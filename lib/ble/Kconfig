@@ -1,0 +1,6 @@
+
+config IB_BLE_COMM
+	bool "BLE communicaiton service"
+	depends on BT
+	help
+	  Enable BLE communication service, which controls the BLE communication. (connecting, disconnecting, etc.)
