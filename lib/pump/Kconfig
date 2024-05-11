@@ -1,0 +1,5 @@
+menu "Libraries"
+
+rsource "medtrum/Kconfig"
+
+endmenu

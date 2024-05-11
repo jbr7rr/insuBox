@@ -2,3 +2,5 @@
 
 add_subdirectory_ifdef(CONFIG_IB_BLE_COMM ble)
 
+add_subdirectory(pump)
+
