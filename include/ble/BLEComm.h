@@ -6,6 +6,8 @@
 
 #include <cstdint>
 #include <map>
+#include <string>
+#include <vector>
 
 class IBLECallback
 {
@@ -13,12 +15,27 @@ public:
     virtual void onConnected(struct bt_conn *conn, uint8_t err) = 0;
     virtual void onDisconnected(struct bt_conn *conn, uint8_t reason) = 0;
     virtual void onSecurityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err) = 0;
+
+    virtual void onAttributeDiscovered(const struct bt_gatt_attr *attr) = 0;
 };
 
-struct BleConnection {
-    IBLECallback *callback;
-    struct bt_conn *conn;
+struct BleConnection
+{
+    IBLECallback *callback = nullptr;
+    struct bt_conn *conn = nullptr;
 };
+
+/*
+ * @brief BLEComm class
+ *
+ * This class is responsible for handling the BLE communication.
+ * It provides the basic functionality to connect, disconnect and discover services.
+ *
+ * @note This class is a singleton as zephyr BLE stack requires static interface.
+ * Using the callback structure of this class it is possible to handle multiple connections
+ * from different non-static classes.
+ *
+ */
 
 class BLEComm
 {
@@ -27,12 +44,29 @@ public:
     static bool connect(bt_addr_le_t &peer, BleConnection *connection);
     static void disconnect(BleConnection *connection);
 
+    // Maybe make this part of a BT gatt class ?
+    static bool discoverServices(BleConnection *connection);
+
 private:
+    struct CompareBtAddr
+    {
+        bool operator()(const bt_addr_le_t &lhs, const bt_addr_le_t &rhs) const
+        {
+            return bt_addr_le_cmp(&lhs, &rhs) < 0;
+        }
+    };
+
+    // TODO: We need to check the impact of these maps if it doesn't grow to large or something
+    static std::map<bt_addr_le_t, BleConnection *, CompareBtAddr> mConnections;
+
     static void connected(struct bt_conn *conn, uint8_t err);
     static void disconnected(struct bt_conn *conn, uint8_t reason);
     static void securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err);
     static void btReady(int err);
     static struct bt_conn_cb connCallbacks;
+
+    static uint8_t discover_func(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+                                 struct bt_gatt_discover_params *params);
 };
 
 #endif // BLE_COMM_H

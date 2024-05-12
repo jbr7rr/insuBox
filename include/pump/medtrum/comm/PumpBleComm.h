@@ -36,6 +36,10 @@ public:
     void onDisconnected(struct bt_conn *conn, uint8_t reason) override;
     void onSecurityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err) override;
 
+    void onAttributeDiscovered(const struct bt_gatt_attr *attr) override;
+    // TODO: Do we need this?
+    // void onServiceDiscoveryComplete() override;
+
 private:
     std::optional<std::int32_t> mDeviceSN = std::nullopt;
     std::optional<bt_addr_le_t> mDeviceAddr = std::nullopt;

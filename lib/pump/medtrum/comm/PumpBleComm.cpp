@@ -65,6 +65,15 @@ void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
 {
     // Handle the connected event
     LOG_DBG("Connected to the pump");
+    // Discover services
+    if (BLEComm::discoverServices(&mConnection))
+    {
+        LOG_DBG("Discovering services");
+    }
+    else
+    {
+        LOG_ERR("Failed to discover services");
+    }
 }
 
 void PumpBleComm::onDisconnected(struct bt_conn *conn, uint8_t reason)
@@ -77,4 +86,10 @@ void PumpBleComm::onSecurityChanged(struct bt_conn *conn, bt_security_t level, e
 {
     // Handle the security changed event
     LOG_DBG("Security changed");
+}
+
+void PumpBleComm::onAttributeDiscovered(const struct bt_gatt_attr *attr)
+{
+    // Handle the service discovered event
+    LOG_DBG("Attribute discovered with handle: %d", attr->handle);
 }
