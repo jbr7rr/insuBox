@@ -54,7 +54,7 @@ void PumpBleComm::connect()
         // Start scanning for the device
         PumpScanner::scanRequest request = {
             .instance = this,
-            .targetDeviceSN = static_cast<int32_t>(0xC29415AB),
+            .targetDeviceSN = 0xC29415AB,
         };
         PumpScanner::startScan(request);
     }

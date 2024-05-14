@@ -1,0 +1,24 @@
+cmake_minimum_required(VERSION 3.20.0)
+
+set(CMAKE_CXX_COMPILER /usr/bin/g++ CACHE PATH "" FORCE)
+set(BOARD native_posix)
+set(ZEPHYR_TOOLCHAIN_VARIANT zephyr)
+set(TOOLCHAIN_ROOT ${ZEPHYR_BASE})
+set(ZEPHYR_EXTRA_MODULES $ENV{ZEPHYR_BASE}/../zephyr-googletest-example/modules/googletest)
+
+find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
+
+project(tst)
+
+# Add test sources
+set(SOURCES
+    src/main.cpp
+    pump/medtrum/crypt/tst_Crypt.cpp
+    ../../lib/pump/medtrum/crypt/Crypt.cpp
+)
+
+# Add these sources to your target
+target_sources(app PRIVATE ${SOURCES})
+
+# Link libraries
+target_link_libraries(app PUBLIC gtest_main)

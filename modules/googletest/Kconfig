@@ -1,0 +1,8 @@
+menu "Google Test Configuration"
+
+config GOOGLETEST
+    bool "Enable Google Test support"
+    help
+      Enable Google Test framework.
+
+endmenu

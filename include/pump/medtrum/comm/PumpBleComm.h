@@ -12,7 +12,7 @@ public:
     struct ManufacturerData
     {
         uint16_t companyId;
-        int32_t deviceSN;
+        uint32_t deviceSN;
         uint8_t deviceType;
         uint8_t version;
     };
@@ -52,7 +52,7 @@ private:
 
     DiscoveryState mDiscoveryState = DISCOVERY_MT_SERVICE;
 
-    std::optional<std::int32_t> mDeviceSN = std::nullopt;
+    std::optional<std::uint32_t> mDeviceSN = std::nullopt;
     std::optional<bt_addr_le_t> mDeviceAddr = std::nullopt;
 
     BleConnection mConnection;

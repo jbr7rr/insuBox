@@ -18,7 +18,7 @@ public:
     struct scanRequest
     {
         IScanCallback *instance;
-        int32_t targetDeviceSN;
+        uint32_t targetDeviceSN;
     };
 
     static bool startScan(scanRequest request);
