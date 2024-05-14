@@ -2,6 +2,7 @@
 #define BLE_COMM_H
 
 #include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/hci.h>
 
 #include <cstdint>
@@ -16,7 +17,10 @@ public:
     virtual void onDisconnected(struct bt_conn *conn, uint8_t reason) = 0;
     virtual void onSecurityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err) = 0;
 
-    virtual void onAttributeDiscovered(const struct bt_gatt_attr *attr) = 0;
+    virtual uint8_t onDiscover(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+                               struct bt_gatt_discover_params *params) = 0;
+    virtual uint8_t onGattChanged(struct bt_conn *conn, struct bt_gatt_subscribe_params *params, const void *data,
+                                  uint16_t length) = 0;
 };
 
 struct BleConnection
@@ -29,7 +33,11 @@ struct BleConnection
  * @brief BLEComm class
  *
  * This class is responsible for handling the BLE communication.
- * It provides the basic functionality to connect, disconnect and discover services.
+ * It wraps the Zephyr BLE stack and provides the necessary functionality to C++ classes,
+ * so multiple classes can connect to different BLE devices, without themselves having to
+ * handle the static BLE callback functions.
+ *
+ * For now this class doesn't handle the pointers, it expects the user to handle the memory if needed.
  *
  * @note This class is a singleton as zephyr BLE stack requires static interface.
  * Using the callback structure of this class it is possible to handle multiple connections
@@ -41,11 +49,12 @@ class BLEComm
 {
 public:
     static void init();
-    static bool connect(bt_addr_le_t &peer, BleConnection *connection);
+    static int connect(bt_addr_le_t &peer, BleConnection *connection);
     static void disconnect(BleConnection *connection);
 
     // Maybe make this part of a BT gatt class ?
-    static bool discoverServices(BleConnection *connection);
+    static int discover(BleConnection *connection, struct bt_gatt_discover_params *params);
+    static int subscribe(BleConnection *connection, struct bt_gatt_subscribe_params *params);
 
 private:
     struct CompareBtAddr
@@ -65,8 +74,10 @@ private:
     static void btReady(int err);
     static struct bt_conn_cb connCallbacks;
 
-    static uint8_t discover_func(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-                                 struct bt_gatt_discover_params *params);
+    static uint8_t onDiscover(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+                              struct bt_gatt_discover_params *params);
+    static uint8_t onGattChanged(struct bt_conn *conn, struct bt_gatt_subscribe_params *params, const void *data,
+                                 uint16_t length);
 };
 
 #endif // BLE_COMM_H

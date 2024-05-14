@@ -25,24 +25,24 @@ struct bt_conn_cb BLEComm::connCallbacks = {
     .security_changed = securityChanged,
 };
 
-bool BLEComm::connect(bt_addr_le_t &peer, BleConnection *connection)
+int BLEComm::connect(bt_addr_le_t &peer, BleConnection *connection)
 {
     if (connection == nullptr || connection->callback == nullptr)
     {
-        return false;
+        return -EINVAL;
     }
     struct bt_conn *conn;
     int err = bt_conn_le_create(&peer, create_param, param, &conn);
     if (err)
     {
         LOG_ERR("Connection failed (err %d)", err);
-        return false;
+        return err;
     }
     // Unref the connection object here as we will use the one we get when connected
     bt_conn_unref(conn);
     // Save the connection object to the connection map
     mConnections[peer] = connection;
-    return true;
+    return err;
 }
 
 void BLEComm::disconnect(BleConnection *connection)
@@ -55,43 +55,64 @@ void BLEComm::disconnect(BleConnection *connection)
     bt_conn_unref(connection->conn);
 }
 
-bool BLEComm::discoverServices(BleConnection *connection)
+int BLEComm::discover(BleConnection *connection, struct bt_gatt_discover_params *params)
 {
-    LOG_DBG("Discovering services");
-    if (connection == nullptr || connection->conn == nullptr)
+    if (connection == nullptr || connection->conn == nullptr || params == nullptr)
     {
-        LOG_ERR("Connection is null");
-        return false;
+        LOG_ERR("Connection or params is null");
+        return -EINVAL;
     }
-    static struct bt_gatt_discover_params discover_params;
-    discover_params.uuid = NULL;
-    discover_params.func = discover_func;
-    discover_params.start_handle = BT_ATT_FIRST_ATTRIBUTE_HANDLE;
-    discover_params.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
-    discover_params.type = BT_GATT_DISCOVER_CHARACTERISTIC;
-
-    int err = bt_gatt_discover(connection->conn, &discover_params);
-    if (err)
+    if (params->func == nullptr)
     {
-        LOG_ERR("Discover failed (err %d)", err);
-        return false;
+        params->func = onDiscover;
     }
-    return true;
+    return bt_gatt_discover(connection->conn, params);
 }
 
-uint8_t BLEComm::discover_func(struct bt_conn *conn, const struct bt_gatt_attr *attr,
-                               struct bt_gatt_discover_params *params)
+uint8_t BLEComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr *attr,
+                            struct bt_gatt_discover_params *params)
 {
-    if (!attr)
-    {
-        LOG_INF("Discover complete");
-        return BT_GATT_ITER_STOP;
-    }
-    LOG_DBG("Discovered attribute handle %u", attr->handle);
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
-        connection->callback->onAttributeDiscovered(attr);
+        return connection->callback->onDiscover(conn, attr, params);
+    }
+    else
+    {
+        return BT_GATT_ITER_STOP;
+    }
+}
+
+int BLEComm::subscribe(BleConnection *connection, struct bt_gatt_subscribe_params *params)
+{
+    if (connection == nullptr || connection->conn == nullptr || params == nullptr)
+    {
+        LOG_ERR("Connection or params is null");
+        return -EINVAL;
+    }
+    if (params->notify == nullptr)
+    {
+        params->notify = onGattChanged;
+    }
+    return bt_gatt_subscribe(connection->conn, params);
+}
+
+uint8_t BLEComm::onGattChanged(struct bt_conn *conn, struct bt_gatt_subscribe_params *params, const void *data,
+                               uint16_t length)
+{
+    LOG_DBG("Gatt changed");
+    auto connection = mConnections[*bt_conn_get_dst(conn)];
+    if (connection != nullptr && connection->callback != nullptr)
+    {
+        connection->callback->onGattChanged(conn, params, data, length);
+    }
+    else
+    {
+        LOG_ERR("Connection object not found");
+    }
+    if (!data)
+    {
+        return BT_GATT_ITER_STOP;
     }
     return BT_GATT_ITER_CONTINUE;
 }
@@ -110,8 +131,7 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
-        LOG_DBG("Connection object found");
-        connection->conn = conn;
+        connection->conn = bt_conn_ref(conn);
         connection->callback->onConnected(conn, err);
     }
     else
