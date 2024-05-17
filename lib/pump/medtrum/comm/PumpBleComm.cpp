@@ -20,7 +20,20 @@ namespace
         BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x669a9101, 0x0008, 0x968f, 0xe311, 0x6050405558b3));
 }
 
-PumpBleComm::PumpBleComm() { mConnection.callback = this; }
+PumpBleComm::PumpBleComm() 
+{ 
+    mConnection.callback = this;
+    mConnectTask.pumpBleComm = this;
+    
+    k_work_queue_init(&mWorkQueue);
+    k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 1, NULL);
+    
+    // Init our tasks
+    k_work_init_delayable(&mConnectTask.work, [](struct k_work *work){
+        auto task = CONTAINER_OF(work, TaskWrap, work);
+        task->pumpBleComm->_connect();
+    });
+}
 
 PumpBleComm::~PumpBleComm()
 {
@@ -34,6 +47,56 @@ void PumpBleComm::init()
 }
 
 void PumpBleComm::connect()
+{
+    // Schedule the connect task
+    submitTask(mConnectTask);
+}
+
+void PumpBleComm::onDeviceFound(bt_addr_le_t addr, ManufacturerData manufacturerData)
+{
+    LOG_DBG("Pump found with SN: %d", manufacturerData.deviceSN);
+    // Handle the found device
+    // Save the device address
+    mDeviceAddr = addr;
+    // Connect to the device
+    submitTask(mConnectTask);
+}
+
+void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
+{
+    // Handle the connected event
+    if (err)
+    {
+        LOG_ERR("Failed to connect to the pump with error: %d", err);
+        // return;
+    }
+    LOG_DBG("Connected to the pump");
+    // Discover services
+    mDiscoverParams.uuid = &BT_UUID_MT_SERVICE.uuid;
+    mDiscoverParams.start_handle = BT_ATT_FIRST_ATTRIBUTE_HANDLE;
+    mDiscoverParams.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
+    mDiscoverParams.type = BT_GATT_DISCOVER_PRIMARY;
+    mDiscoveryState = DISCOVERY_MT_SERVICE;
+    int ret = BLEComm::discover(&mConnection, &mDiscoverParams);
+    if (!ret)
+    {
+        LOG_DBG("Discovering services");
+    }
+    else
+    {
+        LOG_ERR("Failed to discover services with error: %d", err);
+    }
+}
+
+// TASK SHIZZL
+
+void PumpBleComm::submitTask(TaskWrap &task, k_timeout_t delay)
+{
+    // Submit a task to the work queue
+    k_work_reschedule_for_queue(&mWorkQueue, &task.work, delay);
+}
+
+void PumpBleComm::_connect()
 {
     // Connect to the pump
     if (mDeviceAddr.has_value())
@@ -60,45 +123,15 @@ void PumpBleComm::connect()
     }
 }
 
-void PumpBleComm::onDeviceFound(bt_addr_le_t addr, ManufacturerData manufacturerData)
-{
-    LOG_DBG("Pump found with SN: %d", manufacturerData.deviceSN);
-    // Handle the found device
-    // Save the device address
-    mDeviceAddr = addr;
-    // Connect to the device
-    connect();
-}
-
-void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
-{
-    // Handle the connected event
-    if (err)
-    {
-        LOG_ERR("Failed to connect to the pump with error: %d", err);
-        return;
-    }
-    LOG_DBG("Connected to the pump");
-    // Discover services
-    mDiscoverParams.uuid = &BT_UUID_MT_SERVICE.uuid;
-    mDiscoverParams.start_handle = BT_ATT_FIRST_ATTRIBUTE_HANDLE;
-    mDiscoverParams.end_handle = BT_ATT_LAST_ATTRIBUTE_HANDLE;
-    mDiscoverParams.type = BT_GATT_DISCOVER_PRIMARY;
-    int ret = BLEComm::discover(&mConnection, &mDiscoverParams);
-    if (!ret)
-    {
-        LOG_DBG("Discovering services");
-    }
-    else
-    {
-        LOG_ERR("Failed to discover services with error: %d", err);
-    }
-}
+// BLE CALLBACKS
 
 void PumpBleComm::onDisconnected(struct bt_conn *conn, uint8_t reason)
 {
     // Handle the disconnected event
     LOG_DBG("Disconnected from the pump");
+
+    // Try to reconnect
+    submitTask(mConnectTask, K_SECONDS(5));
 }
 
 void PumpBleComm::onSecurityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
@@ -113,7 +146,7 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
     // Handle the service discovered event
     if (!attr)
     {
-        LOG_DBG("Discover complete");
+        LOG_DBG("Discover stopped unexpectedly");
         mDiscoverParams = {};
         return BT_GATT_ITER_STOP;
     }
@@ -234,3 +267,5 @@ uint8_t PumpBleComm::onGattChanged(struct bt_conn *conn, struct bt_gatt_subscrib
 
     return BT_GATT_ITER_CONTINUE;
 }
+
+// END BLECALLBACKS

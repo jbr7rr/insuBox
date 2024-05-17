@@ -40,6 +40,12 @@ public:
                           uint16_t length) override;
 
 private:
+    struct TaskWrap
+    {
+        k_work_delayable work;
+        PumpBleComm *pumpBleComm;
+    };
+
     enum DiscoveryState
     {
         DISCOVERY_MT_SERVICE,
@@ -58,6 +64,14 @@ private:
     BleConnection mConnection;
     struct bt_gatt_discover_params mDiscoverParams;
     struct bt_gatt_subscribe_params mSubscribeParams;
+
+    // Task stuff
+    k_work_q mWorkQueue;
+    K_THREAD_STACK_MEMBER(mWorkQueueBuffer, 2048);
+    void submitTask(TaskWrap &task, k_timeout_t delay = K_MSEC(100));
+
+    TaskWrap mConnectTask;
+    void _connect();    
 };
 
 #endif // PUMP_BLE_COMM_H

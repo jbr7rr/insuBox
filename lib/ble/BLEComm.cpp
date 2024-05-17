@@ -31,15 +31,12 @@ int BLEComm::connect(bt_addr_le_t &peer, BleConnection *connection)
     {
         return -EINVAL;
     }
-    struct bt_conn *conn;
-    int err = bt_conn_le_create(&peer, create_param, param, &conn);
+    int err = bt_conn_le_create(&peer, create_param, param, &connection->conn);
     if (err)
     {
         LOG_ERR("Connection failed (err %d)", err);
         return err;
     }
-    // Unref the connection object here as we will use the one we get when connected
-    bt_conn_unref(conn);
     // Save the connection object to the connection map
     mConnections[peer] = connection;
     return err;
@@ -131,7 +128,6 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
-        connection->conn = bt_conn_ref(conn);
         connection->callback->onConnected(conn, err);
     }
     else
@@ -146,9 +142,9 @@ void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
+        bt_conn_unref(connection->conn);
         connection->callback->onDisconnected(conn, reason);
     }
-    bt_conn_unref(conn);
 }
 
 void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
