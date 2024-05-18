@@ -1,0 +1,53 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - dev
+  workflow_dispatch:
+    
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    container: ghcr.io/zephyrproject-rtos/ci:v0.26.12
+    env:
+      CMAKE_PREFIX_PATH: /opt/toolchains
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: insuBox
+
+      - name: Initialize
+        working-directory: insuBox
+        run: |
+          west init -l .
+          west update -o=--depth=1 -n
+
+      - name: Install dependencies
+        run: |
+          pip install --user -r zephyr/scripts/requirements.txt
+          pip install --user -r bootloader/mcuboot/scripts/requirements.txt
+
+      - name: Apply Zephyr patches
+        working-directory: zephyr
+        run: |
+          git apply ../insuBox/patches/fix_gtest_harness.patch
+          
+      - name: Twister Tests
+        working-directory: insuBox
+        run: |
+          west twister -T tests --integration --jobs 1
+
+      - name: Upload test logs
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: test-logs
+          path: |
+            insuBox/twister-out/native_posix/lib/lib.*/build.log
+            insuBox/twister-out/twister.log
+          retention-days: 14

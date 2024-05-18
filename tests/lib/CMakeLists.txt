@@ -4,7 +4,7 @@ set(CMAKE_CXX_COMPILER /usr/bin/g++ CACHE PATH "" FORCE)
 set(BOARD native_posix)
 set(ZEPHYR_TOOLCHAIN_VARIANT zephyr)
 set(TOOLCHAIN_ROOT ${ZEPHYR_BASE})
-set(ZEPHYR_EXTRA_MODULES $ENV{ZEPHYR_BASE}/../zephyr-googletest-example/modules/googletest)
+set(ZEPHYR_EXTRA_MODULES $ENV{ZEPHYR_BASE}/../insuBox/modules/googletest)
 
 find_package(Zephyr REQUIRED HINTS $ENV{ZEPHYR_BASE})
 
