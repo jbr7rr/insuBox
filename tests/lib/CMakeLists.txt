@@ -14,7 +14,7 @@ project(tst)
 set(SOURCES
     src/main.cpp
     pump/medtrum/crypt/tst_Crypt.cpp
-    ../../lib/pump/medtrum/crypt/Crypt.cpp
+    pump/medtrum/comm/tst_WriteCommandPackets.cpp
 )
 
 # Add these sources to your target
