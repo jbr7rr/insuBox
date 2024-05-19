@@ -7,6 +7,16 @@
 #include <optional>
 #include <string>
 
+class PumpBleCallback
+{
+public:
+    virtual void onReadyForCommands() = 0;
+    virtual void onDisconnected() = 0;
+    virtual void onWriteError() = 0;
+    virtual void onCommandResponse(uint8_t *data, size_t length) = 0;
+    virtual void onNotification(uint8_t *data, size_t length) = 0;
+};
+
 class IScanCallback
 {
 public:
@@ -24,13 +34,30 @@ public:
 class PumpBleComm : public IScanCallback, public IBLECallback
 {
 public:
-    PumpBleComm();
+    PumpBleComm(PumpBleCallback &callback);
     ~PumpBleComm();
     void init();
-    void connect();
+
+    /**
+     * @brief Create a connection to the pump
+     *
+     * @param deviceSN Serial number of the pump
+     *
+     */
+    void connect(uint32_t deviceSN);
+
+    /**
+     * @brief Write a command to the pump
+     *
+     * @param data Pointer to the data to write, needs to be valid until the write is complete
+     * @param length Length of the data to write
+     *
+     * @return True if the command was was dispatched, false otherwise
+     *
+     */
+    bool writeCommand(uint8_t *data, size_t length);
 
     void onDeviceFound(bt_addr_le_t addr, ManufacturerData manufacturerData) override;
-
     void onConnected(struct bt_conn *conn, uint8_t err) override;
     void onDisconnected(struct bt_conn *conn, uint8_t reason) override;
     void onSecurityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err) override;
@@ -59,10 +86,11 @@ private:
 
     DiscoveryState mDiscoveryState = DISCOVERY_MT_SERVICE;
 
-    std::optional<std::uint32_t> mDeviceSN = 0xC29415AB;
+    std::optional<std::uint32_t> mDeviceSN = std::nullopt;
     std::optional<bt_addr_le_t> mDeviceAddr = std::nullopt;
 
     BleConnection mConnection;
+    PumpBleCallback &mCallback;
     struct bt_gatt_discover_params mDiscoverParams;
 
     // Read stuff
@@ -72,9 +100,7 @@ private:
     struct bt_gatt_subscribe_params mSubscribeWriteParams;
     struct bt_gatt_write_params mWriteParams;
     WriteCommandPackets *mWriteCommandPackets = nullptr;
-    k_mutex mWriteMutex;
-    
-    std::vector <uint8_t> mWriteCommandsDataBuffer = {}; // Buffer for whole command, maybe need to move this somewhere?
+    int mSequenceNumber = 0;
     uint8_t mWriteDataBuffer[WriteCommandPackets::PACKET_SIZE];
 
     // Task stuff
@@ -85,8 +111,8 @@ private:
     TaskWrap mConnectTask;
     void _connect();
 
-    TaskWrap mOnDiscoveredTask;
-    void _onDiscovered();
+    TaskWrap mWriteTask;
+    void _write();
 
     void onWrite(uint8_t err, struct bt_gatt_write_params *params);
 };

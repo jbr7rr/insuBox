@@ -2,7 +2,6 @@
 #include <zephyr/bluetooth/gatt.h>
 
 #include "PumpScanner.h"
-#include <pump/medtrum/crypt/Crypt.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -21,21 +20,12 @@ namespace
         BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x669a9101, 0x0008, 0x968f, 0xe311, 0x6050405558b3));
 }
 
-// TODO: Helper funcs, move to seperate file
-void vector_add_le32(std::vector<uint8_t>& vec, uint32_t value) {
-    vec.push_back(static_cast<uint8_t>(value & 0xFF));
-    vec.push_back(static_cast<uint8_t>((value >> 8) & 0xFF));
-    vec.push_back(static_cast<uint8_t>((value >> 16) & 0xFF));
-    vec.push_back(static_cast<uint8_t>((value >> 24) & 0xFF));
-}
-
-PumpBleComm::PumpBleComm()
+PumpBleComm::PumpBleComm(PumpBleCallback &callback) : mCallback(callback)
 {
     mConnection.callback = this;
-    
+
     k_work_queue_init(&mWorkQueue);
     k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 1, NULL);
-    k_mutex_init(&mWriteMutex);
 
     // Init our tasks
     mConnectTask.pumpBleComm = this;
@@ -44,10 +34,10 @@ PumpBleComm::PumpBleComm()
         task->pumpBleComm->_connect();
     });
 
-    mOnDiscoveredTask.pumpBleComm = this;
-    k_work_init_delayable(&mOnDiscoveredTask.work, [](struct k_work *work) {
+    mWriteTask.pumpBleComm = this;
+    k_work_init_delayable(&mWriteTask.work, [](struct k_work *work) {
         auto task = CONTAINER_OF(work, TaskWrap, work);
-        task->pumpBleComm->_onDiscovered();
+        task->pumpBleComm->_write();
     });
 }
 
@@ -62,19 +52,35 @@ void PumpBleComm::init()
     // General BLE init should be done at this point
 }
 
-void PumpBleComm::connect()
+void PumpBleComm::connect(uint32_t deviceSN)
 {
-    // Schedule the connect task
+    // Connect to the pump
+    if (mDeviceSN.value_or(0) != deviceSN)
+    {
+        mDeviceAddr.reset();
+    }
+    mDeviceSN = deviceSN;
     submitTask(mConnectTask);
+}
+
+bool PumpBleComm::writeCommand(uint8_t *data, size_t length)
+{
+    if (mWriteCommandPackets != nullptr)
+    {
+        LOG_ERR("Write command already in progress");
+        return false;
+    }
+    // Write a command to the pump
+    // TODO: Get rid of new/delete ?
+    mWriteCommandPackets = new WriteCommandPackets(data, length, mSequenceNumber++);
+    submitTask(mWriteTask);
+    return true;
 }
 
 void PumpBleComm::onDeviceFound(bt_addr_le_t addr, ManufacturerData manufacturerData)
 {
     LOG_DBG("Pump found with SN: %d", manufacturerData.deviceSN);
-    // Handle the found device
-    // Save the device address
     mDeviceAddr = addr;
-    // Connect to the device
     submitTask(mConnectTask, K_SECONDS(2));
 }
 
@@ -90,6 +96,8 @@ void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
         return;
     }
     LOG_DBG("Connected to the pump");
+    mSequenceNumber = 0;
+
     // Discover services
     mDiscoverParams.uuid = &BT_UUID_MT_SERVICE.uuid;
     mDiscoverParams.start_handle = BT_ATT_FIRST_ATTRIBUTE_HANDLE;
@@ -145,19 +153,9 @@ void PumpBleComm::_connect()
     }
 }
 
-void PumpBleComm::_onDiscovered()
+void PumpBleComm::_write()
 {
-    // Handle the discovery task
-    LOG_DBG("onDiscovered called");
-    mWriteCommandsDataBuffer.clear();
-    mWriteCommandsDataBuffer.push_back(0x05);
-    mWriteCommandsDataBuffer.push_back(0x02);
-    mWriteCommandsDataBuffer.insert(mWriteCommandsDataBuffer.end(), {0x00, 0x00, 0x00, 0x00});
-    uint32_t key = Crypt::keyGen(mDeviceSN.value_or(0));
-    vector_add_le32(mWriteCommandsDataBuffer, key);
-    mWriteCommandPackets = new WriteCommandPackets(mWriteCommandsDataBuffer.data(), mWriteCommandsDataBuffer.size(), 0);
-
-    // This would be part of our write func
+    // Handle the write task
     if (mWriteCommandPackets == nullptr)
     {
         return;
@@ -175,6 +173,7 @@ void PumpBleComm::_onDiscovered()
     if (err)
     {
         LOG_ERR("GATT write operation failed");
+        mCallback.onWriteError();
         return;
     }
 }
@@ -185,11 +184,23 @@ void PumpBleComm::onWrite(uint8_t err, struct bt_gatt_write_params *params)
     if (err)
     {
         LOG_ERR("Write failed with error: %d", err);
+        mCallback.onWriteError();
     }
     else
     {
         LOG_DBG("Write successful");
         LOG_HEXDUMP_DBG(params->data, params->length, "Data: ");
+
+        if (!mWriteCommandPackets->allPacketsConsumed())
+        {
+            submitTask(mWriteTask);
+        }
+        else
+        {
+            // We are done with the write
+            delete mWriteCommandPackets;
+            mWriteCommandPackets = nullptr;
+        }
     }
 }
 
@@ -317,7 +328,7 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
 
         LOG_DBG("Discovery done");
         mDiscoveryState = DISCOVERY_DONE;
-        submitTask(mOnDiscoveredTask);
+        mCallback.onReadyForCommands();
     }
 
     return BT_GATT_ITER_STOP;
@@ -334,6 +345,19 @@ uint8_t PumpBleComm::onGattChanged(struct bt_conn *conn, struct bt_gatt_subscrib
     LOG_HEXDUMP_INF(data, length, "On GATT changed with data: ");
 
     // Handle the GATT changed event
+    if (params->value_handle == mSubscribeReadParams.value_handle)
+    {
+        mCallback.onNotification((uint8_t *)data, length);
+    }
+    else if (params->value_handle == mSubscribeWriteParams.value_handle)
+    {
+        // TODO: Handle responses > 20 bytes
+        mCallback.onCommandResponse((uint8_t *)data, length);
+    }
+    else
+    {
+        LOG_ERR("Unknown characteristic");
+    }
 
     return BT_GATT_ITER_CONTINUE;
 }
