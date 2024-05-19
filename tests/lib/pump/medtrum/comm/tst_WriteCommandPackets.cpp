@@ -32,19 +32,16 @@ TEST(WriteCommandPacketsTest, Given_41LongCommand_Expect_ThreePackets) {
     // Act
     length = cmdPackets.getNextPacket(output.data());
     output.resize(length);
-    // Assert
     EXPECT_EQ(output, expected1);
 
     // Act
     length = cmdPackets.getNextPacket(output.data());
     output.resize(length);
-    // Assert
     EXPECT_EQ(output, expected2);
 
     // Act
     length = cmdPackets.getNextPacket(output.data());
     output.resize(length);
-    // Assert
     EXPECT_EQ(output, expected3);
 
     // Act

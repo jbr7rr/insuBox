@@ -2,6 +2,7 @@
 #define PUMP_BLE_COMM_H
 
 #include <ble/BLEComm.h>
+#include <pump/medtrum/comm/WriteCommandPackets.h>
 
 #include <optional>
 #include <string>
@@ -58,20 +59,36 @@ private:
 
     DiscoveryState mDiscoveryState = DISCOVERY_MT_SERVICE;
 
-    std::optional<std::uint32_t> mDeviceSN = std::nullopt;
+    std::optional<std::uint32_t> mDeviceSN = 0xC29415AB;
     std::optional<bt_addr_le_t> mDeviceAddr = std::nullopt;
 
     BleConnection mConnection;
     struct bt_gatt_discover_params mDiscoverParams;
-    struct bt_gatt_subscribe_params mSubscribeParams;
+
+    // Read stuff
+    struct bt_gatt_subscribe_params mSubscribeReadParams;
+
+    // Write stuff
+    struct bt_gatt_subscribe_params mSubscribeWriteParams;
+    struct bt_gatt_write_params mWriteParams;
+    WriteCommandPackets *mWriteCommandPackets = nullptr;
+    k_mutex mWriteMutex;
+    
+    std::vector <uint8_t> mWriteCommandsDataBuffer = {}; // Buffer for whole command, maybe need to move this somewhere?
+    uint8_t mWriteDataBuffer[WriteCommandPackets::PACKET_SIZE];
 
     // Task stuff
     k_work_q mWorkQueue;
-    K_THREAD_STACK_MEMBER(mWorkQueueBuffer, 2048);
+    K_THREAD_STACK_MEMBER(mWorkQueueBuffer, 4096);
     void submitTask(TaskWrap &task, k_timeout_t delay = K_MSEC(100));
 
     TaskWrap mConnectTask;
-    void _connect();    
+    void _connect();
+
+    TaskWrap mOnDiscoveredTask;
+    void _onDiscovered();
+
+    void onWrite(uint8_t err, struct bt_gatt_write_params *params);
 };
 
 #endif // PUMP_BLE_COMM_H
