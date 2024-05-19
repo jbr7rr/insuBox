@@ -75,7 +75,7 @@ void PumpBleComm::onDeviceFound(bt_addr_le_t addr, ManufacturerData manufacturer
     // Save the device address
     mDeviceAddr = addr;
     // Connect to the device
-    submitTask(mConnectTask);
+    submitTask(mConnectTask, K_SECONDS(2));
 }
 
 void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
@@ -84,8 +84,9 @@ void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
     if (err)
     {
         LOG_ERR("Failed to connect to the pump with error: %d", err);
-        // Try again in 10 mins
-        submitTask(mConnectTask, K_SECONDS(10));
+        // Try again with new scan
+        mDeviceAddr.reset();
+        submitTask(mConnectTask, K_SECONDS(2));
         return;
     }
     LOG_DBG("Connected to the pump");
@@ -128,6 +129,9 @@ void PumpBleComm::_connect()
         else
         {
             LOG_ERR("Failed to connect to the pump");
+            // Try again with new scan
+            mDeviceAddr.reset();
+            submitTask(mConnectTask, K_SECONDS(2));
         }
     }
     else
@@ -215,8 +219,6 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
         LOG_DBG("Discover stopped unexpectedly");
         mDiscoverParams = {};
         mDiscoveryState = DISCOVERY_MT_SERVICE;
-        // Disconnect
-        BLEComm::disconnect(&mConnection);
         return BT_GATT_ITER_STOP;
     }
 

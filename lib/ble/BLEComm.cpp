@@ -44,12 +44,12 @@ int BLEComm::connect(bt_addr_le_t &peer, BleConnection *connection)
 
 void BLEComm::disconnect(BleConnection *connection)
 {
+    LOG_DBG("Disconnecting");
     if (connection == nullptr)
     {
         return;
     }
     bt_conn_disconnect(connection->conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
-    bt_conn_unref(connection->conn);
 }
 
 int BLEComm::discover(BleConnection *connection, struct bt_gatt_discover_params *params)
@@ -119,6 +119,7 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     if (err)
     {
         LOG_ERR("Connection failed (err %u)", err);
+        bt_conn_unref(conn);
     }
     else
     {
