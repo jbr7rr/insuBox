@@ -1,12 +1,10 @@
 #include <ble/BLEComm.h>
-#include <pump/IPumpService.h>
-#include <pump/medtrum/MedtrumService.h>
+#include <pump/PumpService.h>
 
 namespace
 {
     BLEComm bleComm = BLEComm();
-    MedtrumService medtrumService;
-    IPumpService& pumpService = medtrumService;
+    PumpService pumpService;
 }
 
 extern "C" int main(void)

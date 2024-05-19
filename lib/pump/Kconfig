@@ -1,5 +1,10 @@
 menu "Libraries"
 
+config IB_PUMP
+	bool "Insulin Pump"
+    help
+        This option enables support for insulin pumps.
+
 rsource "medtrum/Kconfig"
 
 endmenu
