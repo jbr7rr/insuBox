@@ -51,3 +51,36 @@ jobs:
             insuBox/twister-out/native_posix/lib/lib.*/build.log
             insuBox/twister-out/twister.log
           retention-days: 14
+
+  generate-docs:
+    runs-on: ubuntu-22.04
+    container:
+      image: ubuntu:latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          path: insuBox
+
+      - name: Install Doxygen and LaTeX
+        run: |
+          export DEBIAN_FRONTEND=noninteractive
+          ln -fs /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
+          apt-get update
+          apt-get install -y doxygen graphviz plantuml
+          ln -fs /usr/share/plantuml/ /usr/share/java/
+
+      - name: Generate Doxygen Documentation
+        working-directory: insuBox
+        run: |
+          doxygen ./doc/Doxyfile
+          ls -alh ./doc/html
+
+      - name: Upload Doxygen HTML
+        uses: actions/upload-artifact@v3
+        with:
+          name: doxygen-html
+          path: insuBox/doc/html
+          retention-days: 14
+
