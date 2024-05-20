@@ -1,20 +1,12 @@
 #include <pump/medtrum/MedtrumDevice.h>
 #include <pump/medtrum/comm/PumpBleComm.h>
-#include <pump/medtrum/crypt/Crypt.h>
+
+#include <pump/medtrum/comm/packets/AuthPacket.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 
 LOG_MODULE_REGISTER(ib_medtrum_device);
-
-// TODO: Helper funcs, move to seperate file
-void vector_add_le32(std::vector<uint8_t> &vec, uint32_t value)
-{
-    vec.push_back(static_cast<uint8_t>(value & 0xFF));
-    vec.push_back(static_cast<uint8_t>((value >> 8) & 0xFF));
-    vec.push_back(static_cast<uint8_t>((value >> 16) & 0xFF));
-    vec.push_back(static_cast<uint8_t>((value >> 24) & 0xFF));
-}
 
 MedtrumDevice::MedtrumDevice() : mPumpBleComm(*this)
 {
@@ -39,15 +31,10 @@ void MedtrumDevice::onReadyForCommands()
     // Callback when the device is connected
     LOG_DBG("Connected to pump");
 
-    // Temp code
-    mWriteCommandsDataBuffer.clear();
-    mWriteCommandsDataBuffer.push_back(0x05);
-    mWriteCommandsDataBuffer.push_back(0x02);
-    mWriteCommandsDataBuffer.insert(mWriteCommandsDataBuffer.end(), {0x00, 0x00, 0x00, 0x00});
-    uint32_t key = Crypt::keyGen(mDeviceSN.value_or(0));
-    vector_add_le32(mWriteCommandsDataBuffer, key);
-
-    mPumpBleComm.writeCommand(mWriteCommandsDataBuffer.data(), mWriteCommandsDataBuffer.size());
+    // TODO: Temp code
+    mActivePacket = std::make_unique<AuthPacket>(mDeviceSN.value_or(0));
+    auto &request = mActivePacket->getRequest();
+    mPumpBleComm.writeCommand(request.data(), request.size());
 }
 
 void MedtrumDevice::onDisconnected()
@@ -66,6 +53,16 @@ void MedtrumDevice::onCommandResponse(uint8_t *data, size_t length)
 {
     // Callback when a command response is received
     LOG_DBG("Command response received");
+
+    if (mActivePacket)
+    {
+        bool ready = mActivePacket->onNotification(data, length);
+        if (ready)
+        {
+            LOG_DBG("Packet ready");
+            mActivePacket.reset();
+        }
+    }
 }
 
 void MedtrumDevice::onNotification(uint8_t *data, size_t length)

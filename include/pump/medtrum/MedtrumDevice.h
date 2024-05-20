@@ -3,6 +3,10 @@
 
 #include <pump/IPumpDevice.h>
 #include <pump/medtrum/comm/PumpBleComm.h>
+#include <pump/medtrum/comm/packets/MedtrumBasePacket.h>
+#include <pump/medtrum/comm/packets/AuthPacket.h>
+
+#include <memory>
 
 class MedtrumDevice : public IPumpDevice, PumpBleCallback
 {
@@ -20,6 +24,7 @@ public:
 private:
     PumpBleComm mPumpBleComm;
     std::optional<uint32_t> mDeviceSN = 0xE4B83178;
+    std::unique_ptr<MedtrumBasePacket> mActivePacket = nullptr;
 
     std::vector<uint8_t> mWriteCommandsDataBuffer = {}; // Buffer for whole command, maybe need to move this somewhere?
 };
