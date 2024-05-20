@@ -23,20 +23,19 @@ namespace
 PumpBleComm::PumpBleComm(PumpBleCallback &callback) : mCallback(callback)
 {
     mConnection.callback = this;
+    mSubContainer.pumpBleComm = this;
 
     k_work_queue_init(&mWorkQueue);
     k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 1, NULL);
 
     // Init our tasks
-    mConnectTask.pumpBleComm = this;
-    k_work_init_delayable(&mConnectTask.work, [](struct k_work *work) {
-        auto task = CONTAINER_OF(work, TaskWrap, work);
+    k_work_init_delayable(&mSubContainer.connectWork, [](struct k_work *work) {
+        auto task = CONTAINER_OF(work, SubContainer, connectWork);
         task->pumpBleComm->_connect();
     });
 
-    mWriteTask.pumpBleComm = this;
-    k_work_init_delayable(&mWriteTask.work, [](struct k_work *work) {
-        auto task = CONTAINER_OF(work, TaskWrap, work);
+    k_work_init_delayable(&mSubContainer.writeWork, [](struct k_work *work) {
+        auto task = CONTAINER_OF(work, SubContainer, writeWork);
         task->pumpBleComm->_write();
     });
 }
@@ -60,20 +59,20 @@ void PumpBleComm::connect(uint32_t deviceSN)
         mDeviceAddr.reset();
     }
     mDeviceSN = deviceSN;
-    submitTask(mConnectTask);
+    submitWork(mSubContainer.connectWork);
 }
 
 bool PumpBleComm::writeCommand(uint8_t *data, size_t length)
 {
-    if (mWriteCommandPackets != nullptr)
+    if (mWriteCommandPackets.has_value())
     {
         LOG_ERR("Write command already in progress");
         return false;
     }
     // Write a command to the pump
     // TODO: Get rid of new/delete ?
-    mWriteCommandPackets = new WriteCommandPackets(data, length, mSequenceNumber++);
-    submitTask(mWriteTask);
+    mWriteCommandPackets.emplace(data, length, mSequenceNumber);
+    submitWork(mSubContainer.writeWork);
     return true;
 }
 
@@ -81,7 +80,7 @@ void PumpBleComm::onDeviceFound(bt_addr_le_t addr, ManufacturerData manufacturer
 {
     LOG_DBG("Pump found with SN: %d", manufacturerData.deviceSN);
     mDeviceAddr = addr;
-    submitTask(mConnectTask, K_SECONDS(2));
+    submitWork(mSubContainer.connectWork, K_SECONDS(2));
 }
 
 void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
@@ -92,7 +91,7 @@ void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
         LOG_ERR("Failed to connect to the pump with error: %d", err);
         // Try again with new scan
         mDeviceAddr.reset();
-        submitTask(mConnectTask, K_SECONDS(2));
+        submitWork(mSubContainer.connectWork, K_SECONDS(2));
         return;
     }
     LOG_DBG("Connected to the pump");
@@ -117,10 +116,9 @@ void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
 
 // TASK SHIZZL
 
-void PumpBleComm::submitTask(TaskWrap &task, k_timeout_t delay)
+void PumpBleComm::submitWork(k_work_delayable &task, k_timeout_t delay)
 {
-    // Submit a task to the work queue
-    k_work_reschedule_for_queue(&mWorkQueue, &task.work, delay);
+    k_work_reschedule_for_queue(&mWorkQueue, &task, delay);
 }
 
 void PumpBleComm::_connect()
@@ -139,7 +137,7 @@ void PumpBleComm::_connect()
             LOG_ERR("Failed to connect to the pump");
             // Try again with new scan
             mDeviceAddr.reset();
-            submitTask(mConnectTask, K_SECONDS(2));
+            submitWork(mSubContainer.connectWork, K_SECONDS(2));
         }
     }
     else
@@ -149,27 +147,31 @@ void PumpBleComm::_connect()
             .instance = this,
             .targetDeviceSN = mDeviceSN.value_or(0),
         };
-        PumpScanner::startScan(request);
+        if (!PumpScanner::startScan(request))
+        {
+            LOG_ERR("Failed to start scan");
+            submitWork(mSubContainer.connectWork, K_SECONDS(2));
+        }
     }
 }
 
 void PumpBleComm::_write()
 {
     // Handle the write task
-    if (mWriteCommandPackets == nullptr)
+    if (!mWriteCommandPackets.has_value())
     {
         return;
     }
-    mWriteParams.data = mWriteDataBuffer;
-    mWriteParams.offset = 0;
-    mWriteParams.length = mWriteCommandPackets->getNextPacket(mWriteDataBuffer);
-    mWriteParams.handle = mSubscribeWriteParams.value_handle;
-    mWriteParams.func = [](struct bt_conn *conn, uint8_t err, struct bt_gatt_write_params *params) {
-        auto pumpBleComm = CONTAINER_OF(params, PumpBleComm, mWriteParams);
-        pumpBleComm->onWrite(err, params);
+    mSubContainer.writeParams.data = mWriteDataBuffer;
+    mSubContainer.writeParams.offset = 0;
+    mSubContainer.writeParams.length = mWriteCommandPackets->getNextPacket(mWriteDataBuffer);
+    mSubContainer.writeParams.handle = mSubscribeWriteParams.value_handle;
+    mSubContainer.writeParams.func = [](struct bt_conn *conn, uint8_t err, struct bt_gatt_write_params *params) {
+        auto container = CONTAINER_OF(params, SubContainer, writeParams);
+        container->pumpBleComm->onWrite(err, params);
     };
 
-    int err = bt_gatt_write(mConnection.conn, &mWriteParams);
+    int err = bt_gatt_write(mConnection.conn, &mSubContainer.writeParams);
     if (err)
     {
         LOG_ERR("GATT write operation failed");
@@ -185,22 +187,20 @@ void PumpBleComm::onWrite(uint8_t err, struct bt_gatt_write_params *params)
     {
         LOG_ERR("Write failed with error: %d", err);
         mCallback.onWriteError();
+        return;
+    }
+
+    LOG_DBG("Write successful");
+    LOG_HEXDUMP_DBG(params->data, params->length, "Data: ");
+
+    if (!mWriteCommandPackets->allPacketsConsumed())
+    {
+        submitWork(mSubContainer.writeWork);
     }
     else
     {
-        LOG_DBG("Write successful");
-        LOG_HEXDUMP_DBG(params->data, params->length, "Data: ");
-
-        if (!mWriteCommandPackets->allPacketsConsumed())
-        {
-            submitTask(mWriteTask);
-        }
-        else
-        {
-            // We are done with the write
-            delete mWriteCommandPackets;
-            mWriteCommandPackets = nullptr;
-        }
+        // We are done with the write
+        mWriteCommandPackets.reset();
     }
 }
 
@@ -212,7 +212,7 @@ void PumpBleComm::onDisconnected(struct bt_conn *conn, uint8_t reason)
     LOG_DBG("Disconnected from the pump");
 
     // Try to reconnect
-    submitTask(mConnectTask, K_SECONDS(5));
+    submitWork(mSubContainer.connectWork, K_SECONDS(5));
 }
 
 void PumpBleComm::onSecurityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)

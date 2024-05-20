@@ -68,11 +68,15 @@ public:
                           uint16_t length) override;
 
 private:
-    struct TaskWrap
+    struct SubContainer
     {
-        k_work_delayable work;
         PumpBleComm *pumpBleComm;
-    };
+        // Tasks
+        k_work_delayable connectWork;
+        k_work_delayable writeWork;
+        // Params where we need to put a callback in
+        struct bt_gatt_write_params writeParams;
+    } mSubContainer;
 
     enum DiscoveryState
     {
@@ -85,35 +89,32 @@ private:
     };
 
     DiscoveryState mDiscoveryState = DISCOVERY_MT_SERVICE;
+    struct bt_gatt_discover_params mDiscoverParams;
 
     std::optional<std::uint32_t> mDeviceSN = std::nullopt;
     std::optional<bt_addr_le_t> mDeviceAddr = std::nullopt;
 
     BleConnection mConnection;
     PumpBleCallback &mCallback;
-    struct bt_gatt_discover_params mDiscoverParams;
 
     // Read stuff
     struct bt_gatt_subscribe_params mSubscribeReadParams;
 
     // Write stuff
     struct bt_gatt_subscribe_params mSubscribeWriteParams;
-    struct bt_gatt_write_params mWriteParams;
-    WriteCommandPackets *mWriteCommandPackets = nullptr;
+    std::optional<WriteCommandPackets> mWriteCommandPackets = std::nullopt;
     int mSequenceNumber = 0;
     uint8_t mWriteDataBuffer[WriteCommandPackets::PACKET_SIZE];
 
     // Task stuff
     k_work_q mWorkQueue;
     K_THREAD_STACK_MEMBER(mWorkQueueBuffer, 4096);
-    void submitTask(TaskWrap &task, k_timeout_t delay = K_MSEC(100));
-
-    TaskWrap mConnectTask;
+    void submitWork(k_work_delayable &task, k_timeout_t delay = K_MSEC(100));
+    // Task related functions
     void _connect();
-
-    TaskWrap mWriteTask;
     void _write();
 
+    // Direct callbacks from BLE stack
     void onWrite(uint8_t err, struct bt_gatt_write_params *params);
 };
 
