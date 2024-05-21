@@ -26,9 +26,9 @@ std::vector<uint8_t> &MedtrumBasePacket::getRequest()
     return mRequest;
 }
 
-bool MedtrumBasePacket::onNotification(const uint8_t *data, size_t dataSize)
+bool MedtrumBasePacket::onIndication(const uint8_t *data, size_t dataSize)
 {
-    LOG_DBG("onNotification");
+    LOG_DBG("onIndication");
     // Response: Header: 4 bytes, Data: 15 bytes, CRC: 1 byte
     // Header: Length, Command, Sequence number, Package index
 
@@ -68,7 +68,7 @@ bool MedtrumBasePacket::onNotification(const uint8_t *data, size_t dataSize)
     {
         LOG_ERR("Invalid package index");
         mFailed = true;
-        return true;
+        // Handle the rest of the packet normally, so all sequences are getting handled
     }
 
     if (mPkgIndex < 2)
@@ -81,7 +81,7 @@ bool MedtrumBasePacket::onNotification(const uint8_t *data, size_t dataSize)
         // Strip header and crc
         mResponse.insert(mResponse.end(), &data[HEADER_SIZE], &data[dataSize - 1]);
     }
-    if (responseSize >= mResponse.size())
+    if (mResponse.size() >= static_cast<size_t>(responseSize - 1)) // -1 for strip of total crc
     {
         return handleResponse();
     }

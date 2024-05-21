@@ -1,9 +1,9 @@
 #ifndef MEDTRUM_BASE_PACKET_H
 #define MEDTRUM_BASE_PACKET_H
 
-#include <vector>
-#include <cstdint>
 #include <cstddef>
+#include <cstdint>
+#include <vector>
 
 class MedtrumBasePacket
 {
@@ -13,32 +13,31 @@ public:
 
     /**
      * @brief getRequest
-     * 
+     *
      * @return Returns a reference to the request packet
      *
-    */
-    virtual std::vector<uint8_t>& getRequest();
+     */
+    virtual std::vector<uint8_t> &getRequest();
 
     /**
-     * @brief onNotification
-     * 
+     * @brief onIndication
+     *
      * @param data
      * @param dataSize
-     * 
+     *
      * @return Returns true if the whole packet is received or if error occurred
      * check .isFailed() to see if error occurred
      *
-    */
-    virtual bool onNotification(const uint8_t *data, size_t dataSize);
+     */
+    virtual bool onIndication(const uint8_t *data, size_t dataSize);
 
     /**
      * @brief isFailed
-     * 
+     *
      * @return Returns true if error occurred
      *
-    */
+     */
     virtual bool isFailed() const;
-
 
 protected:
     uint8_t mOpCode = 0;

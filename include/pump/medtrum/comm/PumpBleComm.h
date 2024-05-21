@@ -108,7 +108,7 @@ private:
 
     // Task stuff
     k_work_q mWorkQueue;
-    K_THREAD_STACK_MEMBER(mWorkQueueBuffer, 4096);
+    K_THREAD_STACK_MEMBER(mWorkQueueBuffer, 2048);
     void submitWork(k_work_delayable &task, k_timeout_t delay = K_MSEC(100));
     // Task related functions
     void _connect();
