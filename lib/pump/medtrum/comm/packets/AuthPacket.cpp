@@ -1,7 +1,7 @@
 #include <pump/medtrum/comm/packets/AuthPacket.h>
 
 #include <pump/medtrum/crypt/Crypt.h>
-#include "../../utils/vector.h"
+#include <pump/medtrum/utils/Vector.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>

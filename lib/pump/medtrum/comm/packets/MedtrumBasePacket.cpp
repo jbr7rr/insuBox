@@ -45,14 +45,14 @@ bool MedtrumBasePacket::onNotification(const uint8_t *data, size_t dataSize)
     {
         LOG_ERR("CRC failed");
         mFailed = true;
-        return true;
+        // Handle the rest of the packet normally, so all sequences are getting handled
     }
 
     if (mOpCode != data[HEADER_COMMAND_OFFSET])
     {
-        LOG_ERR("Invalid opcode");
+        LOG_ERR("Invalid opcode: %d, expected: %d", data[HEADER_COMMAND_OFFSET], mOpCode);
         mFailed = true;
-        return true;
+        // Handle the rest of the packet normally, so all sequences are getting handled
     }
 
     // Total length = 1x header + total data size excluding other headers and crc's
@@ -75,7 +75,8 @@ bool MedtrumBasePacket::onNotification(const uint8_t *data, size_t dataSize)
     {
         // For first packet don't strip header
         mResponse.insert(mResponse.end(), data, data + dataSize - 1);
-    } else
+    }
+    else
     {
         // Strip header and crc
         mResponse.insert(mResponse.end(), &data[HEADER_SIZE], &data[dataSize - 1]);
@@ -92,6 +93,7 @@ bool MedtrumBasePacket::isFailed() const { return mFailed; }
 bool MedtrumBasePacket::handleResponse()
 {
     LOG_DBG("Handling response");
+    LOG_HEXDUMP_DBG(mResponse.data(), mResponse.size(), "Response: ");
     bool ready = false;
     if (mResponse.size() < HEADER_SIZE + RESULT_SIZE)
     {
@@ -103,26 +105,25 @@ bool MedtrumBasePacket::handleResponse()
     uint16_t responseCode = sys_get_le16(&mResponse[HEADER_SIZE]);
     switch (responseCode)
     {
-        case RESPONSE_SUCCESS:
-            LOG_DBG("Response success");
-            if (mResponse.size() < mExpectedLength)
-            {
-                mFailed = true;
-                LOG_ERR("Invalid response length");
-                LOG_HEXDUMP_DBG(mResponse.data(), mResponse.size(), "Response: ");
-            }
-            ready = true;
-            break;
-        case RESPONSE_WAITING:
-            LOG_DBG("Response waiting");
-            ready = false;
-            break;
-        default:
-            LOG_ERR("Response error");
-            LOG_HEXDUMP_DBG(mResponse.data(), mResponse.size(), "Response: ");
+    case RESPONSE_SUCCESS:
+        LOG_DBG("Response success");
+        if (mResponse.size() < mExpectedLength)
+        {
             mFailed = true;
-            ready = true;
-            break;
+            LOG_ERR("Invalid response length");
+        }
+        ready = true;
+        break;
+    case RESPONSE_WAITING:
+        LOG_DBG("Response waiting");
+        ready = false;
+        break;
+    default:
+        LOG_ERR("Response error");
+        LOG_HEXDUMP_DBG(mResponse.data(), mResponse.size(), "Response: ");
+        mFailed = true;
+        ready = true;
+        break;
     }
 
     return ready;

@@ -40,15 +40,8 @@ uint32_t Crypt::keyGen(uint32_t input)
 
 uint32_t Crypt::generateRandomToken()
 {
-    std::random_device rd;
-    std::mt19937 gen(rd());
-    std::uniform_int_distribution<> dis(0, 255);
-    uint32_t randomBytes = 0;
-    for (int i = 0; i < 4; ++i)
-    {
-        randomBytes = (randomBytes << 8) | dis(gen);
-    }
-    return randomBytes;
+    // TODO
+    return 0;
 }
 
 uint32_t Crypt::simpleCrypt(uint32_t inputData)
