@@ -26,7 +26,7 @@ std::vector<uint8_t> &MedtrumBasePacket::getRequest()
     return mRequest;
 }
 
-bool MedtrumBasePacket::onIndication(const uint8_t *data, size_t dataSize)
+void MedtrumBasePacket::onIndication(const uint8_t *data, size_t dataSize)
 {
     LOG_DBG("onIndication");
     // Response: Header: 4 bytes, Data: 15 bytes, CRC: 1 byte
@@ -36,7 +36,7 @@ bool MedtrumBasePacket::onIndication(const uint8_t *data, size_t dataSize)
     {
         LOG_ERR("Invalid data size");
         mFailed = true;
-        return true;
+        mReady = true;
     }
 
     // Check crc of data
@@ -85,21 +85,23 @@ bool MedtrumBasePacket::onIndication(const uint8_t *data, size_t dataSize)
     {
         return handleResponse();
     }
-    return false;
+    return;
 }
 
 bool MedtrumBasePacket::isFailed() const { return mFailed; }
 
-bool MedtrumBasePacket::handleResponse()
+bool MedtrumBasePacket::isReady() const { return mReady; }
+
+void MedtrumBasePacket::handleResponse()
 {
     LOG_DBG("Handling response");
     LOG_HEXDUMP_DBG(mResponse.data(), mResponse.size(), "Response: ");
-    bool ready = false;
     if (mResponse.size() < HEADER_SIZE + RESULT_SIZE)
     {
         LOG_ERR("Invalid response size");
         mFailed = true;
-        return true;
+        mReady = true;
+        return;
     }
 
     uint16_t responseCode = sys_get_le16(&mResponse[HEADER_SIZE]);
@@ -112,19 +114,17 @@ bool MedtrumBasePacket::handleResponse()
             mFailed = true;
             LOG_ERR("Invalid response length");
         }
-        ready = true;
+        mReady = true;
         break;
     case RESPONSE_WAITING:
         LOG_DBG("Response waiting");
-        ready = false;
+        mReady = false;
         break;
     default:
         LOG_ERR("Response error");
         LOG_HEXDUMP_DBG(mResponse.data(), mResponse.size(), "Response: ");
         mFailed = true;
-        ready = true;
+        mReady = true;
         break;
     }
-
-    return ready;
 }

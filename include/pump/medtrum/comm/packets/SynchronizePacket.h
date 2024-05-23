@@ -10,7 +10,7 @@ public:
     virtual ~SynchronizePacket() = default;
 
 protected:
-    bool handleResponse() override;
+    void handleResponse() override;
 };
 
 #endif // SYNCHRONIZE_PACKET_H

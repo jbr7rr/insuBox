@@ -3,7 +3,7 @@
 
 PumpService::PumpService() {
     // Constructor
-    mPumpDevice = new MedtrumDevice();
+    mPumpDevice = &mMedtrumDevice;
 }
 
 PumpService::~PumpService() {

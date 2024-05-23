@@ -30,13 +30,16 @@ private:
 
     PumpBleComm mPumpBleComm;
     std::optional<uint32_t> mDeviceSN = 0xE4B83178;
+
+    struct k_mutex mActivePacketMutex;
     std::unique_ptr<MedtrumBasePacket> mActivePacket = nullptr;
 
+    bool sendPacketAndWaitForResponse(std::unique_ptr<MedtrumBasePacket> &&packet, k_timeout_t timeout = K_SECONDS(60));
+
+    // Task stuff
     k_work_q mWorkQueue;
-    K_THREAD_STACK_MEMBER(mWorkQueueBuffer, 2048);
-
+    K_THREAD_STACK_MEMBER(mWorkQueueBuffer, KB(4));
     struct k_sem mCommandResponseSem;
-
     void _negotiateConnection();
 };
 

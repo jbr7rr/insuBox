@@ -11,7 +11,7 @@ public:
 
     std::vector<uint8_t> &getRequest() override;
 protected:
-    bool handleResponse() override;
+    void handleResponse() override;
 private:
     uint32_t mDeviceSN;
 };

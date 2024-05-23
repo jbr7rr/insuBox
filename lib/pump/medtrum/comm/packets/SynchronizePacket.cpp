@@ -26,11 +26,11 @@ SynchronizePacket::SynchronizePacket()
     mExpectedLength = RESP_SYNC_DATA_START + 1;
 }
 
-bool SynchronizePacket::handleResponse()
+void SynchronizePacket::handleResponse()
 {
     LOG_DBG("Handling SynchronizePacket response");
-    bool ready = MedtrumBasePacket::handleResponse();
-    if (ready && !mFailed)
+    MedtrumBasePacket::handleResponse();
+    if (mReady && !mFailed)
     {
         uint8_t state = mResponse[RESP_STATE_START];
 
@@ -46,5 +46,5 @@ bool SynchronizePacket::handleResponse()
         // TODO: Extract data from sync data (Notification Packet)
     }
 
-    return ready;
+    return;
 }

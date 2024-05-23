@@ -36,11 +36,11 @@ std::vector<uint8_t> &AuthPacket::getRequest()
     return mRequest;
 }
 
-bool AuthPacket::handleResponse()
+void AuthPacket::handleResponse()
 {
     LOG_DBG("Handling AuthPacket response");
-    bool ready = MedtrumBasePacket::handleResponse();
-    if (!mFailed && ready)
+    MedtrumBasePacket::handleResponse();
+    if (!mFailed && mReady)
     {
         uint8_t deviceType = mResponse[RESP_DEVICE_TYPE_START];
         uint8_t versionX = mResponse[RESP_VERSION_X_START];
@@ -49,5 +49,5 @@ bool AuthPacket::handleResponse()
         LOG_DBG("Device type: %d, Version: %d.%d.%d", deviceType, versionX, versionY, versionZ);
         // TODO: Do somethign with this or remove it
     }
-    return ready;
+    return;
 }
