@@ -5,6 +5,7 @@
 #include <pump/medtrum/comm/PumpBleComm.h>
 #include <pump/medtrum/comm/packets/AuthPacket.h>
 #include <pump/medtrum/comm/packets/MedtrumBasePacket.h>
+#include <pump/medtrum/comm/packets/NotificationPacket.h>
 
 #include <memory>
 
@@ -33,6 +34,8 @@ private:
 
     struct k_mutex mActivePacketMutex;
     std::unique_ptr<MedtrumBasePacket> mActivePacket = nullptr;
+
+    NotificationPacket mNotificationPacket;
 
     bool sendPacketAndWaitForResponse(std::unique_ptr<MedtrumBasePacket> &&packet, k_timeout_t timeout = K_SECONDS(60));
 

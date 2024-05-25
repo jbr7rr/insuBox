@@ -10,6 +10,7 @@
 
 LOG_MODULE_REGISTER(ib_medtrum_device);
 
+
 MedtrumDevice::MedtrumDevice() : mPumpBleComm(*this)
 {
     // Constructor
@@ -110,6 +111,7 @@ void MedtrumDevice::onNotification(uint8_t *data, size_t length)
 {
     // Callback when a notification is received
     LOG_DBG("Notification received");
+    mNotificationPacket.onNotification(data, length);
 }
 
 bool MedtrumDevice::sendPacketAndWaitForResponse(std::unique_ptr<MedtrumBasePacket> &&packet, k_timeout_t timeout)

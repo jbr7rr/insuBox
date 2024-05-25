@@ -19,8 +19,11 @@ TEST(MedtrumBasePacketTest, Given_CorrectBytes_Expect_PacketNotFailed)
     // act
     TestMedtrumBasePacket packet(99);
     packet.onIndication(chunk1.data(), chunk1.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk2.data(), chunk2.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk3.data(), chunk3.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk4.data(), chunk4.size());
 
     // assert
@@ -43,8 +46,11 @@ TEST(MedtrumBasePacketTest, Given_IncorrectCRCInFirstChunk_Expect_PacketFailed)
     // act
     TestMedtrumBasePacket packet(99);
     packet.onIndication(chunk1.data(), chunk1.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk2.data(), chunk2.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk3.data(), chunk3.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk4.data(), chunk4.size());
 
     // assert
@@ -63,8 +69,11 @@ TEST(MedtrumBasePacketTest, Given_IncorrectCRCInSecondChunk_Expect_PacketFailed)
     // act
     TestMedtrumBasePacket packet(99);
     packet.onIndication(chunk1.data(), chunk1.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk2.data(), chunk2.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk3.data(), chunk3.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk4.data(), chunk4.size());
 
     // assert
@@ -83,8 +92,11 @@ TEST(MedtrumBasePacketTest, Given_IncorrectCRCInThirdChunk_Expect_PacketFailed)
     // act
     TestMedtrumBasePacket packet(99);
     packet.onIndication(chunk1.data(), chunk1.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk2.data(), chunk2.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk3.data(), chunk3.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk4.data(), chunk4.size());
 
     // assert
@@ -103,8 +115,11 @@ TEST(MedtrumBasePacketTest, Given_IncorrectCRCInLastChunk_Expect_PacketFailed)
     // act
     TestMedtrumBasePacket packet(99);
     packet.onIndication(chunk1.data(), chunk1.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk2.data(), chunk2.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk3.data(), chunk3.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk4.data(), chunk4.size());
 
     // assert
@@ -123,8 +138,11 @@ TEST(MedtrumBasePacketTest, Given_IncorrectSequence_Expect_PacketFailed)
     // act
     TestMedtrumBasePacket packet(99);
     packet.onIndication(chunk1.data(), chunk1.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk2.data(), chunk2.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk3.data(), chunk3.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk4.data(), chunk4.size());
 
     // assert
@@ -143,8 +161,11 @@ TEST(MedtrumBasePacketTest, Given_IncorrectOpCode_Expect_PacketFailed)
     // act
     TestMedtrumBasePacket packet(90);
     packet.onIndication(chunk1.data(), chunk1.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk2.data(), chunk2.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk3.data(), chunk3.size());
+    EXPECT_FALSE(packet.isReady());
     packet.onIndication(chunk4.data(), chunk4.size());
 
     // assert

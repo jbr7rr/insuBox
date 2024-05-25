@@ -1,4 +1,5 @@
 #include <pump/medtrum/comm/packets/SynchronizePacket.h>
+#include <pump/medtrum/comm/packets/NotificationPacket.h>
 
 #include <pump/medtrum/comm/enums/CommandType.h>
 
@@ -36,14 +37,13 @@ void SynchronizePacket::handleResponse()
 
         LOG_DBG("SynchronizePacket: state: %d", state);
 
-        // uint16_t fieldMask = ByteArrayExtension::toInt(mResponse.data() + RESP_FIELDS_START, 2);
-        // std::vector<uint8_t> syncData(mResponse.begin() + RESP_SYNC_DATA_START, mResponse.end());
-
         uint16_t fieldMask = sys_get_le16(mResponse.data() + RESP_FIELDS_START);
 
         LOG_DBG("SynchronizePacket: fieldMask: %d", fieldMask);
 
         // TODO: Extract data from sync data (Notification Packet)
+        bool success = NotificationPacket().handleMaskedMessage(mResponse.data() + RESP_SYNC_DATA_START,
+                                                                mResponse.size() - RESP_SYNC_DATA_START);
     }
 
     return;
