@@ -5,11 +5,11 @@
 #include <stddef.h>
 #include <map>
 
-class MedtrumPump;
+class MedtrumPumpSync;
 
 class NotificationPacket {
 public:
-    NotificationPacket();
+    NotificationPacket(MedtrumPumpSync &pumpSync);
 
     void onNotification(const uint8_t* data, size_t dataSize);
     bool handleMaskedMessage(const uint8_t* data, size_t dataSize);
@@ -41,6 +41,7 @@ private:
     std::map<uint16_t, HandlerFunc> mMaskHandlers;
     std::map<uint16_t, size_t> mSizeMap;
 
+    MedtrumPumpSync &mPumpSync;
 };
 
 #endif // NOTIFICATION_PACKET_H

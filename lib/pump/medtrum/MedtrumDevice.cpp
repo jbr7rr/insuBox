@@ -11,7 +11,7 @@
 LOG_MODULE_REGISTER(ib_medtrum_device);
 
 
-MedtrumDevice::MedtrumDevice() : mPumpBleComm(*this)
+MedtrumDevice::MedtrumDevice() : mPumpBleComm(*this), mNotificationPacket(mPumpSync)
 {
     // Constructor
     mSubContainer.mDevice = this;
@@ -38,6 +38,13 @@ void MedtrumDevice::init()
     LOG_DBG("Initializing MedtrumDevice");
     mPumpBleComm.init();
     mPumpBleComm.connect(mDeviceSN.value_or(0));
+    mPumpSync.init();
+
+    // TEMP
+    auto state = mPumpSync.getPumpState();
+    LOG_DBG("Pump state: %d", static_cast<uint8_t>(state));
+    auto level = mPumpSync.getReservoirLevel();
+    LOG_DBG("Reservoir level: %f", static_cast<double>(level));
 }
 
 void MedtrumDevice::onReadyForCommands()
@@ -153,7 +160,7 @@ void MedtrumDevice::_negotiateConnection()
         return;
     }
 
-    result = sendPacketAndWaitForResponse(std::make_unique<SynchronizePacket>());
+    result = sendPacketAndWaitForResponse(std::make_unique<SynchronizePacket>(mPumpSync));
     if (!result)
     {
         LOG_ERR("Failed to synchronize");

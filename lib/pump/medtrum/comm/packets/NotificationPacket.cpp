@@ -1,4 +1,5 @@
 #include <pump/medtrum/comm/packets/NotificationPacket.h>
+#include <pump/medtrum/MedtrumPumpSync.h>
 
 #include <zephyr/sys/byteorder.h>
 
@@ -51,7 +52,7 @@ namespace
     constexpr size_t SIZE_UNUSED_LEGACY = 2;
 }
 
-NotificationPacket::NotificationPacket()
+NotificationPacket::NotificationPacket(MedtrumPumpSync &pumpSync) : mPumpSync(pumpSync)
 {
     mMaskHandlers = {{MASK_SUSPEND, &NotificationPacket::handleSuspend},
                      {MASK_NORMAL_BOLUS, &NotificationPacket::handleNormalBolus},
@@ -90,10 +91,14 @@ NotificationPacket::NotificationPacket()
 
 void NotificationPacket::onNotification(const uint8_t *data, size_t dataSize)
 {
-    int state = data[0];
-    LOG_DBG("Notification state: %d", state);
+    PumpState state = data[NOTIF_STATE_START];
+    LOG_DBG("Notification state: %d", static_cast<uint8_t>(state));
 
     // TODO: Handle state transitions
+    if (mPumpSync.getPumpState() != state)
+    {
+        mPumpSync.setPumpState(state);
+    }
 
     if (dataSize > NOTIF_STATE_END + SIZE_FIELD_MASK)
     {
@@ -198,10 +203,10 @@ bool NotificationPacket::checkDataValidity(uint16_t fieldMask, const uint8_t *da
     if (fieldMask & MASK_RESERVOIR)
     {
         size_t offset = calculateOffset(fieldMask, MASK_RESERVOIR);
-        uint16_t reservoirValue = sys_get_le16(data + offset) * 0.05;
+        float reservoirValue = sys_get_le16(data + offset) * 0.05;
         if (reservoirValue < 0 || reservoirValue > 400)
         {
-            LOG_ERR("Invalid reservoir value: %d", reservoirValue);
+            LOG_ERR("Invalid reservoir value: %f", static_cast<double>(reservoirValue));
             return false;
         }
     }
@@ -259,6 +264,9 @@ size_t NotificationPacket::handleReservoir(const uint8_t *data)
 {
     LOG_DBG("Reservoir data received");
     // TODO: Handle reservoir
+    float reservoirValue = sys_get_le16(data) * 0.05;
+    LOG_DBG("Reservoir value: %f", static_cast<double>(reservoirValue));
+    mPumpSync.setReservoirLevel(reservoirValue);
     return SIZE_RESERVOIR;
 }
 

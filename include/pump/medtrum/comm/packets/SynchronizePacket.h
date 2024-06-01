@@ -3,14 +3,19 @@
 
 #include <pump/medtrum/comm/packets/MedtrumBasePacket.h>
 
+class MedtrumPumpSync;
+
 class SynchronizePacket : public MedtrumBasePacket
 {
 public:
-    SynchronizePacket();
+    SynchronizePacket(MedtrumPumpSync &pumpSync);
     virtual ~SynchronizePacket() = default;
 
 protected:
     void handleResponse() override;
+
+private:
+    MedtrumPumpSync &mPumpSync;
 };
 
 #endif // SYNCHRONIZE_PACKET_H

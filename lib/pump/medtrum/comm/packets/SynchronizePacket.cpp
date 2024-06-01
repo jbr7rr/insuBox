@@ -1,5 +1,6 @@
-#include <pump/medtrum/comm/packets/SynchronizePacket.h>
+#include <pump/medtrum/MedtrumPumpSync.h>
 #include <pump/medtrum/comm/packets/NotificationPacket.h>
+#include <pump/medtrum/comm/packets/SynchronizePacket.h>
 
 #include <pump/medtrum/comm/enums/CommandType.h>
 
@@ -21,7 +22,7 @@ namespace
     constexpr uint8_t MASK_EXTENDED_BOLUS = 0x04;
 }
 
-SynchronizePacket::SynchronizePacket()
+SynchronizePacket::SynchronizePacket(MedtrumPumpSync &pumpSync) : mPumpSync(pumpSync)
 {
     mOpCode = CommandType::SYNCHRONIZE;
     mExpectedLength = RESP_SYNC_DATA_START + 1;
@@ -33,17 +34,22 @@ void SynchronizePacket::handleResponse()
     MedtrumBasePacket::handleResponse();
     if (mReady && !mFailed)
     {
-        uint8_t state = mResponse[RESP_STATE_START];
+        PumpState state = mResponse[RESP_STATE_START];
 
-        LOG_DBG("SynchronizePacket: state: %d", state);
+        LOG_DBG("SynchronizePacket: state: %d", static_cast<uint8_t>(state));
+
+        if (mPumpSync.getPumpState() != state)
+        {
+            mPumpSync.setPumpState(state);
+        }
 
         uint16_t fieldMask = sys_get_le16(mResponse.data() + RESP_FIELDS_START);
 
         LOG_DBG("SynchronizePacket: fieldMask: %d", fieldMask);
 
         // TODO: Extract data from sync data (Notification Packet)
-        bool success = NotificationPacket().handleMaskedMessage(mResponse.data() + RESP_SYNC_DATA_START,
-                                                                mResponse.size() - RESP_SYNC_DATA_START);
+        bool success = NotificationPacket(mPumpSync).handleMaskedMessage(mResponse.data() + RESP_SYNC_DATA_START,
+                                                                         mResponse.size() - RESP_SYNC_DATA_START);
     }
 
     return;
