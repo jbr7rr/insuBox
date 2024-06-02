@@ -113,7 +113,7 @@ bool NotificationPacket::handleMaskedMessage(const uint8_t *data, size_t dataSiz
     size_t expectedLength = calculateExpectedLengthBasedOnFieldMask(fieldMask);
     if (dataSize < expectedLength)
     {
-        LOG_ERR("Incorrect message length. Expected at least %d bytes.", expectedLength);
+        LOG_ERR("Incorrect message length. Expected at least %d bytes. but got: %d", expectedLength, dataSize);
         return false;
     }
 

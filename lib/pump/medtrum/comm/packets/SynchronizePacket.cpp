@@ -14,8 +14,6 @@ namespace
 {
     constexpr uint8_t RESP_STATE_START = 6;
     constexpr uint8_t RESP_FIELDS_START = 7;
-    constexpr uint8_t RESP_FIELDS_END = RESP_FIELDS_START + 2;
-    constexpr uint8_t RESP_SYNC_DATA_START = 9;
 
     constexpr uint8_t MASK_SUSPEND = 0x01;
     constexpr uint8_t MASK_NORMAL_BOLUS = 0x02;
@@ -25,7 +23,7 @@ namespace
 SynchronizePacket::SynchronizePacket(MedtrumPumpSync &pumpSync) : mPumpSync(pumpSync)
 {
     mOpCode = CommandType::SYNCHRONIZE;
-    mExpectedLength = RESP_SYNC_DATA_START + 1;
+    mExpectedLength = RESP_FIELDS_START + 3;
 }
 
 void SynchronizePacket::handleResponse()
@@ -46,10 +44,8 @@ void SynchronizePacket::handleResponse()
         uint16_t fieldMask = sys_get_le16(mResponse.data() + RESP_FIELDS_START);
 
         LOG_DBG("SynchronizePacket: fieldMask: %d", fieldMask);
-
-        // TODO: Extract data from sync data (Notification Packet)
-        bool success = NotificationPacket(mPumpSync).handleMaskedMessage(mResponse.data() + RESP_SYNC_DATA_START,
-                                                                         mResponse.size() - RESP_SYNC_DATA_START);
+        bool success = NotificationPacket(mPumpSync).handleMaskedMessage(mResponse.data() + RESP_FIELDS_START,
+                                                                         mResponse.size() - RESP_FIELDS_START);
     }
 
     return;
