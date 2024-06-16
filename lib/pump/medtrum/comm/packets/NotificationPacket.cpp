@@ -94,7 +94,6 @@ void NotificationPacket::onNotification(const uint8_t *data, size_t dataSize)
     PumpState state = data[NOTIF_STATE_START];
     LOG_DBG("Notification state: %d", static_cast<uint8_t>(state));
 
-    // TODO: Handle state transitions
     if (mPumpSync.getPumpState() != state)
     {
         mPumpSync.setPumpState(state);

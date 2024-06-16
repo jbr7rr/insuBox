@@ -1,5 +1,5 @@
-#include <pump/medtrum/comm/PumpBleComm.h>
 #include "PumpScanner.h"
+#include <pump/medtrum/comm/PumpBleComm.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -7,11 +7,13 @@ LOG_MODULE_REGISTER(ib_medtrum_pump_scanner);
 
 PumpScanner::scanRequest PumpScanner::mScanRequest = {};
 
-// TODO: When creating a connection we have to disable the scanner, so if we want multiple connections we need to handle this, maybe setup a general scanner in BLEComm ?
+// TODO: When creating a connection we have to disable the scanner, so if we want multiple connections we need to handle
+// this, maybe setup a general scanner in BLEComm ?
 
 namespace
 {
-    constexpr uint16_t MANUFACTURER_ID = 18305; // Medtrum manufacturer ID
+    constexpr uint16_t MANUFACTURER_ID = 18305;   // Medtrum manufacturer ID
+    constexpr uint8_t BOOTLOADER_DEVICE_TYPE = 1; // Bootloader device type
 }
 
 bool PumpScanner::startScan(scanRequest request)
@@ -45,8 +47,7 @@ bool PumpScanner::startScan(scanRequest request)
     return true;
 }
 
-void PumpScanner::scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type,
-                          struct net_buf_simple *buf)
+void PumpScanner::scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_type, struct net_buf_simple *buf)
 {
     // Extract manufacturer data
     IScanCallback::ManufacturerData mfgData = {};
@@ -57,12 +58,14 @@ void PumpScanner::scan_cb(const bt_addr_le_t *addr, int8_t rssi, uint8_t adv_typ
     {
         // Found Medtrum manufacturer data
         LOG_DBG("Found Medtrum device");
-        LOG_DBG("Device SN: %02X %02X %02X %02X", (mfgData.deviceSN >> 24) & 0xFF, (mfgData.deviceSN >> 16) & 0xFF, (mfgData.deviceSN >> 8) & 0xFF, mfgData.deviceSN & 0xFF);
+        LOG_DBG("Device SN: %02X %02X %02X %02X", (mfgData.deviceSN >> 24) & 0xFF, (mfgData.deviceSN >> 16) & 0xFF,
+                (mfgData.deviceSN >> 8) & 0xFF, mfgData.deviceSN & 0xFF);
         LOG_DBG("Device Type: %d", mfgData.deviceType);
         LOG_DBG("Version: %d", mfgData.version);
 
-        // Check if the device is the target device
-        if (mScanRequest.instance != nullptr && mScanRequest.targetDeviceSN == mfgData.deviceSN)
+        // Check if the device is the target device, and filter out bootloader device
+        if (mScanRequest.instance != nullptr && mScanRequest.targetDeviceSN == mfgData.deviceSN &&
+            mfgData.deviceType != BOOTLOADER_DEVICE_TYPE)
         {
             bt_le_scan_stop();
 
@@ -107,9 +110,9 @@ bool PumpScanner::data_cb(struct bt_data *data, void *user_data)
             }
         }
         return true;
-        break;
     default:
         return true;
     }
+
     return false;
 }

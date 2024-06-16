@@ -36,9 +36,9 @@ void MedtrumDevice::init()
 {
     // Initialize the MedtrumDevice
     LOG_DBG("Initializing MedtrumDevice");
+    mPumpSync.init();
     mPumpBleComm.init();
     mPumpBleComm.connect(mDeviceSN.value_or(0));
-    mPumpSync.init();
 
     // TEMP
     auto state = mPumpSync.getPumpState();

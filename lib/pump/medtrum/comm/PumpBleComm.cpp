@@ -70,7 +70,6 @@ bool PumpBleComm::writeCommand(uint8_t *data, size_t length)
         return false;
     }
     // Write a command to the pump
-    // TODO: Get rid of new/delete ?
     mWriteCommandPackets.emplace(data, length, mSequenceNumber);
     submitWork(mSubContainer.writeWork);
     return true;

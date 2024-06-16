@@ -65,7 +65,6 @@ private:
         }
     };
 
-    // TODO: We need to check the impact of these maps if it doesn't grow to large or something
     static std::map<bt_addr_le_t, BleConnection *, CompareBtAddr> mConnections;
 
     static void connected(struct bt_conn *conn, uint8_t err);
