@@ -31,7 +31,7 @@ private:
     } mSubContainer;
 
     PumpBleComm mPumpBleComm;
-    std::optional<uint32_t> mDeviceSN = 0xE4B83178;
+    std::optional<uint32_t> mDeviceSN = 0x39B36926;
 
     struct k_mutex mActivePacketMutex;
     std::unique_ptr<MedtrumBasePacket> mActivePacket = nullptr;
