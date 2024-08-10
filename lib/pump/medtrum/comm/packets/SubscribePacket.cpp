@@ -1,6 +1,5 @@
 #include <pump/medtrum/comm/enums/CommandType.h>
 #include <pump/medtrum/comm/packets/SubscribePacket.h>
-
 #include <pump/medtrum/utils/Vector.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -11,7 +10,6 @@ SubscribePacket::SubscribePacket()
 {
     // Initialize member variables
     mOpCode = CommandType::SUBSCRIBE;
-    mExpectedLength = 0; // Set the expected length based on your requirements
 }
 
 std::vector<uint8_t> &SubscribePacket::getRequest()
