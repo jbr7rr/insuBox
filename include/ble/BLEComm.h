@@ -67,6 +67,8 @@ private:
 
     static std::map<bt_addr_le_t, BleConnection *, CompareBtAddr> mConnections;
 
+    static struct k_sem semBtReady;
+
     static void connected(struct bt_conn *conn, uint8_t err);
     static void disconnected(struct bt_conn *conn, uint8_t reason);
     static void securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err);

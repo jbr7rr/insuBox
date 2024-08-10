@@ -12,6 +12,7 @@
 LOG_MODULE_REGISTER(ib_ble);
 
 std::map<bt_addr_le_t, BleConnection *, BLEComm::CompareBtAddr> BLEComm::mConnections;
+K_SEM_DEFINE(BLEComm::semBtReady, 0, 1);
 
 namespace
 {
@@ -170,16 +171,10 @@ void BLEComm::btReady(int err)
     if (err != 0)
     {
         LOG_ERR("Bluetooth failed to initialise: %d", err);
+        // TODO: Handle errors
     }
-    else
-    {
-        if (IS_ENABLED(CONFIG_SETTINGS))
-        {
-            settings_load();
-        }
-        LOG_DBG("Bluetooth initialized");
-    }
-    bt_conn_cb_register(&connCallbacks);
+
+    k_sem_give(&semBtReady);
 }
 
 void BLEComm::init()
@@ -191,4 +186,14 @@ void BLEComm::init()
     {
         LOG_ERR("Bluetooth enable failed: %d", err);
     }
+
+    k_sem_take(&semBtReady, K_FOREVER);
+
+    if (IS_ENABLED(CONFIG_SETTINGS))
+    {
+        settings_load();
+    }
+    LOG_DBG("Bluetooth initialized");
+
+    bt_conn_cb_register(&connCallbacks);
 }

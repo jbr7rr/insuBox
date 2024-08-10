@@ -10,11 +10,6 @@ namespace
 extern "C" int main(void)
 {
     bleComm.init();
-
-    // Wait for the BLE stack to be ready
-    // TODO: This should be done via callback or event
-    k_sleep(K_SECONDS(1));
-
     pumpService.init();
     return 0;
 }
