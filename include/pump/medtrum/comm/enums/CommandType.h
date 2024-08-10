@@ -30,7 +30,10 @@ public:
     };
 
     // Allow implicit conversion to uint8_t
-    operator uint8_t() const { return value; }
+    operator uint8_t() const
+    {
+        return value;
+    }
 
     // Allow implicit conversion from Type
     CommandType(Type v) : value(v) {}

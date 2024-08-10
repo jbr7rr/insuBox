@@ -68,4 +68,7 @@ size_t WriteCommandPackets::getNextPacket(uint8_t *packet)
     return dataLength + 5; // Header + data + crc
 }
 
-bool WriteCommandPackets::allPacketsConsumed() const { return mPacketsConsumed; }
+bool WriteCommandPackets::allPacketsConsumed() const
+{
+    return mPacketsConsumed;
+}

@@ -98,6 +98,12 @@ uint32_t Crypt::changeByTable(uint32_t inputData, const std::array<uint8_t, 256>
     return result;
 }
 
-uint32_t Crypt::rotatoLeft(uint32_t x, int s, int n) { return (x << n) | (x >> (s - n)); }
+uint32_t Crypt::rotatoLeft(uint32_t x, int s, int n)
+{
+    return (x << n) | (x >> (s - n));
+}
 
-uint32_t Crypt::rotatoRight(uint32_t x, int s, int n) { return (x >> n) | (x << (s - n)); }
+uint32_t Crypt::rotatoRight(uint32_t x, int s, int n)
+{
+    return (x >> n) | (x << (s - n));
+}

@@ -4,8 +4,14 @@
 class TestMedtrumBasePacket : public MedtrumBasePacket
 {
 public:
-    TestMedtrumBasePacket(uint8_t opcode = 0x00) { mOpCode = opcode; }
-    std::vector<uint8_t> getResponse() const { return mResponse; }
+    TestMedtrumBasePacket(uint8_t opcode = 0x00)
+    {
+        mOpCode = opcode;
+    }
+    std::vector<uint8_t> getResponse() const
+    {
+        return mResponse;
+    }
 };
 
 TEST(MedtrumBasePacketTest, Given_CorrectBytes_Expect_PacketNotFailed)

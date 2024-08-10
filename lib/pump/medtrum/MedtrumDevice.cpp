@@ -10,7 +10,6 @@
 
 LOG_MODULE_REGISTER(ib_medtrum_device);
 
-
 MedtrumDevice::MedtrumDevice() : mPumpBleComm(*this), mNotificationPacket(mPumpSync)
 {
     // Constructor

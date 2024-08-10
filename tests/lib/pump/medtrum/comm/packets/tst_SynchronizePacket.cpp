@@ -6,7 +6,10 @@
 class SynchronizePacketTest : public ::testing::Test
 {
 protected:
-    virtual void SetUp() override { mPumpSync.init(); }
+    virtual void SetUp() override
+    {
+        mPumpSync.init();
+    }
     virtual void TearDown() override {}
 
     MedtrumPumpSync mPumpSync;

@@ -6,7 +6,10 @@
 class AuthPacketTest : public ::testing::Test
 {
 protected:
-    virtual void SetUp() override { mPumpSync.init(); }
+    virtual void SetUp() override
+    {
+        mPumpSync.init();
+    }
     virtual void TearDown() override {}
 
     MedtrumPumpSync mPumpSync;
@@ -62,7 +65,7 @@ TEST_F(AuthPacketTest, GetRequest_Given_Response_When_MessageIsIncorrect_Then_Da
 
     // act
     AuthPacket authPacket(mPumpSync, 0);
-    
+
     uint8_t buffer[WriteCommandPackets::PACKET_SIZE];
     WriteCommandPackets command(response.data(), response.size(), 0);
     size_t length = command.getNextPacket(buffer);
@@ -99,7 +102,7 @@ TEST_F(AuthPacketTest, GetRequest_Given_Response_When_MessageIsCorrect_Then_Data
 
     // act
     AuthPacket authPacket(mPumpSync, 0);
-    
+
     uint8_t buffer[WriteCommandPackets::PACKET_SIZE];
     WriteCommandPackets command(response.data(), response.size(), 0);
     size_t length = command.getNextPacket(buffer);

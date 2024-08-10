@@ -1,5 +1,5 @@
-#include <pump/medtrum/comm/packets/NotificationPacket.h>
 #include <pump/medtrum/MedtrumPumpSync.h>
+#include <pump/medtrum/comm/packets/NotificationPacket.h>
 
 #include <zephyr/sys/byteorder.h>
 

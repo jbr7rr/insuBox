@@ -1,7 +1,7 @@
+#include <cmath>
 #include <pump/medtrum/comm/enums/CommandType.h>
 #include <pump/medtrum/comm/packets/SetBolusPacket.h>
 #include <pump/medtrum/utils/Vector.h>
-#include <cmath>
 
 SetBolusPacket::SetBolusPacket(float insulin) : mInsulin(insulin)
 {

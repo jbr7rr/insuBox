@@ -2,7 +2,8 @@
 #include <pump/medtrum/comm/WriteCommandPackets.h>
 #include <vector>
 
-TEST(WriteCommandPacketsTest, Given_14LongCommand_Expect_OnePacket) {
+TEST(WriteCommandPacketsTest, Given_14LongCommand_Expect_OnePacket)
+{
     // Arrange
     std::vector<uint8_t> input = {5, 2, 0, 0, 0, 0, 235, 57, 134, 200};
     std::vector<uint8_t> expected = {14, 5, 0, 0, 2, 0, 0, 0, 0, 235, 57, 134, 200, 163, 0};
@@ -18,9 +19,11 @@ TEST(WriteCommandPacketsTest, Given_14LongCommand_Expect_OnePacket) {
     EXPECT_EQ(output, expected);
 }
 
-TEST(WriteCommandPacketsTest, Given_41LongCommand_Expect_ThreePackets) {
+TEST(WriteCommandPacketsTest, Given_41LongCommand_Expect_ThreePackets)
+{
     // Arrange
-    std::vector<uint8_t> input = {18, 0, 12, 0, 3, 0, 1, 30, 32, 3, 16, 14, 0, 0, 1, 7, 0, 160, 2, 240, 96, 2, 104, 33, 2, 224, 225, 1, 192, 3, 2, 236, 36, 2, 100, 133, 2};
+    std::vector<uint8_t> input = {18,  0,  12, 0,   3,  0, 1,   30,  32, 3,   16, 14, 0,   0,  1, 7,   0,   160, 2,
+                                  240, 96, 2,  104, 33, 2, 224, 225, 1,  192, 3,  2,  236, 36, 2, 100, 133, 2};
     std::vector<uint8_t> expected1 = {41, 18, 0, 1, 0, 12, 0, 3, 0, 1, 30, 32, 3, 16, 14, 0, 0, 1, 7, 135};
     std::vector<uint8_t> expected2 = {41, 18, 0, 2, 0, 160, 2, 240, 96, 2, 104, 33, 2, 224, 225, 1, 192, 3, 2, 253};
     std::vector<uint8_t> expected3 = {41, 18, 0, 3, 236, 36, 2, 100, 133, 2, 131, 167};

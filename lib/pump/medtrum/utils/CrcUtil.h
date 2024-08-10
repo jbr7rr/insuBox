@@ -1,10 +1,8 @@
 #ifndef CRCUTIL_H
 #define CRCUTIL_H
 
-
 #include <cstdint>
 #include <cstring>
-
 
 class CrcUtil
 {

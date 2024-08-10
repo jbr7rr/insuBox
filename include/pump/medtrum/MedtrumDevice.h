@@ -2,11 +2,11 @@
 #define MEDTRUM_DEVICE_H
 
 #include <pump/IPumpDevice.h>
+#include <pump/medtrum/MedtrumPumpSync.h>
 #include <pump/medtrum/comm/PumpBleComm.h>
 #include <pump/medtrum/comm/packets/AuthPacket.h>
 #include <pump/medtrum/comm/packets/MedtrumBasePacket.h>
 #include <pump/medtrum/comm/packets/NotificationPacket.h>
-#include <pump/medtrum/MedtrumPumpSync.h>
 
 #include <memory>
 

@@ -1,17 +1,17 @@
 #include <pump/PumpService.h>
 #include <pump/medtrum/MedtrumDevice.h>
 
-PumpService::PumpService() {
-    // Constructor
+PumpService::PumpService()
+{
     mPumpDevice = &mMedtrumDevice;
 }
 
-PumpService::~PumpService() {
-    // Destructor
+PumpService::~PumpService()
+{
     delete mPumpDevice;
 }
 
-void PumpService::init() {
-    // Initialize the PumpDevice
+void PumpService::init()
+{
     mPumpDevice->init();
 }

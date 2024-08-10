@@ -88,9 +88,15 @@ void MedtrumBasePacket::onIndication(const uint8_t *data, size_t dataSize)
     return;
 }
 
-bool MedtrumBasePacket::isFailed() const { return mFailed; }
+bool MedtrumBasePacket::isFailed() const
+{
+    return mFailed;
+}
 
-bool MedtrumBasePacket::isReady() const { return mReady; }
+bool MedtrumBasePacket::isReady() const
+{
+    return mReady;
+}
 
 void MedtrumBasePacket::handleResponse()
 {

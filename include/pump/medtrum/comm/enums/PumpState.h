@@ -1,6 +1,5 @@
 #include <cstdint>
 
-
 class PumpState
 {
 public:
@@ -36,7 +35,10 @@ public:
     PumpState() : value(NONE) {}
 
     // Allow implicit conversion to uint8_t
-    operator uint8_t() const { return value; }
+    operator uint8_t() const
+    {
+        return value;
+    }
 
     // Allow implicit conversion from Type
     PumpState(Type v) : value(v) {}
