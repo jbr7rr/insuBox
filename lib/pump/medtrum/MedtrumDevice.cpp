@@ -153,7 +153,7 @@ void MedtrumDevice::_negotiateConnection()
     // Negotiate the connection
     LOG_DBG("Negotiating connection");
 
-    bool result = sendPacketAndWaitForResponse(std::make_unique<AuthPacket>(mDeviceSN.value_or(0)));
+    bool result = sendPacketAndWaitForResponse(std::make_unique<AuthPacket>(mPumpSync, mDeviceSN.value_or(0)));
     if (!result)
     {
         LOG_ERR("Failed to authenticate");

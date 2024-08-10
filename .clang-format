@@ -16,6 +16,7 @@ BraceWrapping:
     BeforeElse: true
     IndentBraces: false
 AllowShortIfStatementsOnASingleLine: false
+AllowShortFunctionsOnASingleLine: Empty
 IndentCaseLabels: false
 ColumnLimit: 120
 AccessModifierOffset: -4

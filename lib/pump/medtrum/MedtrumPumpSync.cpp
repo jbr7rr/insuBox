@@ -7,14 +7,18 @@
 
 namespace
 {
-    constexpr char subKey[] = "medtrum";
-    constexpr char pumpStateKey[] = "pump_state";
-    constexpr char reservoirLevelKey[] = "reservoir_level";
+    constexpr char subKey[] = "mt";
+    constexpr char pumpStateKey[] = "state";
+    constexpr char reservoirLevelKey[] = "level";
+    constexpr char sessionTokenKey[] = "token";
 }
 
 LOG_MODULE_REGISTER(ib_medtrum_pump_sync);
 
-MedtrumPumpSync::MedtrumPumpSync() { LOG_DBG("Initializing MedtrumPumpSync"); }
+MedtrumPumpSync::MedtrumPumpSync()
+{
+    LOG_DBG("Initializing MedtrumPumpSync");
+}
 
 void MedtrumPumpSync::init()
 {
@@ -30,10 +34,7 @@ void MedtrumPumpSync::init()
         this);
 }
 
-MedtrumPumpSync::~MedtrumPumpSync()
-{
-    // Optional: handle any cleanup if necessary
-}
+MedtrumPumpSync::~MedtrumPumpSync() {}
 
 void MedtrumPumpSync::setPumpState(PumpState state)
 {
@@ -42,7 +43,10 @@ void MedtrumPumpSync::setPumpState(PumpState state)
     settings_save_one(key.c_str(), &state, sizeof(state));
 }
 
-PumpState MedtrumPumpSync::getPumpState() { return mPumpState.load(); }
+PumpState MedtrumPumpSync::getPumpState()
+{
+    return mPumpState.load();
+}
 
 void MedtrumPumpSync::setReservoirLevel(float level)
 {
@@ -51,7 +55,42 @@ void MedtrumPumpSync::setReservoirLevel(float level)
     settings_save_one(key.c_str(), &level, sizeof(level));
 }
 
-float MedtrumPumpSync::getReservoirLevel() { return mReservoirLevel.load(); }
+float MedtrumPumpSync::getReservoirLevel()
+{
+    return mReservoirLevel.load();
+}
+
+void MedtrumPumpSync::setSessionToken(uint32_t token)
+{
+    mSessionToken.store(token);
+    std::string key = std::string(subKey) + "/" + sessionTokenKey;
+    settings_save_one(key.c_str(), &token, sizeof(token));
+}
+
+uint32_t MedtrumPumpSync::getSessionToken()
+{
+    return mSessionToken.load();
+}
+
+void MedtrumPumpSync::setDeviceType(uint8_t type)
+{
+    mDeviceType.store(type);
+}
+
+uint8_t MedtrumPumpSync::getDeviceType()
+{
+    return mDeviceType.load();
+}
+
+void MedtrumPumpSync::setSwVersion(std::string version)
+{
+    mSwVersion = version;
+}
+
+std::string MedtrumPumpSync::getSwVersion()
+{
+    return mSwVersion;
+}
 
 int MedtrumPumpSync::loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param)
 {
@@ -79,6 +118,18 @@ int MedtrumPumpSync::loadCb(const char *key, size_t len, settings_read_cb read_c
             return -1;
         }
         mReservoirLevel.store(level);
+    }
+    else if (strcmp(key, sessionTokenKey) == 0)
+    {
+        LOG_DBG("Loading session token");
+        uint32_t token;
+        int len = read_cb(cb_arg, &token, sizeof(token));
+        if (len != sizeof(token))
+        {
+            LOG_ERR("Failed to read session token from settings");
+            return -1;
+        }
+        mSessionToken.store(token);
     }
     else
     {

@@ -15,6 +15,7 @@ set(SOURCES
     src/main.cpp
     crypt/tst_Crypt.cpp
     comm/tst_WriteCommandPackets.cpp
+    comm/packets/tst_AuthPacket.cpp
     comm/packets/tst_MedtrumBasePacket.cpp
 )
 

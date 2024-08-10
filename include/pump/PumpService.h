@@ -16,7 +16,6 @@ public:
 private:
     IPumpDevice *mPumpDevice;
 
-    // TODO: Determine build time which pump to use
     MedtrumDevice mMedtrumDevice;
 };
 

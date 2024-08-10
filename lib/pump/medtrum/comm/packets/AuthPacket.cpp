@@ -16,7 +16,7 @@ namespace
     constexpr size_t RESP_VERSION_Z_START = 10;
 }
 
-AuthPacket::AuthPacket(uint32_t deviceSN) : mDeviceSN(deviceSN)
+AuthPacket::AuthPacket(MedtrumPumpSync &pumpSync, uint32_t deviceSN) : mPumpSync(pumpSync), mDeviceSN(deviceSN)
 {
     mOpCode = CommandType::AUTH_REQ;
     mExpectedLength = RESP_VERSION_Z_START + 1;
@@ -24,8 +24,7 @@ AuthPacket::AuthPacket(uint32_t deviceSN) : mDeviceSN(deviceSN)
 
 std::vector<uint8_t> &AuthPacket::getRequest()
 {
-    // TODO: Save token somewhere, and ability to get external token
-    uint32_t sessionToken = 0;
+    uint32_t sessionToken = mPumpSync.getSessionToken();
     uint32_t key = Crypt::keyGen(mDeviceSN);
 
     mRequest.push_back(mOpCode);
@@ -47,7 +46,10 @@ void AuthPacket::handleResponse()
         uint8_t versionY = mResponse[RESP_VERSION_Y_START];
         uint8_t versionZ = mResponse[RESP_VERSION_Z_START];
         LOG_DBG("Device type: %d, Version: %d.%d.%d", deviceType, versionX, versionY, versionZ);
-        // TODO: Do somethign with this or remove it
+
+        mPumpSync.setDeviceType(deviceType);
+        mPumpSync.setSwVersion(std::to_string(versionX) + "." + std::to_string(versionY) + "." +
+                               std::to_string(versionZ));
     }
     return;
 }
