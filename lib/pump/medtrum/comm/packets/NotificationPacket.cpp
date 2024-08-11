@@ -184,7 +184,7 @@ bool NotificationPacket::checkDataValidity(uint16_t fieldMask, const uint8_t *da
     if (fieldMask & MASK_BASAL)
     {
         size_t offset = calculateOffset(fieldMask, MASK_BASAL);
-        uint16_t basalPatchId = sys_get_le16(data + offset + 3);
+        // uint16_t basalPatchId = sys_get_le16(data + offset + 3);
         uint32_t basalRateAndDelivery = sys_get_le32(data + offset + 9);
         double basalRate = (basalRateAndDelivery & 0xFFF) * 0.05;
         // if (medtrumPump.patchId != 0 && basalPatchId != medtrumPump.patchId)
@@ -212,8 +212,8 @@ bool NotificationPacket::checkDataValidity(uint16_t fieldMask, const uint8_t *da
 
     if (fieldMask & MASK_STORAGE)
     {
-        size_t offset = calculateOffset(fieldMask, MASK_STORAGE);
-        uint16_t patchId = sys_get_le16(data + offset + 2);
+        // size_t offset = calculateOffset(fieldMask, MASK_STORAGE);
+        // uint16_t patchId = sys_get_le16(data + offset + 2);
         // if (medtrumPump.patchId != 0 && patchId != medtrumPump.patchId)
         // {
         //     LOG_ERR("Mismatched patch ID: %lu vs stored patchID: %lu", patchId, medtrumPump.patchId);
@@ -226,7 +226,7 @@ bool NotificationPacket::checkDataValidity(uint16_t fieldMask, const uint8_t *da
 size_t NotificationPacket::handleSuspend(const uint8_t *data)
 {
     LOG_DBG("Suspend data received");
-    uint32_t suspendTime = sys_get_le32(data); // TODO: Convert to time
+    // uint32_t suspendTime = sys_get_le32(data); // TODO: Convert to time
 
     return SIZE_SUSPEND;
 }

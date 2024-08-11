@@ -1,5 +1,6 @@
 
 zephyr_library()
+zephyr_library_compile_options(-Wall -Werror)
 zephyr_library_sources(MedtrumDevice.cpp)
 zephyr_library_sources(MedtrumPumpSync.cpp)
 zephyr_library_sources(comm/WriteCommandPackets.cpp)

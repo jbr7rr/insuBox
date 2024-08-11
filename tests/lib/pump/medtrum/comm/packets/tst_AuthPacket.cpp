@@ -52,7 +52,6 @@ TEST_F(AuthPacketTest, onIndication_Given_Response_When_MessageIsTooShort_Then_D
     uint8_t deviceType = 80;
     uint8_t swVerX = 12;
     uint8_t swVerY = 1;
-    uint8_t swVerZ = 3;
 
     std::vector<uint8_t> response = {opcode,
                                      static_cast<uint8_t>(responseCode & 0xFF),

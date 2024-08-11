@@ -7,7 +7,7 @@
 class CrcUtil
 {
 public:
-    static uint8_t crc8(const uint8_t *value, size_t size, uint8_t crc8 = 0);
+    static uint8_t crc8(const uint8_t *value, size_t size, uint8_t initial = 0);
 
 private:
 };
