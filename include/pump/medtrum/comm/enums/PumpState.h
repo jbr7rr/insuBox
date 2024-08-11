@@ -1,9 +1,12 @@
+#ifndef MEDTRUM_PUMP_STATE_H
+#define MEDTRUM_PUMP_STATE_H
+
 #include <cstdint>
 
 class PumpState
 {
 public:
-    enum Type : uint8_t
+    enum State : uint8_t
     {
         NONE = 0,
         IDLE = 1,
@@ -40,12 +43,14 @@ public:
         return value;
     }
 
-    // Allow implicit conversion from Type
-    PumpState(Type v) : value(v) {}
+    // Allow implicit conversion from State
+    PumpState(State v) : value(v) {}
 
     // Allow implicit conversion from uint8_t
-    PumpState(uint8_t v) : value(static_cast<Type>(v)) {}
+    PumpState(uint8_t v) : value(static_cast<State>(v)) {}
 
 private:
-    Type value;
+    State value;
 };
+
+#endif // MEDTRUM_PUMP_STATE_H

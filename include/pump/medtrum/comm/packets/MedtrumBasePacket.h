@@ -49,7 +49,7 @@ protected:
     bool mFailed = false;
     bool mReady = false;
     uint8_t mPkgIndex = 0;
-    uint8_t mExpectedLength = 7;
+    size_t mExpectedLength = 7;
     std::vector<uint8_t> mRequest = {};
     std::vector<uint8_t> mResponse = {};
 

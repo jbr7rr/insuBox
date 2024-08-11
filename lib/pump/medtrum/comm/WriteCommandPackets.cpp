@@ -40,7 +40,7 @@ size_t WriteCommandPackets::getNextPacket(uint8_t *packet)
         return 0;
     }
 
-    if (mDataSize >= 15)
+    if (mDataSize > 15)
     {
         // Single packet has index of 0, multiple packets have index of 1, 2, 3, ...
         mHeader[PACKAGE_IDX_OFFSET]++; // Increment the package index

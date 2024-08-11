@@ -15,7 +15,7 @@ protected:
     MedtrumPumpSync mPumpSync;
 };
 
-TEST_F(AuthPacketTest, GetRequest_Given_PacketAndSN_Expect_RequestPacket)
+TEST_F(AuthPacketTest, getRequest_Given_PacketAndSN_Expect_RequestPacket)
 {
     // arange
     uint32_t pumpSerial = 0xAA76F9D9;
@@ -44,7 +44,7 @@ TEST_F(AuthPacketTest, GetRequest_Given_PacketAndSN_Expect_RequestPacket)
     EXPECT_EQ(requestPacket, expectedPacket);
 }
 
-TEST_F(AuthPacketTest, GetRequest_Given_Response_When_MessageIsIncorrect_Then_DataIsNotStored)
+TEST_F(AuthPacketTest, onIndication_Given_Response_When_MessageIsTooShort_Then_DataIsNotStored)
 {
     // arrange
     uint8_t opcode = 5;
@@ -60,8 +60,7 @@ TEST_F(AuthPacketTest, GetRequest_Given_Response_When_MessageIsIncorrect_Then_Da
                                      0,
                                      deviceType,
                                      swVerX,
-                                     swVerY,
-                                     swVerZ};
+                                     swVerY};
 
     // act
     AuthPacket authPacket(mPumpSync, 0);
@@ -69,19 +68,15 @@ TEST_F(AuthPacketTest, GetRequest_Given_Response_When_MessageIsIncorrect_Then_Da
     uint8_t buffer[WriteCommandPackets::PACKET_SIZE];
     WriteCommandPackets command(response.data(), response.size(), 0);
     size_t length = command.getNextPacket(buffer);
-    authPacket.onIndication(buffer, length - 2);
+    authPacket.onIndication(buffer, length);
 
-    // Expected values
-    std::string swString = std::to_string(swVerX) + "." + std::to_string(swVerY) + "." + std::to_string(swVerZ);
-
-    // Assertions
+    // assert
     ASSERT_TRUE(authPacket.isFailed());
-    ASSERT_FALSE(authPacket.isReady());
+    ASSERT_TRUE(authPacket.isReady());
     ASSERT_NE(mPumpSync.getDeviceType(), deviceType);
-    ASSERT_NE(mPumpSync.getSwVersion(), swString);
 }
 
-TEST_F(AuthPacketTest, GetRequest_Given_Response_When_MessageIsCorrect_Then_DataIsStored)
+TEST_F(AuthPacketTest, onIndication_Given_Response_When_MessageIsCorrect_Then_DataIsStored)
 {
     // arrange
     uint8_t opcode = 5;
@@ -108,10 +103,9 @@ TEST_F(AuthPacketTest, GetRequest_Given_Response_When_MessageIsCorrect_Then_Data
     size_t length = command.getNextPacket(buffer);
     authPacket.onIndication(buffer, length);
 
-    // Expected values
-    std::string swString = std::to_string(swVerX) + "." + std::to_string(swVerY) + "." + std::to_string(swVerZ);
 
-    // Assertions
+    // assert
+    std::string swString = std::to_string(swVerX) + "." + std::to_string(swVerY) + "." + std::to_string(swVerZ);
     ASSERT_TRUE(authPacket.isReady());
     ASSERT_FALSE(authPacket.isFailed());
     ASSERT_EQ(mPumpSync.getDeviceType(), deviceType);

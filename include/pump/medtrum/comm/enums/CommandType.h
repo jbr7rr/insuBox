@@ -1,3 +1,6 @@
+#ifndef MEDTRUM_COMMAND_TYPE_H
+#define MEDTRUM_COMMAND_TYPE_H
+
 #include <cstdint>
 
 class CommandType
@@ -41,3 +44,5 @@ public:
 private:
     Type value;
 };
+
+#endif // MEDTRUM_COMMAND_TYPE_H

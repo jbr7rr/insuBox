@@ -66,7 +66,7 @@ void MedtrumBasePacket::onIndication(const uint8_t *data, size_t dataSize)
 
     if (mPkgIndex != data[HEADER_PACKAGE_IDX_OFFSET])
     {
-        LOG_ERR("Invalid package index");
+        LOG_ERR("Invalid package index: %d, expected: %d", data[HEADER_PACKAGE_IDX_OFFSET], mPkgIndex);
         mFailed = true;
         // Handle the rest of the packet normally, so all sequences are getting handled
     }
@@ -115,7 +115,7 @@ void MedtrumBasePacket::handleResponse()
     {
     case RESPONSE_SUCCESS:
         LOG_DBG("Response success");
-        if (mResponse.size() < mExpectedLength)
+        if (mResponse.size() < mExpectedLength + 1)
         {
             mFailed = true;
             LOG_ERR("Invalid response length");

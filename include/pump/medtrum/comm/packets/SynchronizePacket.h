@@ -2,6 +2,7 @@
 #define SYNCHRONIZE_PACKET_H
 
 #include <pump/medtrum/comm/packets/MedtrumBasePacket.h>
+#include <pump/medtrum/MedtrumPumpSync.h>
 
 class MedtrumPumpSync;
 

@@ -6,7 +6,7 @@
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 
-LOG_MODULE_REGISTER(NotificationPacket);
+LOG_MODULE_REGISTER(ib_medtrum_notification_packet);
 
 namespace
 {

@@ -46,6 +46,11 @@ void SynchronizePacket::handleResponse()
         LOG_DBG("SynchronizePacket: fieldMask: %d", fieldMask);
         bool success = NotificationPacket(mPumpSync).handleMaskedMessage(mResponse.data() + RESP_FIELDS_START,
                                                                          mResponse.size() - RESP_FIELDS_START);
+        if (!success)
+        {
+            LOG_ERR("Failed to handle masked message");
+            mFailed = true;
+        }
     }
 
     return;
