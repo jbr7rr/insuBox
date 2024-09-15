@@ -49,7 +49,7 @@ protected:
     bool mFailed = false;
     bool mReady = false;
     uint8_t mPkgIndex = 0;
-    size_t mExpectedLength = 7;
+    size_t mExpectedLength = 6; // Min response length
     std::vector<uint8_t> mRequest = {};
     std::vector<uint8_t> mResponse = {};
 

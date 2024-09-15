@@ -350,7 +350,6 @@ uint8_t PumpBleComm::onGattChanged(struct bt_conn *conn, struct bt_gatt_subscrib
     }
     else if (params->value_handle == mSubscribeWriteParams.value_handle)
     {
-        // TODO: Handle responses > 20 bytes
         mCallback.onCommandResponse((uint8_t *)data, length);
     }
     else

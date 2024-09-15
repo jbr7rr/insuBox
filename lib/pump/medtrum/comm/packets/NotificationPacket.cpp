@@ -1,6 +1,6 @@
 #include <pump/medtrum/MedtrumPumpSync.h>
 #include <pump/medtrum/comm/packets/NotificationPacket.h>
-
+#include <pump/medtrum/utils/MedtrumTimeUtil.h>
 #include <zephyr/sys/byteorder.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -65,7 +65,7 @@ NotificationPacket::NotificationPacket(MedtrumPumpSync &pumpSync) : mPumpSync(pu
                      {MASK_STORAGE, &NotificationPacket::handleStorage},
                      {MASK_ALARM, &NotificationPacket::handleAlarm},
                      {MASK_AGE, &NotificationPacket::handleAge},
-                     {MASK_MAGNETO_PLACE, &NotificationPacket::handleUnknown1},
+                     {MASK_MAGNETO_PLACE, &NotificationPacket::handleMagnetoPlacement},
                      {MASK_UNUSED_CGM, &NotificationPacket::handleUnusedCGM},
                      {MASK_UNUSED_COMMAND_CONFIRM, &NotificationPacket::handleUnusedCommandConfirm},
                      {MASK_UNUSED_AUTO_STATUS, &NotificationPacket::handleUnusedAutoStatus},
@@ -184,17 +184,17 @@ bool NotificationPacket::checkDataValidity(uint16_t fieldMask, const uint8_t *da
     if (fieldMask & MASK_BASAL)
     {
         size_t offset = calculateOffset(fieldMask, MASK_BASAL);
-        // uint16_t basalPatchId = sys_get_le16(data + offset + 3);
+        uint16_t basalPatchId = sys_get_le16(data + offset + 3);
         uint32_t basalRateAndDelivery = sys_get_le32(data + offset + 9);
         double basalRate = (basalRateAndDelivery & 0xFFF) * 0.05;
-        // if (medtrumPump.patchId != 0 && basalPatchId != medtrumPump.patchId)
-        // {
-        //     LOG_ERR("Mismatched patch ID: %lu vs stored patchID: %lu", basalPatchId, medtrumPump.patchId);
-        //     return false;
-        // }
+        if (mPumpSync.getPatchId() != 0 && basalPatchId != mPumpSync.getPatchId())
+        {
+            LOG_ERR("checkDataValidity Mismatched patch ID: %d vs stored patchID: %d", basalPatchId, mPumpSync.getPatchId());
+            return false;
+        }
         if (basalRate < 0 || basalRate > 40)
         {
-            LOG_ERR("Invalid basal rate: %f", basalRate);
+            LOG_ERR("checkDataValidity( Invalid basal rate: %f", basalRate);
             return false;
         }
     }
@@ -205,64 +205,75 @@ bool NotificationPacket::checkDataValidity(uint16_t fieldMask, const uint8_t *da
         float reservoirValue = sys_get_le16(data + offset) * 0.05;
         if (reservoirValue < 0 || reservoirValue > 400)
         {
-            LOG_ERR("Invalid reservoir value: %f", static_cast<double>(reservoirValue));
+            LOG_ERR("checkDataValidity( Invalid reservoir value: %f", static_cast<double>(reservoirValue));
             return false;
         }
     }
 
     if (fieldMask & MASK_STORAGE)
     {
-        // size_t offset = calculateOffset(fieldMask, MASK_STORAGE);
-        // uint16_t patchId = sys_get_le16(data + offset + 2);
-        // if (medtrumPump.patchId != 0 && patchId != medtrumPump.patchId)
-        // {
-        //     LOG_ERR("Mismatched patch ID: %lu vs stored patchID: %lu", patchId, medtrumPump.patchId);
-        //     return false;
-        // }
+        size_t offset = calculateOffset(fieldMask, MASK_STORAGE);
+        uint16_t patchId = sys_get_le16(data + offset + 2);
+        if (mPumpSync.getPatchId() != 0 && patchId != mPumpSync.getPatchId())
+        {
+            LOG_ERR("checkDataValidity( Mismatched patch ID: %d vs stored patchID: %d", patchId, mPumpSync.getPatchId());
+            return false;
+        }
     }
     return true;
 }
 
 size_t NotificationPacket::handleSuspend(const uint8_t *data)
 {
-    LOG_DBG("Suspend data received");
-    // uint32_t suspendTime = sys_get_le32(data); // TODO: Convert to time
-
+    uint32_t suspendTime = MedtrumTimeUtil::convertPumpTimeToSystemTime(sys_get_le32(data));
+    LOG_DBG("Suspend time: %d", suspendTime);
     return SIZE_SUSPEND;
 }
 
 size_t NotificationPacket::handleNormalBolus(const uint8_t *data)
 {
-    LOG_DBG("Normal bolus data received");
-    // TODO: Handle normal bolus
+    uint8_t bolusData = data[0];
+    uint8_t bolusType = bolusData & 0x7F;
+    bool bolusCompleted = bolusData & 0x80;
+    float bolusDelivered = sys_get_le16(data + 1) * 0.05;
+    LOG_DBG("Bolus type: %d, Bolus completed: %d, Bolus delivered: %f", bolusType, bolusCompleted, static_cast<double>(bolusDelivered));
+    mPumpSync.handleBolusStatusUpdate(bolusType, bolusCompleted, bolusDelivered);
     return SIZE_NORMAL_BOLUS;
 }
 
 size_t NotificationPacket::handleExtendedBolus(const uint8_t *data)
 {
-    LOG_DBG("Extended bolus data received");
-    // TODO: Handle extended bolus
+    LOG_WRN("Extended bolus notification received, extended bolus not supported!");
     return SIZE_EXTENDED_BOLUS;
 }
 
 size_t NotificationPacket::handleBasal(const uint8_t *data)
 {
-    LOG_DBG("Basal data received");
-    // TODO: Handle basal
+    BasalType basalType = static_cast<BasalType>(data[0]);
+    uint16_t basalSequence = sys_get_le16(data + 1);
+    uint16_t basalPatchId = sys_get_le16(data + 3);
+    time_t basalStartTime = MedtrumTimeUtil::convertPumpTimeToSystemTime(sys_get_le32(data + 5));
+    uint32_t basalRateAndDelivery = sys_get_le24(data + 9);
+    float basalRate = (basalRateAndDelivery & 0xFFF) * 0.05;
+    float basalDelivered = (basalRateAndDelivery >> 12) * 0.05;
+    LOG_DBG("Basal type: %d, Basal sequence: %d, Basal patch id: %d, Basal start time: %lld, Basal rate: %f, Basal delivered: %f",
+            static_cast<uint8_t>(basalType), basalSequence, basalPatchId, basalStartTime, static_cast<double>(basalRate), static_cast<double>(basalDelivered));
+    if (mPumpSync.getBasalRate() != basalRate || mPumpSync.getBasalStartTime() != basalStartTime)
+    {
+        mPumpSync.handleBasalStatusUpdate(basalType, basalRate, basalSequence, basalPatchId, basalStartTime);
+    }
     return SIZE_BASAL;
 }
 
 size_t NotificationPacket::handleSetup(const uint8_t *data)
 {
-    LOG_DBG("Setup data received");
-    // TODO: Handle setup
+    mPumpSync.setPrimeProgress(data[0]);
+    LOG_DBG("Prime progress: %d", data[0]);
     return SIZE_SETUP;
 }
 
 size_t NotificationPacket::handleReservoir(const uint8_t *data)
 {
-    LOG_DBG("Reservoir data received");
-    // TODO: Handle reservoir
     float reservoirValue = sys_get_le16(data) * 0.05;
     LOG_DBG("Reservoir value: %f", static_cast<double>(reservoirValue));
     mPumpSync.setReservoirLevel(reservoirValue);
@@ -271,42 +282,65 @@ size_t NotificationPacket::handleReservoir(const uint8_t *data)
 
 size_t NotificationPacket::handleStartTime(const uint8_t *data)
 {
-    LOG_DBG("Start time data received");
-    // TODO
+    mStartTime = MedtrumTimeUtil::convertPumpTimeToSystemTime(sys_get_le32(data));
+    LOG_DBG("Patch start time: %lld", mStartTime);
+    mPumpSync.setPatchStartTime(mStartTime);
     return SIZE_START_TIME;
 }
 
 size_t NotificationPacket::handleBattery(const uint8_t *data)
 {
-    LOG_DBG("Battery data received");
-    // TODO
+    // Not really interesting for us, we can show in logs though
+    uint32_t batteryData = sys_get_le24(data);
+    float batteryVoltageA = (batteryData & 0xFFF) / 512;
+    float batteryVoltageB = (batteryData >> 12) / 512;
+    LOG_DBG("Battery voltage A: %f, Battery voltage B: %f", static_cast<double>(batteryVoltageA), static_cast<double>(batteryVoltageB));
     return SIZE_BATTERY;
 }
 
 size_t NotificationPacket::handleStorage(const uint8_t *data)
 {
-    LOG_DBG("Storage data received");
-    // TODO
+    uint16_t sequence = sys_get_le16(data);
+    uint16_t patchId = sys_get_le16(data + 2);
+    LOG_DBG("Storage sequence: %d, Storage patch ID: %d", sequence, patchId);
+
+    if (sequence > mPumpSync.getCurrentSequenceNumber())
+    {
+        mPumpSync.setCurrentSequenceNumber(sequence);
+    }
+
+    if (patchId != mPumpSync.getPatchId())
+    {
+        LOG_DBG("handleStorage Mismatched patch ID: %d vs stored patchID: %d", patchId, mPumpSync.getPatchId());
+        if (mStartTime != 0)
+        {
+            LOG_DBG("handleStorage Handling new patch");
+            mPumpSync.handleNewPatch(patchId, sequence, mStartTime);
+        }
+    }
+
     return SIZE_STORAGE;
 }
 
 size_t NotificationPacket::handleAlarm(const uint8_t *data)
 {
-    LOG_DBG("Alarm data received");
-    // TODO
+    // uint16_t alarmFlags = sys_get_le16(data);
+    // uint16_t alarmCode = sys_get_le16(data + 2);
+    // For now we ignore alarms here, as what we recieve are only warnings and not critical alarms
     return SIZE_ALARM;
 }
 
 size_t NotificationPacket::handleAge(const uint8_t *data)
 {
     LOG_DBG("Age data received");
-    // TODO
+    // Not used for now
     return SIZE_AGE;
 }
 
-size_t NotificationPacket::handleUnknown1(const uint8_t *data)
+size_t NotificationPacket::handleMagnetoPlacement(const uint8_t *data)
 {
-    LOG_WRN("Unknown1 data received");
+    LOG_WRN("Magneto placement data received");
+    // Not used for now
     return SIZE_MAGNETO_PLACE;
 }
 

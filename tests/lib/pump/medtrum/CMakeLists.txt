@@ -17,6 +17,7 @@ set(SOURCES
     comm/tst_WriteCommandPackets.cpp
     comm/packets/tst_AuthPacket.cpp
     comm/packets/tst_MedtrumBasePacket.cpp
+    comm/packets/tst_NotificationPacket.cpp
     comm/packets/tst_SetBolusPacket.cpp
     comm/packets/tst_SetTempBasalPacket.cpp
     comm/packets/tst_SubscribePacket.cpp

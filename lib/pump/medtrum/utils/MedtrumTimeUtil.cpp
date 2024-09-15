@@ -14,3 +14,11 @@ time_t MedtrumTimeUtil::convertPumpTimeToSystemTime(uint32_t pumpTime)
     time_t pumpEpochTime = startEpoch + pumpTime;
     return pumpEpochTime;
 }
+
+time_t MedtrumTimeUtil::getCurrentTime()
+{
+    struct timespec currentTime;
+    clock_gettime(CLOCK_REALTIME, &currentTime);
+
+    return currentTime.tv_sec;
+}

@@ -31,7 +31,7 @@ private:
     size_t handleStorage(const uint8_t *data);
     size_t handleAlarm(const uint8_t *data);
     size_t handleAge(const uint8_t *data);
-    size_t handleUnknown1(const uint8_t *data);
+    size_t handleMagnetoPlacement(const uint8_t *data);
     size_t handleUnusedCGM(const uint8_t *data);
     size_t handleUnusedCommandConfirm(const uint8_t *data);
     size_t handleUnusedAutoStatus(const uint8_t *data);
@@ -40,6 +40,8 @@ private:
     using HandlerFunc = size_t (NotificationPacket::*)(const uint8_t *);
     std::map<uint16_t, HandlerFunc> mMaskHandlers;
     std::map<uint16_t, size_t> mSizeMap;
+
+    time_t mStartTime = 0;
 
     MedtrumPumpSync &mPumpSync;
 };
