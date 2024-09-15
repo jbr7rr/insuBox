@@ -17,7 +17,7 @@ jobs:
       CMAKE_PREFIX_PATH: /opt/toolchains
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: insuBox
 
@@ -44,7 +44,7 @@ jobs:
 
       - name: Upload test logs
         if: ${{ always() }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: test-logs
           path: |
@@ -59,7 +59,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           path: insuBox
 
@@ -78,7 +78,7 @@ jobs:
           ls -alh ./doc/html
 
       - name: Upload Doxygen HTML
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: doxygen-html
           path: insuBox/doc/html
