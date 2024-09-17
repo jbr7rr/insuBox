@@ -6,8 +6,13 @@
 # python
 .venv
 
+# doxygen
+doc/html
+doc/latex
+
 # build
 /build*
 /twister-out*
 
 __pycache__/
+_gtestCache/

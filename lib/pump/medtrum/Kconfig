@@ -1,6 +1,6 @@
 
 config IB_PUMP_MEDTRUM
+	select IB_PUMP
 	bool "Medtrum insulin pump driver"
-	depends on BT
 	help
 	  This driver adds support for Medtrum insulin pumps.

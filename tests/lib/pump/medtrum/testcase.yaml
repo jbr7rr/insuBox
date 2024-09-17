@@ -3,5 +3,5 @@ common:
   integration_platforms:
     - native_posix
 tests:
-  lib.ib: 
+  lib.pump.medtrum: 
     harness: gtest

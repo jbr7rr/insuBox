@@ -34,4 +34,17 @@ west update
 ``` 
 
 - Build the project for your target board, for example:
-https://docs.zephyrproject.org/latest/boards/m5stack/m5stickc_plus/doc/index.html
+https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html
+
+# Run unit tests
+
+Apply the patch in the `patches` folder to the zephyr repo (only first time needed):
+```
+cd ../zephyr
+git apply ../insuBox/patches/fix_gtest_harness.patch
+```
+
+Run the tests (from the repo dir):
+```
+west twister -T tests --integration
+```

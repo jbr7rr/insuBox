@@ -20,18 +20,23 @@ namespace
         BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x669a9101, 0x0008, 0x968f, 0xe311, 0x6050405558b3));
 }
 
-PumpBleComm::PumpBleComm() 
-{ 
+PumpBleComm::PumpBleComm(PumpBleCallback &callback) : mCallback(callback)
+{
     mConnection.callback = this;
-    mConnectTask.pumpBleComm = this;
-    
+    mSubContainer.pumpBleComm = this;
+
     k_work_queue_init(&mWorkQueue);
     k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 1, NULL);
-    
+
     // Init our tasks
-    k_work_init_delayable(&mConnectTask.work, [](struct k_work *work){
-        auto task = CONTAINER_OF(work, TaskWrap, work);
+    k_work_init_delayable(&mSubContainer.connectWork, [](struct k_work *work) {
+        auto task = CONTAINER_OF(work, SubContainer, connectWork);
         task->pumpBleComm->_connect();
+    });
+
+    k_work_init_delayable(&mSubContainer.writeWork, [](struct k_work *work) {
+        auto task = CONTAINER_OF(work, SubContainer, writeWork);
+        task->pumpBleComm->_write();
     });
 }
 
@@ -46,20 +51,35 @@ void PumpBleComm::init()
     // General BLE init should be done at this point
 }
 
-void PumpBleComm::connect()
+void PumpBleComm::connect(uint32_t deviceSN)
 {
-    // Schedule the connect task
-    submitTask(mConnectTask);
+    // Connect to the pump
+    if (mDeviceSN.value_or(0) != deviceSN)
+    {
+        mDeviceAddr.reset();
+    }
+    mDeviceSN = deviceSN;
+    submitWork(mSubContainer.connectWork);
+}
+
+bool PumpBleComm::writeCommand(uint8_t *data, size_t length)
+{
+    if (mWriteCommandPackets.has_value())
+    {
+        LOG_ERR("Write command already in progress");
+        return false;
+    }
+    // Write a command to the pump
+    mWriteCommandPackets.emplace(data, length, mSequenceNumber);
+    submitWork(mSubContainer.writeWork);
+    return true;
 }
 
 void PumpBleComm::onDeviceFound(bt_addr_le_t addr, ManufacturerData manufacturerData)
 {
     LOG_DBG("Pump found with SN: %d", manufacturerData.deviceSN);
-    // Handle the found device
-    // Save the device address
     mDeviceAddr = addr;
-    // Connect to the device
-    submitTask(mConnectTask);
+    submitWork(mSubContainer.connectWork, K_SECONDS(2));
 }
 
 void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
@@ -68,9 +88,14 @@ void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
     if (err)
     {
         LOG_ERR("Failed to connect to the pump with error: %d", err);
-        // return;
+        // Try again with new scan
+        mDeviceAddr.reset();
+        submitWork(mSubContainer.connectWork, K_SECONDS(2));
+        return;
     }
     LOG_DBG("Connected to the pump");
+    mSequenceNumber = 0;
+
     // Discover services
     mDiscoverParams.uuid = &BT_UUID_MT_SERVICE.uuid;
     mDiscoverParams.start_handle = BT_ATT_FIRST_ATTRIBUTE_HANDLE;
@@ -90,10 +115,9 @@ void PumpBleComm::onConnected(struct bt_conn *conn, uint8_t err)
 
 // TASK SHIZZL
 
-void PumpBleComm::submitTask(TaskWrap &task, k_timeout_t delay)
+void PumpBleComm::submitWork(k_work_delayable &task, k_timeout_t delay)
 {
-    // Submit a task to the work queue
-    k_work_reschedule_for_queue(&mWorkQueue, &task.work, delay);
+    k_work_reschedule_for_queue(&mWorkQueue, &task, delay);
 }
 
 void PumpBleComm::_connect()
@@ -110,6 +134,9 @@ void PumpBleComm::_connect()
         else
         {
             LOG_ERR("Failed to connect to the pump");
+            // Try again with new scan
+            mDeviceAddr.reset();
+            submitWork(mSubContainer.connectWork, K_SECONDS(2));
         }
     }
     else
@@ -117,9 +144,62 @@ void PumpBleComm::_connect()
         // Start scanning for the device
         PumpScanner::scanRequest request = {
             .instance = this,
-            .targetDeviceSN = 0xC29415AB,
+            .targetDeviceSN = mDeviceSN.value_or(0),
         };
-        PumpScanner::startScan(request);
+        if (!PumpScanner::startScan(request))
+        {
+            LOG_ERR("Failed to start scan");
+            submitWork(mSubContainer.connectWork, K_SECONDS(2));
+        }
+    }
+}
+
+void PumpBleComm::_write()
+{
+    // Handle the write task
+    if (!mWriteCommandPackets.has_value())
+    {
+        return;
+    }
+    mSubContainer.writeParams.data = mWriteDataBuffer;
+    mSubContainer.writeParams.offset = 0;
+    mSubContainer.writeParams.length = mWriteCommandPackets->getNextPacket(mWriteDataBuffer);
+    mSubContainer.writeParams.handle = mSubscribeWriteParams.value_handle;
+    mSubContainer.writeParams.func = [](struct bt_conn *conn, uint8_t err, struct bt_gatt_write_params *params) {
+        auto container = CONTAINER_OF(params, SubContainer, writeParams);
+        container->pumpBleComm->onWrite(err, params);
+    };
+
+    int err = bt_gatt_write(mConnection.conn, &mSubContainer.writeParams);
+    if (err)
+    {
+        LOG_ERR("GATT write operation failed");
+        mCallback.onWriteError();
+        return;
+    }
+}
+
+void PumpBleComm::onWrite(uint8_t err, struct bt_gatt_write_params *params)
+{
+    // Handle the write event
+    if (err)
+    {
+        LOG_ERR("Write failed with error: %d", err);
+        mCallback.onWriteError();
+        return;
+    }
+
+    LOG_DBG("Write successful");
+    LOG_HEXDUMP_DBG(params->data, params->length, "Data: ");
+
+    if (!mWriteCommandPackets->allPacketsConsumed())
+    {
+        submitWork(mSubContainer.writeWork);
+    }
+    else
+    {
+        // We are done with the write
+        mWriteCommandPackets.reset();
     }
 }
 
@@ -131,7 +211,7 @@ void PumpBleComm::onDisconnected(struct bt_conn *conn, uint8_t reason)
     LOG_DBG("Disconnected from the pump");
 
     // Try to reconnect
-    submitTask(mConnectTask, K_SECONDS(5));
+    submitWork(mSubContainer.connectWork, K_SECONDS(5));
 }
 
 void PumpBleComm::onSecurityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
@@ -148,10 +228,9 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
     {
         LOG_DBG("Discover stopped unexpectedly");
         mDiscoverParams = {};
+        mDiscoveryState = DISCOVERY_MT_SERVICE;
         return BT_GATT_ITER_STOP;
     }
-
-    LOG_DBG("Attribute discovered with handle: %d", attr->handle);
 
     if (mDiscoveryState == DISCOVERY_MT_SERVICE && bt_uuid_cmp(mDiscoverParams.uuid, &BT_UUID_MT_SERVICE.uuid) == 0)
     {
@@ -176,6 +255,7 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
         mDiscoverParams.uuid = BT_UUID_GATT_CCC;
         mDiscoverParams.start_handle = attr->handle + 1;
         mDiscoverParams.type = BT_GATT_DISCOVER_DESCRIPTOR;
+        mSubscribeReadParams.value_handle = bt_gatt_attr_value_handle(attr);
         int err = BLEComm::discover(&mConnection, &mDiscoverParams);
         if (err)
         {
@@ -188,10 +268,9 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
         // Found the CCC descriptor
         LOG_DBG("CCC descriptor found");
         // Subscribe to the read characteristic
-        mSubscribeParams.ccc_handle = attr->handle;
-        mSubscribeParams.value_handle = mSubscribeParams.ccc_handle;
-        mSubscribeParams.value = BT_GATT_CCC_NOTIFY;
-        int err = BLEComm::subscribe(&mConnection, &mSubscribeParams);
+        mSubscribeReadParams.ccc_handle = attr->handle;
+        mSubscribeReadParams.value = BT_GATT_CCC_NOTIFY;
+        int err = BLEComm::subscribe(&mConnection, &mSubscribeReadParams);
         if (err && err != -EALREADY)
         {
             LOG_ERR("Subscribe failed (err %d)", err);
@@ -220,6 +299,7 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
         mDiscoverParams.uuid = BT_UUID_GATT_CCC;
         mDiscoverParams.start_handle = attr->handle + 1;
         mDiscoverParams.type = BT_GATT_DISCOVER_DESCRIPTOR;
+        mSubscribeWriteParams.value_handle = bt_gatt_attr_value_handle(attr);
         int err = BLEComm::discover(&mConnection, &mDiscoverParams);
         if (err)
         {
@@ -232,10 +312,9 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
         // Found the CCC descriptor
         LOG_DBG("CCC descriptor found");
         // Subscribe to the write characteristic
-        mSubscribeParams.ccc_handle = attr->handle;
-        mSubscribeParams.value_handle = mSubscribeParams.ccc_handle;
-        mSubscribeParams.value = BT_GATT_CCC_INDICATE;
-        int err = BLEComm::subscribe(&mConnection, &mSubscribeParams);
+        mSubscribeWriteParams.ccc_handle = attr->handle;
+        mSubscribeWriteParams.value = BT_GATT_CCC_INDICATE;
+        int err = BLEComm::subscribe(&mConnection, &mSubscribeWriteParams);
         if (err && err != -EALREADY)
         {
             LOG_ERR("Subscribe failed (err %d)", err);
@@ -248,6 +327,7 @@ uint8_t PumpBleComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr 
 
         LOG_DBG("Discovery done");
         mDiscoveryState = DISCOVERY_DONE;
+        mCallback.onReadyForCommands();
     }
 
     return BT_GATT_ITER_STOP;
@@ -264,6 +344,18 @@ uint8_t PumpBleComm::onGattChanged(struct bt_conn *conn, struct bt_gatt_subscrib
     LOG_HEXDUMP_INF(data, length, "On GATT changed with data: ");
 
     // Handle the GATT changed event
+    if (params->value_handle == mSubscribeReadParams.value_handle)
+    {
+        mCallback.onNotification((uint8_t *)data, length);
+    }
+    else if (params->value_handle == mSubscribeWriteParams.value_handle)
+    {
+        mCallback.onCommandResponse((uint8_t *)data, length);
+    }
+    else
+    {
+        LOG_ERR("Unknown characteristic");
+    }
 
     return BT_GATT_ITER_CONTINUE;
 }

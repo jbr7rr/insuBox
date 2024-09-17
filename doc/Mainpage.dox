@@ -1,0 +1,84 @@
+/*!
+@mainpage InsuBox Firmware Documentation
+
+## Bootloader
+
+The bootloader is based on MCUBoot and is configured to use the following partitions:
+
+## Decomposition
+
+The system is decomposed into the following components:
+
+\startuml System decomposition
+node "InsuBox" {
+    package "System Controller" {
+        [Controller]
+    }
+
+    package "Infra" {
+        [EventDispatcher]
+    }
+
+    package "Services" {
+        [AlgorithmService]
+        [PumpService]
+        [SensorService]
+        [InsuBoxControlService]
+    }
+
+    package "Devices" {
+        [WavezAlgorithm]
+        [MedtrumPump]
+        [DexcomG6Sensor]
+        [InsuBoxControlBleService]
+        [InsuBoxControlWiFi] << Not decided yet >>
+        [InsuBoxHMI]
+    }
+
+    package "Drivers" {
+        [BLEComm]
+        [ZephyrBLELibrary]
+        [ZephyrWiFiLibrary]
+        [ZephyrGPIO]
+    }
+}
+
+' System Controller
+Controller <-down-> PumpService
+Controller <-down-> SensorService
+Controller <-down-> InsuBoxControlService
+Controller <-down-> AlgorithmService
+Controller <--> EventDispatcher
+
+' Services
+AlgorithmService -down-> WavezAlgorithm
+PumpService -down-> MedtrumPump
+SensorService -down-> DexcomG6Sensor
+InsuBoxControlService -down-> InsuBoxControlBleService
+InsuBoxControlService -down-> InsuBoxControlWiFi
+InsuBoxControlService -down-> InsuBoxHMI
+
+' Devices
+MedtrumPump -down-> BLEComm
+MedtrumPump -down-> ZephyrBLELibrary
+DexcomG6Sensor -down-> BLEComm
+DexcomG6Sensor -down-> ZephyrBLELibrary
+InsuBoxControlBleService -down-> BLEComm
+InsuBoxControlBleService -down-> ZephyrBLELibrary
+InsuBoxControlWiFi -down-> ZephyrWiFiLibrary
+InsuBoxHMI -down-> ZephyrGPIO
+
+' Peripherals
+actor BLE as "BLE"
+actor WiFi as "WiFi"
+actor GPIO as "GPIO"
+
+' Drivers
+BLEComm -> ZephyrBLELibrary
+ZephyrBLELibrary -down-> BLE
+ZephyrWiFiLibrary -down-> WiFi
+ZephyrGPIO -down-> GPIO
+\enduml
+
+
+*/
