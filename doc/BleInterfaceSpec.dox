@@ -1,0 +1,230 @@
+/*!
+
+\page BleInterfaceSpec InsuBox Bluetooth Interface Specification
+
+# Introduction
+
+This page specifies the Bluetooth interface for the InsuBox project. 
+The key requirements are:
+- The interface should implement bluetooth standard services as much as possible
+- All custom service shall have a clear structure similair to the Insulin Delivery Service
+
+WARNING: Compatibility with any Bluetooth specificaiton is not claimed by this document. The document is a guideline for the implementation of the Bluetooth interface.
+No claims are made that the implementation will be compatible with any specific Bluetooth standard. Any liability is excluded.
+
+# Bluetooth Device Profile
+
+The device shall implement the [Bluetooth Insulin Delivery Profile](https://www.bluetooth.com/specifications/specs/insulin-delivery-profile-1-0-1/) 
+
+The device shall have history functionality and additional automated insulin delivery features.
+
+Thus the following Bluetooth Services will used:
+- [Insulin Delivery Service](#insulin-delivery-service)
+- [Device Information service](#device-information-service)
+- [Current Time Service](#current-time-service)
+
+The following Custom Bluetooth Services will be defined and used:
+- [Insulin Delivery Automation Service](#insulin-delivery-automation-service)
+
+The following Bluetooth Services may be used depending on the capabilties of the deployment target:
+- [Battery Service](#battery-service)
+- [Bond Management Service](https://www.bluetooth.com/specifications/specs/bond-management-service-1-0-1/)
+
+# Insulin Delivery Service
+
+[Insulin Delivery Service](https://www.bluetooth.com/specifications/specs/insulin-delivery-service-1-0-1/) will be used. All mandetory characteristics shall be implemented.
+
+The following optional characteristics shall be implemented:
+
+- IDD Command Control Point
+- IDD Command Data
+- IDD Record Access Control Point
+- IDD History Data
+
+# Device Information service
+
+[Device Information service](https://www.bluetooth.com/specifications/specs/device-information-service-1-1/)
+
+The following optional characteristics shall be implemented:
+
+- Manufacturer Name String 
+- Model Number String 
+- Software Revision String
+
+# Current Time Service
+
+[Current Time Service](https://www.bluetooth.com/specifications/specs/current-time-service-1-1/)
+
+This service shall be implemented.
+
+# Insulin Delivery Automation Service
+
+The Insulin Delivery Automation Service is a custom service with UUID <<TODO>>. The service will have the following characteristics:
+
+| Characteristic Name            | Requirement | Mandatory Properties | Security Permissions     |
+|--------------------------------|-------------|----------------------|--------------------------|
+| IDD Automation Status          | Mandatory   | Readable, Notifiable | Authorization Required   |
+| IDD Automation Control Point   | Mandatory   | Write, Indicate      | Authorization Required   |
+| IDD Automation Command Data    | Mandatory   | Notify               | Authorization Required   |
+
+## IDD Automation Status
+
+The IDD Automation Status characteristic is identified using the UUID «TODO».
+
+The IDD Automation Status characteristic represents the current status of the automated insulin delivery system. The characteristic shall have the following properties:
+
+- Readable
+- Notifiable
+
+The characteristic shall have the following descriptors:
+- Client Characteristic Configuration Descriptor
+
+The characteristic shall have the following fields:
+
+| Field Name                  | Requirement | Data Type | Size (octets) | Unit    | Byte Order |
+|-----------------------------|-------------|-----------|---------------|---------|------------|
+| AID state                   | Mandatory   | ENUM      | 1             | None    | N/A        |
+| AID suspend remaining time  | Mandatory   | UINT16    | 2             | minutes | LSO…MSO    |
+| Last insulin recommendation | Mandatory   | SFLOAT    | 2             | IU      | LSO…MSO    |
+| Flags                       | Mandatory   | ENUM      | 1             | None    | N/A        |
+
+### AID State
+
+The AID State field represents the current state of the automated insulin delivery system. The field shall have the following values:
+
+| Description  | Value | Meaning                                                                 |
+|--------------|-------|-------------------------------------------------------------------------|
+| Undetermined | 0x0F  | The state of the automated insulin delivery system is undetermined.     |
+| Stopped      | 0x33  | The automated insulin delivery system is stopped.                       |
+| Running      | 0x55  | The automated insulin delivery system is running.                       |
+| Suspended    | 0x77  | The automated insulin delivery system is suspended. Remaining time is set in the AID suspend remaining time |
+| Error        | 0x99  | There is an error in the automated insulin delivery system.             |
+| RFU          | All not already defined Hamming code values within 0x00 and 0xFF | Reserved for future use. |
+
+Note: Insulin delivery still may occur in the Suspended state, for excample when a basal profile is running.
+
+### AID Suspend Remaining Time
+
+The AID Suspend Remaining Time field represents the remaining time in minutes that the automated insulin delivery system is suspended. The field shall have the following properties:
+
+- UINT16
+- Unit: minutes
+- Byte Order: LSO…MSO
+
+### Last Insulin Req
+
+The Last Insulin Req field represents the last insulin recom that was made by the automated insulin delivery system. The field shall have the following properties:
+
+### Flags
+
+TBD
+
+## IDD Automation Control Point
+
+The IDD Automation Control Point provides procedures to control the automated insulin delivery system remotely.
+
+If a procedure is executed on the IDD Automation Control Point which requires more than one response from the Server to get the requested information, the Server shall send the responses by notifications of the IDD Automation Command Data characteristic and shall indicate the IDD Automation Control Point to confirm the end of the executed procedure.
+
+### IDD Automation Control Point procedure requirements
+
+The table below shows the requirements for the IDD Automation Control Point procedures concerning the request Op Codes and Operands in the context of this service:
+
+| Category          | Op Code Procedure       | Section | Op Code Requirement | Operand               | Operand Requirement |
+|-------------------|-------------------------|---------|---------------------|-----------------------|---------------------|
+| Device State      | Set AID State           | 3.7.1   | M                   | AID State             | M                   |
+| Algorithm Mode    | Set Algorithm Mode      | 3.7.2   | M                   | Algorithm Mode        | M                   |
+
+### 3.7.1 Set AID State
+
+The Set AID State procedure allows setting the state of the automated insulin delivery system.
+
+#### Op Code
+
+| Description  | Value |
+|--------------|-------|
+| Set AID State | 0x01 |
+
+#### Operand
+
+| Field Name                  | Requirement | Data Type | Size (octets) | Unit    | Byte Order |
+|-----------------------------|-------------|-----------|---------------|---------|------------|
+| AID State                   | Mandatory   | ENUM      | 1             | N/A     | N/A        |
+| AID Suspend Remaining Time  | *1          | UINT16    | 2             | minutes | LSO…MSO    |
+
+*1 AID Suspended Remaining Time is only required if the desired AID State is set to Suspended.
+
+### 3.7.2 Set Algorithm Mode
+
+The Set Algorithm Mode procedure allows setting the algorithm mode of the automated insulin delivery system.
+
+#### Op Code
+
+| Description        | Value |
+|--------------------|-------|
+| Set Algorithm Mode | 0x02 |
+
+#### Operand
+
+| Field Name                  | Requirement | Data Type | Size (octets) | Unit    | Byte Order |
+|-----------------------------|-------------|-----------|---------------|---------|------------|
+| Algorithm Mode              | Mandatory   | ENUM      | 1             | N/A     | N/A        |
+
+##### Algorithm Mode
+
+The Algorithm Mode field represents the current algorithm mode of the automated insulin delivery system. The field shall have the following values:
+
+| Description  | Value | Meaning                                                                      |
+|--------------|-------|------------------------------------------------------------------------------|
+| Undetermined | 0x0F  | The algorithm mode of the automated insulin delivery system is undetermined. |
+| Low-Suspend  | 0x33  | The automated insulin delivery system will only react when IOB is below 0.   |
+| TBR          | 0x55  | The automated insulin delivery system will only use TBR to adjust insulin.   |
+| Full mode    | 0x77  | The automated insulin delivery system is fully active.                       |
+
+## IDD Automation Command Data
+
+The IDD Automation Command Data characteristic is comprised of response records from executed procedures of
+the IDD Automation Control Point. The characteristic shall have the following properties:
+- Notify
+
+The characteristic shall have the following descriptors:
+- Client Characteristic Configuration Descriptor
+
+The characteristic shall have the following fields:
+
+| Field Name                  | Requirement | Data Type | Size (octets) | Unit    | Byte Order |
+|-----------------------------|-------------|-----------|---------------|---------|------------|
+| Response Op Code            | Mandatory   | ENUM      | 1             | N/A     | N/A        |
+| Operand                     | Mandatory   | Variable  | Variable      | N/A     | N/A        |
+
+### Response Op Code
+
+The Response Op Code field contains the Response Op Code of the executed procedure of the IDD Automation Control Point.
+
+### Operand
+
+The Operand field contains additional data related to the outcome of the executed procedure. The Operand shall vary based on the Response Op Code. The following table outlines the specific response op codes and the corresponding operands:
+
+| Response Op Code             | Value | Description                                             | Operand Requirement | Operand Description                                                                                     |
+|------------------------------|-------|---------------------------------------------------------|---------------------|---------------------------------------------------------------------------------------------------------|
+| Command Accepted             | 0x01  | Indicates that the command was successfully processed.  | None                | No further data is needed.                                                                              |
+| Command Rejected             | 0x02  | Indicates that the command was rejected.                | Mandatory           | UINT8, Reason Code (explains why the command was rejected).                                             |
+| Insufficient Authorization   | 0x03  | Indicates that the user lacks necessary authorization.  | None                | No further data is needed.                                                                              |
+| Invalid Operand              | 0x04  | Indicates that an operand is invalid or out of range.   | Mandatory           | UINT8, Operand Index (identifies the invalid operand).                                                  |
+| Operation Failed             | 0x05  | The operation was not successful.                       | Optional            | UINT8, Failure Reason (provides additional detail on the nature of the failure).                        |
+| Procedure Not Supported      | 0x06  | The requested procedure is not supported by the device. | None                | No further data is needed.                                                                              |
+| Response Pending             | 0x07  | Indicates that the procedure will take time to complete.| None                | No further data is needed. Additional notifications may follow to indicate the result when completed.   |
+
+
+# Battery Service
+
+[Battery Service](https://www.bluetooth.com/specifications/specs/battery-service/)
+
+The Battery Service shall be implemented for devices with a battery.
+
+# Bond Management Service
+
+[Bond Management Service](https://www.bluetooth.com/specifications/specs/bond-management-service-1-0-1/)
+
+The Bond Management Service shall be implemented for devices that support more then one bonded device.
+
+*/
