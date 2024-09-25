@@ -96,9 +96,9 @@ $(document).ready(function(){initNavTree('BleInterfaceSpec.html',''); initResiza
 Introduction</h1>
 <p>This page specifies the Bluetooth interface for the InsuBox project. The key requirements are:</p><ul>
 <li>The interface should implement bluetooth standard services as much as possible</li>
-<li>All custom service shall have a clear structure similair to the Insulin Delivery Service</li>
+<li>All custom service shall have a clear structure similar to the Insulin Delivery Service</li>
 </ul>
-<p>WARNING: Compatibility with any Bluetooth specificaiton is not claimed by this document. The document is a guideline for the implementation of the Bluetooth interface. No claims are made that the implementation will be compatible with any specific Bluetooth standard. Any liability is excluded.</p>
+<p>WARNING: Compatibility with any Bluetooth specification is not claimed by this document. The document is a guideline for the implementation of the Bluetooth interface. No claims are made that the implementation will be compatible with any specific Bluetooth standard. Any liability is excluded.</p>
 <h1><a class="anchor" id="autotoc_md1"></a>
 Bluetooth Device Profile</h1>
 <p>The device shall implement the <a href="https://www.bluetooth.com/specifications/specs/insulin-delivery-profile-1-0-1/">Bluetooth Insulin Delivery Profile</a></p>
@@ -112,13 +112,13 @@ Bluetooth Device Profile</h1>
 <li><a class="el" href="BleInterfaceSpec.html#insulin-delivery-automation-service">Insulin Delivery Automation Service</a></li>
 <li><a class="el" href="BleInterfaceSpec.html#insubox-settings-service">InsuBox Settings Service</a></li>
 </ul>
-<p>The following Bluetooth Services may be used depending on the capabilties of the deployment target:</p><ul>
+<p>The following Bluetooth Services may be used depending on the capabilities of the deployment target:</p><ul>
 <li><a class="el" href="BleInterfaceSpec.html#battery-service">Battery Service</a></li>
 <li><a class="el" href="BleInterfaceSpec.html#bond-management-service">Bond Management Service</a></li>
 </ul>
 <h1><a class="anchor" id="insulin-delivery-service"></a>
 Insulin Delivery Service</h1>
-<p><a href="https://www.bluetooth.com/specifications/specs/insulin-delivery-service-1-0-1/">Insulin Delivery Service</a> will be used. All mandetory characteristics shall be implemented.</p>
+<p><a href="https://www.bluetooth.com/specifications/specs/insulin-delivery-service-1-0-1/">Insulin Delivery Service</a> will be used. All mandatory characteristics shall be implemented.</p>
 <p>The following optional characteristics shall be implemented:</p>
 <ul>
 <li>IDD Command Control Point</li>
@@ -195,7 +195,7 @@ AID State</h3>
 <tr class="markdownTableRowEven">
 <td class="markdownTableBodyNone">RFU   </td><td class="markdownTableBodyNone">All not already defined Hamming code values within 0x00 and 0xFF   </td><td class="markdownTableBodyNone">Reserved for future use.   </td></tr>
 </table>
-<p>Note: Insulin delivery still may occur in the Suspended state, for excample when a basal profile is running.</p>
+<p>Note: Insulin delivery still may occur in the Suspended state, for example when a basal profile is running.</p>
 <h3><a class="anchor" id="idas-aid-suspend-remaining-time"></a>
 AID Suspend Remaining Time</h3>
 <p>The AID Suspend Remaining Time field represents the remaining time in minutes that the automated insulin delivery system is suspended. The field shall have the following properties:</p>
@@ -204,9 +204,9 @@ AID Suspend Remaining Time</h3>
 <li>Unit: minutes</li>
 <li>Byte Order: LSO…MSO</li>
 </ul>
-<h3><a class="anchor" id="idas-last-insulin-req"></a>
-Last Insulin Req</h3>
-<p>The Last Insulin Req field represents the last insulin recom that was made by the automated insulin delivery system. The field shall have the following properties:</p>
+<h3><a class="anchor" id="idas-last-insulin-recommendation"></a>
+Last Insulin recommendation</h3>
+<p>The Last Insulin recommendation field represents the last insulin recommendation that was made by the automated insulin delivery system. The field shall have the following properties:</p>
 <h3><a class="anchor" id="idas-flags"></a>
 Flags</h3>
 <p>TBD</p>
@@ -339,7 +339,7 @@ InsuBox Settings Service</h1>
 <tr class="markdownTableRowOdd">
 <td class="markdownTableBodyNone">InsuBox Settings Control Point   </td><td class="markdownTableBodyNone">Mandatory   </td><td class="markdownTableBodyNone">Write, Indicate   </td><td class="markdownTableBodyNone">Authorization Required    </td></tr>
 <tr class="markdownTableRowEven">
-<td class="markdownTableBodyNone">InsuBox Settings Data   </td><td class="markdownTableBodyNone">Mandatory   </td><td class="markdownTableBodyNone">Read, Write, Notify   </td><td class="markdownTableBodyNone">Authorization Required   </td></tr>
+<td class="markdownTableBodyNone">InsuBox Settings Data   </td><td class="markdownTableBodyNone">Mandatory   </td><td class="markdownTableBodyNone">Notify   </td><td class="markdownTableBodyNone">Authorization Required   </td></tr>
 </table>
 <h2><a class="anchor" id="iss-insubox-settings-control-point"></a>
 InsuBox Settings Control Point</h2>

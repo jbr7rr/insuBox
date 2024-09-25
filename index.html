@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>InsiBox: InsuBox Firmware Documentation</title>
+<title>InsiBox: InsuBox Documentation</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -89,14 +89,44 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </div>
 
 <div><div class="header">
-  <div class="headertitle"><div class="title">InsuBox Firmware Documentation </div></div>
+  <div class="headertitle"><div class="title">InsuBox Documentation </div></div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><h2><a class="anchor" id="autotoc_md2"></a>
-Bootloader</h2>
-<p>The bootloader is based on MCUBoot and is configured to use the following partitions:</p>
+<div class="textblock"><h1><a class="anchor" id="autotoc_md2"></a>
+Introduction</h1>
+<p>This software is still in development, it's not ready for use.**</p>
+<p>InsuBox is a DIY Loop system which targets embedded systems, so the hardware size can be minimized. It uses ZephyrOS as a base and can run a variety of hardware.</p>
+<p>Intended use case is as a stand alone loop system, so one don't need to carry a phone to run the loop. The system can be configured and monitored via Bluetooth from a phone.</p>
 <h2><a class="anchor" id="autotoc_md3"></a>
-Decomposition</h2>
+Features</h2>
+<p>Initial target features:</p><ul>
+<li>Medtrum Nano support</li>
+<li>Dexcom G6 support</li>
+<li>Algorithm based on <a href="https://github.com/openaps/oref0">OpenAPS</a> and <a href="https://github.com/piecycle/tsunami">Tsunami</a> but simplified (no carb input)</li>
+<li>Bluetooth communication with phone for configuration and monitoring</li>
+</ul>
+<h1><a class="anchor" id="autotoc_md4"></a>
+How to develop</h1>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Build</h2>
+<ul>
+<li>Install zephyr toolchain etc : <a href="https://docs.zephyrproject.org/latest/develop/getting_started/index.html#install-the-zephyr-sdk">https://docs.zephyrproject.org/latest/develop/getting_started/index.html#install-the-zephyr-sdk</a></li>
+<li>Clone this repo in a folder in which you want to have the zephyr project (zephyr will fetch zephyr and other modules in the top dir of the repo)</li>
+<li>run in your repo folder: <pre class="fragment">west init -l .
+cd ..
+west update
+</pre></li>
+<li>Build the project for your target board, for example: <a href="https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html">https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html</a></li>
+</ul>
+<h2><a class="anchor" id="autotoc_md6"></a>
+Run unit tests</h2>
+<p>Apply the patch in the <code>patches</code> folder to the zephyr repo (only first time needed): </p><pre class="fragment">cd ../zephyr
+git apply ../insuBox/patches/fix_gtest_harness.patch
+</pre><p>Run the tests (from the repo dir): </p><pre class="fragment">west twister -T tests --integration
+</pre><h1><a class="anchor" id="autotoc_md7"></a>
+Architecture</h1>
+<h2><a class="anchor" id="autotoc_md8"></a>
+Software Decomposition</h2>
 <p>The system is decomposed into the following components:</p>
 <div class="plantumlgraph">
 <img src="inline_umlgraph_1.png" />

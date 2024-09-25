@@ -15,6 +15,6 @@ var searchData=
   ['bluetooth_20device_20profile_12',['Bluetooth Device Profile',['../BleInterfaceSpec.html#autotoc_md1',1,'']]],
   ['bluetooth_20interface_20specification_13',['InsuBox Bluetooth Interface Specification',['../BleInterfaceSpec.html',1,'']]],
   ['bond_20management_20service_14',['Bond Management Service',['../BleInterfaceSpec.html#bond-management-service',1,'']]],
-  ['bootloader_15',['Bootloader',['../index.html#autotoc_md2',1,'']]],
-  ['btready_16',['btReady',['../classBLEComm.html#a584e110fda463de5a7412dbcd6ee1df5',1,'BLEComm']]]
+  ['btready_15',['btReady',['../classBLEComm.html#a584e110fda463de5a7412dbcd6ee1df5',1,'BLEComm']]],
+  ['build_16',['Build',['../index.html#autotoc_md5',1,'']]]
 ];

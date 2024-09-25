@@ -35,7 +35,7 @@ var NAVTREEINDEX0 =
 "BleInterfaceSpec.html#idas-idd-automation-control-point":[1,5,1],
 "BleInterfaceSpec.html#idas-idd-automation-control-point-procedure-requirements":[1,5,1,0],
 "BleInterfaceSpec.html#idas-idd-automation-status":[1,5,0],
-"BleInterfaceSpec.html#idas-last-insulin-req":[1,5,0,2],
+"BleInterfaceSpec.html#idas-last-insulin-recommendation":[1,5,0,2],
 "BleInterfaceSpec.html#idas-operand":[1,5,2,1],
 "BleInterfaceSpec.html#idas-operand-get-aid-state":[1,5,2,1,0],
 "BleInterfaceSpec.html#idas-operand-get-algorithm-mode":[1,5,2,1,1],

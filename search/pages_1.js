@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['documentation_0',['InsuBox Firmware Documentation',['../index.html',1,'']]]
+  ['documentation_0',['InsuBox Documentation',['../index.html',1,'']]]
 ];

@@ -25,7 +25,7 @@
 var NAVTREE =
 [
   [ "InsiBox", "index.html", [
-    [ "InsuBox Firmware Documentation", "index.html", null ],
+    [ "InsuBox Documentation", "index.html", "index" ],
     [ "InsuBox Bluetooth Interface Specification", "BleInterfaceSpec.html", [
       [ "Introduction", "BleInterfaceSpec.html#autotoc_md0", null ],
       [ "Bluetooth Device Profile", "BleInterfaceSpec.html#autotoc_md1", null ],
@@ -36,7 +36,7 @@ var NAVTREE =
         [ "IDD Automation Status", "BleInterfaceSpec.html#idas-idd-automation-status", [
           [ "AID State", "BleInterfaceSpec.html#idas-aid-state", null ],
           [ "AID Suspend Remaining Time", "BleInterfaceSpec.html#idas-aid-suspend-remaining-time", null ],
-          [ "Last Insulin Req", "BleInterfaceSpec.html#idas-last-insulin-req", null ],
+          [ "Last Insulin recommendation", "BleInterfaceSpec.html#idas-last-insulin-recommendation", null ],
           [ "Flags", "BleInterfaceSpec.html#idas-flags", null ]
         ] ],
         [ "IDD Automation Control Point", "BleInterfaceSpec.html#idas-idd-automation-control-point", [
