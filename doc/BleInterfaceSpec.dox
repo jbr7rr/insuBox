@@ -7,9 +7,9 @@
 This page specifies the Bluetooth interface for the InsuBox project. 
 The key requirements are:
 - The interface should implement bluetooth standard services as much as possible
-- All custom service shall have a clear structure similair to the Insulin Delivery Service
+- All custom service shall have a clear structure similar to the Insulin Delivery Service
 
-WARNING: Compatibility with any Bluetooth specificaiton is not claimed by this document. The document is a guideline for the implementation of the Bluetooth interface.
+WARNING: Compatibility with any Bluetooth specification is not claimed by this document. The document is a guideline for the implementation of the Bluetooth interface.
 No claims are made that the implementation will be compatible with any specific Bluetooth standard. Any liability is excluded.
 
 # Bluetooth Device Profile
@@ -27,13 +27,13 @@ The following Custom Bluetooth Services will be defined and used:
 - [Insulin Delivery Automation Service](#insulin-delivery-automation-service)
 - [InsuBox Settings Service](#insubox-settings-service)
 
-The following Bluetooth Services may be used depending on the capabilties of the deployment target:
+The following Bluetooth Services may be used depending on the capabilities of the deployment target:
 - [Battery Service](#battery-service)
 - [Bond Management Service](#bond-management-service)
 
 # Insulin Delivery Service {#insulin-delivery-service}
 
-[Insulin Delivery Service](https://www.bluetooth.com/specifications/specs/insulin-delivery-service-1-0-1/) will be used. All mandetory characteristics shall be implemented.
+[Insulin Delivery Service](https://www.bluetooth.com/specifications/specs/insulin-delivery-service-1-0-1/) will be used. All mandatory characteristics shall be implemented.
 
 The following optional characteristics shall be implemented:
 
@@ -102,7 +102,7 @@ The AID State field represents the current state of the automated insulin delive
 | Error        | 0x99  | There is an error in the automated insulin delivery system.             |
 | RFU          | All not already defined Hamming code values within 0x00 and 0xFF | Reserved for future use. |
 
-Note: Insulin delivery still may occur in the Suspended state, for excample when a basal profile is running.
+Note: Insulin delivery still may occur in the Suspended state, for example when a basal profile is running.
 
 ### AID Suspend Remaining Time {#idas-aid-suspend-remaining-time}
 
@@ -112,9 +112,9 @@ The AID Suspend Remaining Time field represents the remaining time in minutes th
 - Unit: minutes
 - Byte Order: LSO…MSO
 
-### Last Insulin Req {#idas-last-insulin-req}
+### Last Insulin recommendation {#idas-last-insulin-recommendation}
 
-The Last Insulin Req field represents the last insulin recom that was made by the automated insulin delivery system. The field shall have the following properties:
+The Last Insulin recommendation field represents the last insulin recommendation that was made by the automated insulin delivery system. The field shall have the following properties:
 
 ### Flags {#idas-flags}
 
@@ -246,7 +246,7 @@ The InsuBox Settings Service is a custom service with UUID <<TODO>>. The service
 | Characteristic Name            | Requirement | Mandatory Properties | Security Permissions     |
 |--------------------------------|-------------|----------------------|--------------------------|
 | InsuBox Settings Control Point | Mandatory   | Write, Indicate      | Authorization Required   |
-| InsuBox Settings Data          | Mandatory   | Read, Write, Notify  | Authorization Required   |
+| InsuBox Settings Data          | Mandatory   | Notify               | Authorization Required   |
 
 ## InsuBox Settings Control Point {#iss-insubox-settings-control-point}
 

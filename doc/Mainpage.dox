@@ -1,11 +1,55 @@
 /*!
-\mainpage InsuBox Firmware Documentation
+\mainpage InsuBox Documentation
 
-## Bootloader
+# Introduction
 
-The bootloader is based on MCUBoot and is configured to use the following partitions:
+**This software is still in development, it's not ready for use.**
 
-## Decomposition
+InsuBox is a DIY Loop system which targets embedded systems, so the hardware size can be minimized. It uses ZephyrOS as a base and can run a variety of hardware.
+
+Intended use case is as a stand alone loop system, so one don't need to carry a phone to run the loop. The system can be configured and monitored via Bluetooth from a phone.
+
+## Features
+
+Initial target features:
+- Medtrum Nano support
+- Dexcom G6 support
+- Algorithm based on [OpenAPS](https://github.com/openaps/oref0) and [Tsunami](https://github.com/piecycle/tsunami) but simplified (no carb input)
+- Bluetooth communication with phone for configuration and monitoring
+
+# How to develop
+
+## Build
+
+- Install zephyr toolchain etc : https://docs.zephyrproject.org/latest/develop/getting_started/index.html#install-the-zephyr-sdk
+- Clone this repo in a folder in which you want to have the zephyr project (zephyr will fetch zephyr and other modules in the top dir of the repo)
+- run in your repo folder:
+\verbatim
+west init -l .
+cd ..
+west update
+\endverbatim
+
+- Build the project for your target board, for example:
+https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html
+
+## Run unit tests
+
+Apply the patch in the `patches` folder to the zephyr repo (only first time needed):
+\verbatim
+cd ../zephyr
+git apply ../insuBox/patches/fix_gtest_harness.patch
+\endverbatim
+
+
+Run the tests (from the repo dir):
+\verbatim
+west twister -T tests --integration
+\endverbatim
+
+# Architecture
+
+## Software Decomposition
 
 The system is decomposed into the following components:
 
