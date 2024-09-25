@@ -1,0 +1,35 @@
+var classPumpState =
+[
+    [ "State", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9", [
+      [ "NONE", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9aee048765ae5a959f3c2d982e2d85d3ba", null ],
+      [ "IDLE", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9ae4ac9443568e30e10a5ab4f00668aeb6", null ],
+      [ "FILLED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a6b909fd940269f7e56fe9cefd098cba0", null ],
+      [ "PRIMING", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a92ee654c8e6a4c14cf9d775aa911cd7b", null ],
+      [ "PRIMED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a41e90401c18fe0ca5a1731e2add26b66", null ],
+      [ "EJECTING", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a482312ce71d6ec11988ccdb131014327", null ],
+      [ "EJECTED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9afc9dc32c4609206199210bfc0d87da08", null ],
+      [ "ACTIVE", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9aceb4300c2038ee469ca23ab4087f16d3", null ],
+      [ "ACTIVE_ALT", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a870d7323031b0da28f48c92f624fd016", null ],
+      [ "LOW_BG_SUSPENDED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a3b63ea1dba2d602500bc07315d933543", null ],
+      [ "LOW_BG_SUSPENDED2", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a0aefbc586d1267c106a3765b0d05093b", null ],
+      [ "AUTO_SUSPENDED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9acfc3f1a4412e7e78e4027707fe2065d1", null ],
+      [ "HOURLY_MAX_SUSPENDED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a84b2ba518f59424c13a964f6881495ad", null ],
+      [ "DAILY_MAX_SUSPENDED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a5207436728d875c0e026e0a0c4a65271", null ],
+      [ "SUSPENDED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9afb97476d17a346302026b83e6ae85e77", null ],
+      [ "PAUSED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a67ef2eef14e8674bb369d59aabb4739c", null ],
+      [ "OCCLUSION", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a48996da90039d97b8ddb3fce8f7dd828", null ],
+      [ "EXPIRED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a2e775562f70ec9d04c1c0ac190cabc2e", null ],
+      [ "RESERVOIR_EMPTY", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9ab4f1c109222c6b61e684d2e48cddbe39", null ],
+      [ "PATCH_FAULT", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a0512aba7a89c06e5f67c26a7027d2ac7", null ],
+      [ "PATCH_FAULT2", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a486ecff5e617d081a9eee9b976a283d6", null ],
+      [ "BASE_FAULT", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9aa973aa92bca9393458c8ff68e7c745d9", null ],
+      [ "BATTERY_OUT", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9aee35681b492e012643c5c229d2af92eb", null ],
+      [ "NO_CALIBRATION", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a748695f2840f7cf9ace944498de8ccd3", null ],
+      [ "STOPPED", "classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a006524121da91b23d2fe00f62153b9c0", null ]
+    ] ],
+    [ "PumpState", "classPumpState.html#aeed2df41bf16abc50ac0ae84ac0baf22", null ],
+    [ "PumpState", "classPumpState.html#ad8a709133b07ffd706df835e8752b3a9", null ],
+    [ "PumpState", "classPumpState.html#a5a9728c53df4bcb7a9587ebb28f15c13", null ],
+    [ "operator uint8_t", "classPumpState.html#aa629cf0c14b1ad5b59e1f0a2636762f2", null ],
+    [ "value", "classPumpState.html#ae00c570699abba81e0ecc532db9f7c80", null ]
+];
