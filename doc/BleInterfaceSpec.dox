@@ -327,7 +327,7 @@ The Operand of the Get Dexcom ID procedure shall contain the up to date Dexcom I
 
 [Battery Service](https://www.bluetooth.com/specifications/specs/battery-service/)
 
-The Battery Service shall be implemented for devices with a battery.
+The Battery Service shall be implemented for devices which are capable of reporting their battery percentage.
 
 # Bond Management Service {#bond-management-service}
 
