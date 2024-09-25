@@ -1,0 +1,8 @@
+<map id="include/pump/medtrum/comm/enums/BasalType.h" name="include/pump/medtrum/comm/enums/BasalType.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="33,5,230,45"/>
+<area shape="rect" id="Node000002" href="$BasalEndReason_8h.html" title=" " alt="" coords="5,93,148,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,47,95,84,90,80,116,44"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="98,167,165,192"/>
+<area shape="poly" id="edge3_Node000001_Node000003" title=" " alt="" coords="145,44,160,79,163,99,162,119,148,155,143,153,157,118,158,99,155,80,141,46"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="88,117,116,154,112,157,84,121"/>
+</map>
