@@ -19,15 +19,13 @@ node "InsuBox" {
         [WavezAlgorithm]
         [MedtrumPump]
         [DexcomG6Sensor]
-        [InsuBoxControlBleService]
-        [InsuBoxControlWiFi] << Not decided yet >>
+        [InsuBoxControlBleServices]
         [InsuBoxHMI]
     }
 
     package "Drivers" {
         [BLEComm]
         [ZephyrBLELibrary]
-        [ZephyrWiFiLibrary]
         [ZephyrGPIO]
     }
 }
@@ -43,8 +41,7 @@ Controller <--> EventDispatcher
 AlgorithmService -down-> WavezAlgorithm
 PumpService -down-> MedtrumPump
 SensorService -down-> DexcomG6Sensor
-InsuBoxControlService -down-> InsuBoxControlBleService
-InsuBoxControlService -down-> InsuBoxControlWiFi
+InsuBoxControlService -down-> InsuBoxControlBleServices
 InsuBoxControlService -down-> InsuBoxHMI
 
 ' Devices
@@ -52,19 +49,16 @@ MedtrumPump -down-> BLEComm
 MedtrumPump -down-> ZephyrBLELibrary
 DexcomG6Sensor -down-> BLEComm
 DexcomG6Sensor -down-> ZephyrBLELibrary
-InsuBoxControlBleService -down-> BLEComm
-InsuBoxControlBleService -down-> ZephyrBLELibrary
-InsuBoxControlWiFi -down-> ZephyrWiFiLibrary
+InsuBoxControlBleServices -down-> BLEComm
+InsuBoxControlBleServices -down-> ZephyrBLELibrary
 InsuBoxHMI -down-> ZephyrGPIO
 
 ' Peripherals
 actor BLE as "BLE"
-actor WiFi as "WiFi"
 actor GPIO as "GPIO"
 
 ' Drivers
 BLEComm -> ZephyrBLELibrary
 ZephyrBLELibrary -down-> BLE
-ZephyrWiFiLibrary -down-> WiFi
 ZephyrGPIO -down-> GPIO
 @enduml
