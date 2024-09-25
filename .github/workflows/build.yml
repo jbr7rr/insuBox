@@ -54,25 +54,24 @@ jobs:
 
   generate-docs:
     runs-on: ubuntu-22.04
+    permissions:
+      contents: write
     container:
       image: ubuntu:latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          path: insuBox
 
-      - name: Install Doxygen and LaTeX
+      - name: Install dependencies
         run: |
           export DEBIAN_FRONTEND=noninteractive
           ln -fs /usr/share/zoneinfo/Europe/Amsterdam /etc/localtime
           apt-get update
-          apt-get install -y doxygen graphviz plantuml
+          apt-get install -y doxygen graphviz plantuml git
           ln -fs /usr/share/plantuml/ /usr/share/java/
 
       - name: Generate Doxygen Documentation
-        working-directory: insuBox
         run: |
           doxygen ./doc/Doxyfile
           ls -alh ./doc/html
@@ -81,6 +80,11 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: doxygen-html
-          path: insuBox/doc/html
+          path: doc/html
           retention-days: 14
 
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: doc/html
