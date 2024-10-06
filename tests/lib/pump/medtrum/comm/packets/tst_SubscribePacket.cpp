@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include <pump/medtrum/comm/packets/SubscribePacket.h>
+#include <pump/medtrum_bt/comm/packets/SubscribePacket.h>
 
 TEST(SubscribePacketTest, GetRequest_Given_Packet_Expect_RequestPacket)
 {

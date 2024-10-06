@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <pump/medtrum/comm/packets/MedtrumBasePacket.h>
+#include <pump/medtrum_bt/comm/packets/MedtrumBasePacket.h>
 
 class TestMedtrumBasePacket : public MedtrumBasePacket
 {

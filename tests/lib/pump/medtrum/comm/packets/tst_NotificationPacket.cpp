@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include <pump/medtrum/comm/packets/NotificationPacket.h>
-#include <pump/medtrum/MedtrumPumpSync.h>
+#include <pump/medtrum_bt/comm/packets/NotificationPacket.h>
+#include <pump/medtrum_bt/MedtrumPumpSync.h>
 
 class NotificationPacketTest : public ::testing::Test
 {

@@ -1,17 +1,17 @@
 #include <pump/PumpService.h>
-#include <pump/medtrum/MedtrumDevice.h>
+#include <pump/medtrum_bt/MedtrumBTDevice.h>
 
-PumpService::PumpService()
-{
-    mPumpDevice = &mMedtrumDevice;
-}
+#define LOG_LEVEL LOG_LEVEL_DBG
+#include <zephyr/logging/log.h>
 
-PumpService::~PumpService()
-{
-    delete mPumpDevice;
-}
+LOG_MODULE_REGISTER(ib_pump_service);
+
+PumpService::PumpService(IPumpDevice &pumpDevice) : mPumpDevice(pumpDevice) {}
+
+PumpService::~PumpService() {}
 
 void PumpService::init()
 {
-    mPumpDevice->init();
+    LOG_DBG("Initializing PumpService");
+    mPumpDevice.init();
 }

@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <pump/medtrum/comm/WriteCommandPackets.h>
+#include <pump/medtrum_bt/comm/WriteCommandPackets.h>
 #include <vector>
 
 TEST(WriteCommandPacketsTest, Given_14LongCommand_Expect_OnePacket)

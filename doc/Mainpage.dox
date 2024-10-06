@@ -33,6 +33,11 @@ west update
 - Build the project for your target board, for example:
 https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html
 
+To select an additional config file use:
+```
+west build -b $BOARD app -- -DOVERLAY_CONFIG=medtrum_bt.conf
+```
+
 ## Run unit tests
 
 Apply the patch in the `patches` folder to the zephyr repo (only first time needed):

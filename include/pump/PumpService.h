@@ -4,19 +4,17 @@
 #include <pump/IPumpDevice.h>
 #include <pump/PumpService.h>
 
-#include <pump/medtrum/MedtrumDevice.h>
+#include <pump/medtrum_bt/MedtrumBTDevice.h>
 
 class PumpService
 {
 public:
-    PumpService();
+    PumpService(IPumpDevice &pumpDevice);
     ~PumpService();
     void init();
 
 private:
-    IPumpDevice *mPumpDevice;
-
-    MedtrumDevice mMedtrumDevice;
+    IPumpDevice &mPumpDevice;
 };
 
 #endif // PUMP_SERVICE_H

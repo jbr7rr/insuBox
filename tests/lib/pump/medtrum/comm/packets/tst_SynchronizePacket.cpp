@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
-#include <pump/medtrum/MedtrumPumpSync.h>
-#include <pump/medtrum/comm/WriteCommandPackets.h>
-#include <pump/medtrum/comm/packets/SynchronizePacket.h>
+#include <pump/medtrum_bt/MedtrumPumpSync.h>
+#include <pump/medtrum_bt/comm/WriteCommandPackets.h>
+#include <pump/medtrum_bt/comm/packets/SynchronizePacket.h>
 
 class SynchronizePacketTest : public ::testing::Test
 {
