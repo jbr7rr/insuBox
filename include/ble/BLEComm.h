@@ -66,6 +66,8 @@ private:
     };
 
     static std::map<bt_addr_le_t, BleConnection *, CompareBtAddr> mConnections;
+    static const struct bt_data advertizingData[];
+    static const struct bt_le_adv_param advParam;
 
     static struct k_sem semBtReady;
 

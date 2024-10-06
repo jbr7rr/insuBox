@@ -12,6 +12,13 @@
 LOG_MODULE_REGISTER(ib_ble);
 
 std::map<bt_addr_le_t, BleConnection *, BLEComm::CompareBtAddr> BLEComm::mConnections;
+
+const struct bt_data BLEComm::advertizingData[] = {BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
+                                                   BT_DATA_BYTES(BT_DATA_UUID16_ALL)};
+
+const struct bt_le_adv_param BLEComm::advParam = *BT_LE_ADV_PARAM(
+    BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_USE_NAME, BT_GAP_ADV_SLOW_INT_MIN, BT_GAP_ADV_SLOW_INT_MAX, NULL);
+
 K_SEM_DEFINE(BLEComm::semBtReady, 0, 1);
 
 namespace
@@ -196,4 +203,11 @@ void BLEComm::init()
     LOG_DBG("Bluetooth initialized");
 
     bt_conn_cb_register(&connCallbacks);
+
+    err = bt_le_adv_start(&advParam, advertizingData, ARRAY_SIZE(advertizingData), NULL, 0);
+    if (err)
+    {
+        LOG_ERR("Advertising failed to start (ret %d)", err);
+        return;
+    }
 }
