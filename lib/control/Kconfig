@@ -1,0 +1,9 @@
+menu "Libraries"
+
+config IB_CONTROL
+    bool "InsuBox control module"
+    help
+        This option enables support for the InsuBox control module.
+
+
+endmenu

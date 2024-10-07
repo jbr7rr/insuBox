@@ -1,6 +1,7 @@
 menu "Libraries"
 
 rsource "ble/Kconfig"
+rsource "control/Kconfig"
 rsource "pump/Kconfig"
 
 endmenu
