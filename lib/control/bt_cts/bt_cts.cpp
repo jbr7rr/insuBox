@@ -88,7 +88,7 @@ namespace bt_cts
     BT_GATT_SERVICE_DEFINE(bt_cts, BT_GATT_PRIMARY_SERVICE(BT_UUID_CTS),
                            BT_GATT_CHARACTERISTIC(BT_UUID_CTS_CURRENT_TIME,
                                                   BT_GATT_CHRC_READ | BT_GATT_CHRC_WRITE | BT_GATT_CHRC_NOTIFY,
-                                                  BT_GATT_PERM_READ | BT_GATT_PERM_WRITE_LESC, readCurrentTime,
+                                                  BT_GATT_PERM_READ | BT_GATT_PERM_WRITE_AUTHEN, readCurrentTime,
                                                   writeCurrentTime, NULL),
                            BT_GATT_CCC(NULL, BT_GATT_PERM_READ | BT_GATT_PERM_WRITE),
                            BT_GATT_CHARACTERISTIC(BT_UUID_CTS_LOCAL_TIME_INFO, BT_GATT_CHRC_READ, BT_GATT_PERM_READ,

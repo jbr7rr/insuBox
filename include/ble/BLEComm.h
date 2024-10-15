@@ -75,7 +75,16 @@ private:
     static void disconnected(struct bt_conn *conn, uint8_t reason);
     static void securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err);
     static void btReady(int err);
+
     static struct bt_conn_cb connCallbacks;
+    static struct bt_conn_auth_cb connAuthCallbacks;
+    static struct bt_conn_auth_info_cb connAuthInfoCallbacks;
+
+    static void authCancel(struct bt_conn *conn);
+    static void passkeyConfirm(struct bt_conn *conn, unsigned int passkey);
+    static void passkeyDisplay(struct bt_conn *conn, unsigned int passkey);
+    static void pairingComplete(struct bt_conn *conn, bool bonded);
+    static void pairingFailed(struct bt_conn *conn, enum bt_security_err reason);
 
     static uint8_t onDiscover(struct bt_conn *conn, const struct bt_gatt_attr *attr,
                               struct bt_gatt_discover_params *params);

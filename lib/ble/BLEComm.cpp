@@ -35,6 +35,17 @@ struct bt_conn_cb BLEComm::connCallbacks = {
     .security_changed = securityChanged,
 };
 
+struct bt_conn_auth_cb BLEComm::connAuthCallbacks = {
+    .passkey_display = passkeyDisplay,
+    .passkey_confirm = passkeyConfirm,
+    .cancel = authCancel,
+};
+
+struct bt_conn_auth_info_cb BLEComm::connAuthInfoCallbacks = {
+    .pairing_complete = pairingComplete,
+    .pairing_failed = pairingFailed,
+};
+
 int BLEComm::connect(bt_addr_le_t &peer, BleConnection *connection)
 {
     if (connection == nullptr || connection->callback == nullptr)
@@ -170,7 +181,15 @@ void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt
     else
     {
         LOG_ERR("Security failed: level %u, err %d", level, err);
+        
+        // Check if we have the device in bond memory, if so delete
+        int err = bt_unpair(BT_ID_DEFAULT, bt_conn_get_dst(conn));
+        if (err)
+        {
+            LOG_ERR("Failed to unpair device: %d", err);
+        }
     }
+
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
@@ -193,6 +212,19 @@ void BLEComm::init()
 {
     LOG_INF("Bluetooth initialising");
     int err = 0;
+
+    err = bt_conn_auth_cb_register(&connAuthCallbacks);
+    if (err)
+    {
+        LOG_ERR("Failed to register auth callback: %d", err);
+    }
+
+    err = bt_conn_auth_info_cb_register(&connAuthInfoCallbacks);
+    if (err)
+    {
+        LOG_ERR("Failed to register auth info callback: %d", err);
+    }
+
     err = bt_enable(btReady);
     if (err)
     {
@@ -215,4 +247,48 @@ void BLEComm::init()
         LOG_ERR("Advertising failed to start (ret %d)", err);
         return;
     }
+}
+
+void BLEComm::authCancel(struct bt_conn *conn)
+{
+    char addr[BT_ADDR_LE_STR_LEN];
+
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+    LOG_DBG("Pairing cancelled: %s", addr);
+}
+
+void BLEComm::passkeyConfirm(struct bt_conn *conn, unsigned int passkey)
+{
+    char addr[BT_ADDR_LE_STR_LEN];
+
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+    LOG_DBG("Passkey for %s: %06u", addr, passkey);
+
+    // TODO: HMI link etc, for now we just confirm the passkey
+    // TODO: Config depending on device how we handle pairing
+    int err = bt_conn_auth_passkey_confirm(conn);
+	if (err) {
+		LOG_ERR("Failed to confirm passkey.");
+	}
+}
+
+void BLEComm::passkeyDisplay(struct bt_conn *conn, unsigned int passkey)
+{
+    char addr[BT_ADDR_LE_STR_LEN];
+
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+    LOG_DBG("Passkey for %s: %06u", addr, passkey);
+}
+
+void BLEComm::pairingComplete(struct bt_conn *conn, bool bonded)
+{
+    LOG_INF("Pairing complete, bonded: %d", bonded);
+}
+
+void BLEComm::pairingFailed(struct bt_conn *conn, enum bt_security_err reason)
+{
+    LOG_ERR("Pairing failed: %d", reason);
 }
