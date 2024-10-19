@@ -16,7 +16,8 @@ std::map<bt_addr_le_t, BleConnection *, BLEComm::CompareBtAddr> BLEComm::mConnec
 const struct bt_data BLEComm::advertizingData[] = {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
     BT_DATA_BYTES(BT_DATA_GAP_APPEARANCE, BT_BYTES_LIST_LE16(BT_APPEARANCE_GENERIC_INSULIN_PUMP)),
-    BT_DATA_BYTES(BT_DATA_UUID16_ALL)};
+    BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(BT_UUID_IDS_VAL), BT_UUID_16_ENCODE(BT_UUID_CTS_VAL),
+                  BT_UUID_16_ENCODE(BT_UUID_DIS_VAL))};
 
 const struct bt_le_adv_param BLEComm::advParam = *BT_LE_ADV_PARAM(
     BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_USE_NAME, BT_GAP_ADV_SLOW_INT_MIN, BT_GAP_ADV_SLOW_INT_MAX, NULL);
@@ -181,7 +182,7 @@ void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt
     else
     {
         LOG_ERR("Security failed: level %u, err %d", level, err);
-        
+
         // Check if we have the device in bond memory, if so delete
         int err = bt_unpair(BT_ID_DEFAULT, bt_conn_get_dst(conn));
         if (err)
