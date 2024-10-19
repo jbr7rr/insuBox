@@ -1,0 +1,9 @@
+menu "Libraries"
+
+config IB_HMI
+    bool "InsuBox HMI module"
+    help
+        This option enables support for the InsuBox control module.
+
+
+endmenu

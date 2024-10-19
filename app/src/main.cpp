@@ -1,6 +1,10 @@
 #include <ble/BLEComm.h>
 #include <control/ControlService.h>
+#include <events/EventDispatcher.h>
+#include <hmi/HmiService.h>
 #include <pump/PumpService.h>
+
+#include <thread>
 
 #include <pump/medtrum_bt/MedtrumBTDevice.h>
 #include <pump/VirtualPumpDevice.h>
@@ -18,12 +22,14 @@ namespace
 
     PumpService pumpService(pumpDevice);
     ControlService controlService;
+    HmiService hmiService;
 }
 
-extern "C" int main(void)
+int main(void)
 {
     BLEComm::init();
     pumpService.init();
     controlService.init();
+    hmiService.init();
     return 0;
 }

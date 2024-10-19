@@ -73,6 +73,7 @@ node "InsuBox" {
         [PumpService]
         [SensorService]
         [InsuBoxControlService]
+        [HMIService]
     }
 
     package "Devices" {
@@ -95,14 +96,15 @@ Controller <-down-> PumpService
 Controller <-down-> SensorService
 Controller <-down-> InsuBoxControlService
 Controller <-down-> AlgorithmService
-Controller <--> EventDispatcher
+Controller <-down-> HMIService
+Controller <-left-> EventDispatcher
 
 ' Services
 AlgorithmService -down-> WavezAlgorithm
 PumpService -down-> MedtrumPump
 SensorService -down-> DexcomG6Sensor
 InsuBoxControlService -down-> InsuBoxControlBleServices
-InsuBoxControlService -down-> InsuBoxHMI
+HMIService -down-> InsuBoxHMI
 
 ' Devices
 MedtrumPump -down-> BLEComm
@@ -122,6 +124,5 @@ BLEComm -> ZephyrBLELibrary
 ZephyrBLELibrary -down-> BLE
 ZephyrGPIO -down-> GPIO
 \enduml
-
 
 */
