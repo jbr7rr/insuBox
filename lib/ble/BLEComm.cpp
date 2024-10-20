@@ -5,6 +5,7 @@
 #include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/hci.h>
 #include <zephyr/settings/settings.h>
+#include <zephyr/zbus/zbus.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -23,6 +24,12 @@ const struct bt_le_adv_param BLEComm::advParam = *BT_LE_ADV_PARAM(
     BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_USE_NAME, BT_GAP_ADV_SLOW_INT_MIN, BT_GAP_ADV_SLOW_INT_MAX, NULL);
 
 K_SEM_DEFINE(BLEComm::semBtReady, 0, 1);
+
+ZBUS_CHAN_DEFINE(bleChan, struct BleCommMsg, NULL, NULL, ZBUS_OBSERVERS_EMPTY,
+                 ZBUS_MSG_INIT(.type = BleCommMsg::Type::NONE, .passkey = 0));
+
+ZBUS_LISTENER_DEFINE(bleChanListener, BLEComm::bleChanListener);
+ZBUS_CHAN_ADD_OBS(bleChan, bleChanListener, 3);
 
 namespace
 {
@@ -182,7 +189,6 @@ void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt
     else
     {
         LOG_ERR("Security failed: level %u, err %d", level, err);
-
         // Check if we have the device in bond memory, if so delete
         int err = bt_unpair(BT_ID_DEFAULT, bt_conn_get_dst(conn));
         if (err)
@@ -267,12 +273,14 @@ void BLEComm::passkeyConfirm(struct bt_conn *conn, unsigned int passkey)
 
     LOG_DBG("Passkey for %s: %06u", addr, passkey);
 
-    // TODO: HMI link etc, for now we just confirm the passkey
-    // TODO: Config depending on device how we handle pairing
-    int err = bt_conn_auth_passkey_confirm(conn);
-	if (err) {
-		LOG_ERR("Failed to confirm passkey.");
-	}
+    // Publish passkey to zbus
+    BleCommMsg msg = {
+        .type = BleCommMsg::Type::PASSKEY_CONFIRM_REQ,
+        .conn = conn,
+        .passkey = passkey,
+    };
+    zbus_chan_pub(&bleChan, &msg, K_FOREVER);
+    LOG_DBG("Passkey confirm published");
 }
 
 void BLEComm::passkeyDisplay(struct bt_conn *conn, unsigned int passkey)
@@ -292,4 +300,20 @@ void BLEComm::pairingComplete(struct bt_conn *conn, bool bonded)
 void BLEComm::pairingFailed(struct bt_conn *conn, enum bt_security_err reason)
 {
     LOG_ERR("Pairing failed: %d", reason);
+}
+
+void BLEComm::bleChanListener(const struct zbus_channel *chan)
+{
+    LOG_DBG("BLE Channel listener");
+    const struct BleCommMsg *msg = static_cast<const struct BleCommMsg *>(zbus_chan_const_msg(chan));
+
+    if (msg->type == BleCommMsg::Type::PASSKEY_CONFIRM)
+    {
+        LOG_DBG("Pairing confirm");
+        int err = bt_conn_auth_passkey_confirm(msg->conn);
+        if (err)
+        {
+            LOG_ERR("Failed to confirm passkey: %d", err);
+        }
+    }
 }

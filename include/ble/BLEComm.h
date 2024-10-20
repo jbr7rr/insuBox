@@ -10,6 +10,21 @@
 #include <string>
 #include <vector>
 
+#include <optional>
+
+struct BleCommMsg
+{
+    enum Type : uint8_t
+    {
+        NONE,
+        PASSKEY_CONFIRM_REQ,
+        PASSKEY_CONFIRM,
+    };
+    Type type;
+    struct bt_conn *conn;
+    std::optional<uint32_t> passkey;
+};
+
 class IBLECallback
 {
 public:
@@ -56,6 +71,7 @@ public:
     static int discover(BleConnection *connection, struct bt_gatt_discover_params *params);
     static int subscribe(BleConnection *connection, struct bt_gatt_subscribe_params *params);
 
+    static void bleChanListener(const struct zbus_channel *chan);
 private:
     struct CompareBtAddr
     {
@@ -90,6 +106,7 @@ private:
                               struct bt_gatt_discover_params *params);
     static uint8_t onGattChanged(struct bt_conn *conn, struct bt_gatt_subscribe_params *params, const void *data,
                                  uint16_t length);
+
 };
 
 #endif // BLE_COMM_H

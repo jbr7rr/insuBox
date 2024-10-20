@@ -1,10 +1,7 @@
 #include <ble/BLEComm.h>
 #include <control/ControlService.h>
-#include <events/EventDispatcher.h>
 #include <hmi/HmiService.h>
 #include <pump/PumpService.h>
-
-#include <thread>
 
 #include <pump/medtrum_bt/MedtrumBTDevice.h>
 #include <pump/VirtualPumpDevice.h>
