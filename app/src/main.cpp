@@ -20,14 +20,15 @@ namespace
     #error "No pump device selected, error in config"
 #endif
 
-    PumpService pumpService(pumpDevice);
+    EventDispatcher eventDispatcher;
     ControlService controlService;
-    HmiService hmiService;
+    PumpService pumpService(pumpDevice);
+    HmiService hmiService(eventDispatcher);
 }
 
 int main(void)
 {
-    BLEComm::init();
+    BLEComm::init(&eventDispatcher);
     pumpService.init();
     controlService.init();
     hmiService.init();

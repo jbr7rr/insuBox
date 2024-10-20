@@ -5,9 +5,12 @@
 
 LOG_MODULE_REGISTER(ib_hmi_service);
 
-HmiService::HmiService()
+HmiService::HmiService(EventDispatcher &dispatcher) : mDispatcher(dispatcher)
 {
     LOG_DBG("HmiService constructor");
+    mDispatcher.subscribe<BtPassKeyConfirmRequest>([this](const BtPassKeyConfirmRequest &request) {
+        this->onBtPassKeyConfirmRequest(request);
+    });
 }
 
 HmiService::~HmiService() {}
@@ -15,4 +18,13 @@ HmiService::~HmiService() {}
 void HmiService::init()
 {
     LOG_DBG("Initializing HmiService");
+}
+
+void HmiService::onBtPassKeyConfirmRequest(const BtPassKeyConfirmRequest &request)
+{
+    LOG_DBG("Passkey confirm request");
+
+    // TODO: Implement HMI to ask user to confirm the passkey
+    // For now just accept the passkey and send response
+    mDispatcher.dispatch<BtPassKeyConfirmResponse>({request.conn, true});
 }

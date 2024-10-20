@@ -1,6 +1,7 @@
 #ifndef BLE_COMM_H
 #define BLE_COMM_H
 
+#include <events/EventDispatcher.h>
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gatt.h>
 #include <zephyr/bluetooth/hci.h>
@@ -9,6 +10,18 @@
 #include <map>
 #include <string>
 #include <vector>
+
+struct BtPassKeyConfirmRequest
+{
+    struct bt_conn *conn;
+    unsigned int passkey;
+};
+
+struct BtPassKeyConfirmResponse
+{
+    struct bt_conn *conn;
+    bool accept;
+};
 
 class IBLECallback
 {
@@ -48,7 +61,7 @@ struct BleConnection
 class BLEComm
 {
 public:
-    static void init();
+    static void init(EventDispatcher *dispatcher);
     static int connect(bt_addr_le_t &peer, BleConnection *connection);
     static void disconnect(BleConnection *connection);
 
@@ -65,6 +78,7 @@ private:
         }
     };
 
+    static EventDispatcher *mDispatcher;
     static std::map<bt_addr_le_t, BleConnection *, CompareBtAddr> mConnections;
     static const struct bt_data advertizingData[];
     static const struct bt_le_adv_param advParam;
@@ -90,6 +104,8 @@ private:
                               struct bt_gatt_discover_params *params);
     static uint8_t onGattChanged(struct bt_conn *conn, struct bt_gatt_subscribe_params *params, const void *data,
                                  uint16_t length);
+
+    static void onBtPassKeyConfirmResponse(const BtPassKeyConfirmResponse &response);
 };
 
 #endif // BLE_COMM_H

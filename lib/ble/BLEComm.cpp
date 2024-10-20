@@ -11,6 +11,7 @@
 
 LOG_MODULE_REGISTER(ib_ble);
 
+EventDispatcher *BLEComm::mDispatcher = nullptr;
 std::map<bt_addr_le_t, BleConnection *, BLEComm::CompareBtAddr> BLEComm::mConnections;
 
 const struct bt_data BLEComm::advertizingData[] = {
@@ -209,8 +210,15 @@ void BLEComm::btReady(int err)
     k_sem_give(&semBtReady);
 }
 
-void BLEComm::init()
+void BLEComm::init(EventDispatcher *dispatcher)
 {
+    mDispatcher = dispatcher;
+
+    if (mDispatcher)
+    {
+        mDispatcher->subscribe<BtPassKeyConfirmResponse>(BLEComm::onBtPassKeyConfirmResponse);
+    }
+
     LOG_INF("Bluetooth initialising");
     int err = 0;
 
@@ -267,12 +275,10 @@ void BLEComm::passkeyConfirm(struct bt_conn *conn, unsigned int passkey)
 
     LOG_DBG("Passkey for %s: %06u", addr, passkey);
 
-    // TODO: HMI link etc, for now we just confirm the passkey
-    // TODO: Config depending on device how we handle pairing
-    int err = bt_conn_auth_passkey_confirm(conn);
-	if (err) {
-		LOG_ERR("Failed to confirm passkey.");
-	}
+    if (mDispatcher)
+    {
+        mDispatcher->dispatch<BtPassKeyConfirmRequest>({conn, passkey});
+    }
 }
 
 void BLEComm::passkeyDisplay(struct bt_conn *conn, unsigned int passkey)
@@ -292,4 +298,25 @@ void BLEComm::pairingComplete(struct bt_conn *conn, bool bonded)
 void BLEComm::pairingFailed(struct bt_conn *conn, enum bt_security_err reason)
 {
     LOG_ERR("Pairing failed: %d", reason);
+}
+
+void BLEComm::onBtPassKeyConfirmResponse(const BtPassKeyConfirmResponse &response)
+{
+    int err = 0;
+    if (response.accept)
+    {
+        err = bt_conn_auth_passkey_confirm(response.conn);
+        if (err)
+        {
+            LOG_ERR("Failed to confirm passkey.");
+        }
+    }
+    else
+    {
+        err = bt_conn_auth_cancel(response.conn);
+        if (err)
+        {
+            LOG_ERR("Failed to cancel pairing.");
+        }
+    }
 }
