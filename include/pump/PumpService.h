@@ -2,19 +2,23 @@
 #define PUMP_SERVICE_H
 
 #include <pump/IPumpDevice.h>
-#include <pump/PumpService.h>
-
-#include <pump/medtrum_bt/MedtrumBTDevice.h>
 
 class PumpService
 {
 public:
-    PumpService(IPumpDevice &pumpDevice);
+    PumpService(IPumpDevice &pumpDevice = PumpService::getPumpDevice());
     ~PumpService();
     void init();
 
 private:
     IPumpDevice &mPumpDevice;
+
+    /**
+     * @brief Get the pump internal pump device object of the selected type in Kconfig
+     *
+     * @return IPumpDevice&
+     */
+    static IPumpDevice &getPumpDevice();
 };
 
 #endif // PUMP_SERVICE_H
