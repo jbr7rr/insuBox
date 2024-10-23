@@ -5,14 +5,15 @@
 
 namespace
 {
+    EventDispatcher eventDispatcher;
     PumpService pumpService;
     ControlService controlService;
-    HmiService hmiService;
+    HmiService hmiService(eventDispatcher);
 }
 
 int main(void)
 {
-    BLEComm::init();
+    BLEComm::init(&eventDispatcher);
     pumpService.init();
     controlService.init();
     hmiService.init();

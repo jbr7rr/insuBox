@@ -2,15 +2,18 @@
 #define HMI_SERVICE_H
 
 #include <hmi/IHmiDevice.h>
+#include <events/EventDispatcher.h>
+#include <ble/BLEComm.h>
 
 class HmiService
 {
 public:
-    HmiService(IHmiDevice &hmiDevice = HmiService::getHmiDevice());
+    HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice = HmiService::getHmiDevice());
     ~HmiService();
     void init();
 
 private:
+    EventDispatcher &mDispatcher;
     IHmiDevice &mHmiDevice;
 
     /**
@@ -19,6 +22,9 @@ private:
      * @return IHmiDevice&
      */
     static IHmiDevice &getHmiDevice();
+
+    void onBtPassKeyConfirmRequest(const BtPassKeyConfirmRequest &request);
+
 };
 
 #endif // HMI_SERVICE_H

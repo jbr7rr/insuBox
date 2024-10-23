@@ -1,0 +1,7 @@
+common:
+  tags: extensibility
+  integration_platforms:
+    - native_posix
+tests:
+  lib.events: 
+    harness: gtest
