@@ -5,5 +5,20 @@ config IB_HMI
     help
         This option enables support for the InsuBox control module.
 
+if IB_HMI
+
+choice IB_HMI_TYPE
+    prompt "InsuBox HMI Type"
+    default IB_HMI_VIRTUAL
+
+config IB_HMI_VIRTUAL
+    bool "Virtual InsuBox HMI"
+    help
+        This option enables support for a virtual InsuBox HMI.
+        WARNING: This option is not intended for production use.
+
+endchoice
+
+endif
 
 endmenu
