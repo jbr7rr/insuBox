@@ -5,7 +5,7 @@
 
 LOG_MODULE_REGISTER(ib_virtual_hmi_device);
 
-VirtualHmiDevice::VirtualHmiDevice()
+VirtualHmiDevice::VirtualHmiDevice(IHmiCallback &hmiCallback) : mHmiCallback(hmiCallback)
 {
     LOG_DBG("VirtualHmiDevice constructor");
 }
@@ -18,4 +18,10 @@ VirtualHmiDevice::~VirtualHmiDevice()
 void VirtualHmiDevice::init()
 {
     LOG_DBG("VirtualHmiDevice init");
+}
+
+void VirtualHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t passkey)
+{
+    // Accept the pairing request, we are virtual :)
+    mHmiCallback.onUserBtPairingResponse(conn, true);
 }

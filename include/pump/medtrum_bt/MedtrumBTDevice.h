@@ -43,7 +43,7 @@ private:
 
     // Task stuff
     k_work_q mWorkQueue;
-    K_THREAD_STACK_MEMBER(mWorkQueueBuffer, KB(4));
+    K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, KB(4));
     struct k_sem mCommandResponseSem;
     void _negotiateConnection();
 };
