@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.20.0)
 
 set(CMAKE_CXX_COMPILER /usr/bin/g++ CACHE PATH "" FORCE)
-set(BOARD native_posix)
 set(ZEPHYR_TOOLCHAIN_VARIANT zephyr)
 set(TOOLCHAIN_ROOT ${ZEPHYR_BASE})
 set(ZEPHYR_EXTRA_MODULES $ENV{ZEPHYR_BASE}/../insuBox/modules/googletest)

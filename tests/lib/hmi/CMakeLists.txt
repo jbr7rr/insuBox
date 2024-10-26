@@ -12,19 +12,11 @@ project(tst)
 # Add test sources
 set(SOURCES
     src/main.cpp
-    crypt/tst_Crypt.cpp
-    comm/tst_WriteCommandPackets.cpp
-    comm/packets/tst_AuthPacket.cpp
-    comm/packets/tst_MedtrumBasePacket.cpp
-    comm/packets/tst_NotificationPacket.cpp
-    comm/packets/tst_SetBolusPacket.cpp
-    comm/packets/tst_SetTempBasalPacket.cpp
-    comm/packets/tst_SubscribePacket.cpp
-    comm/packets/tst_SynchronizePacket.cpp
+    tst_HmiService.cpp
 )
 
 # Add these sources to your target
 target_sources(app PRIVATE ${SOURCES})
 
 # Link libraries
-target_link_libraries(app PUBLIC gtest_main)
+target_link_libraries(app PUBLIC gtest_main gmock_main)
