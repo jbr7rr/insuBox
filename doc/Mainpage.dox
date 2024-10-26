@@ -40,14 +40,7 @@ west build -b $BOARD app -- -DOVERLAY_CONFIG=medtrum_bt.conf
 
 ## Run unit tests
 
-Apply the patch in the `patches` folder to the zephyr repo (only first time needed):
-\verbatim
-cd ../zephyr
-git apply ../insuBox/patches/fix_gtest_harness.patch
-\endverbatim
-
-
-Run the tests (from the repo dir):
+Run the tests:
 \verbatim
 west twister -T tests --integration
 \endverbatim

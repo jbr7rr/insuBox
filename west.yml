@@ -7,5 +7,5 @@ manifest:
     - name: zephyr
       remote: zephyr
       repo-path: zephyr
-      revision: v3.7.0
+      revision: main
       import: true
