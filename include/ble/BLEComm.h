@@ -71,6 +71,8 @@ public:
     static int subscribe(BleConnection *connection, struct bt_gatt_subscribe_params *params);
 
 private:
+    // For now we set it here, we might want to make this configurable and depend on the device
+    static constexpr int MAX_CLIENT_CONNECTIONS = 1;
     struct CompareBtAddr
     {
         bool operator()(const bt_addr_le_t &lhs, const bt_addr_le_t &rhs) const
@@ -81,14 +83,17 @@ private:
 
     static EventDispatcher *mDispatcher;
     static std::map<bt_addr_le_t, BleConnection *, CompareBtAddr> mConnections;
+    static std::array<BleConnection, MAX_CLIENT_CONNECTIONS> mClientConnections;
     static const struct bt_data advertizingData[];
     static const struct bt_le_adv_param advParam;
+    static struct k_work advertisingWork;
 
     static struct k_sem semBtReady;
 
     static void connected(struct bt_conn *conn, uint8_t err);
     static void disconnected(struct bt_conn *conn, uint8_t reason);
     static void securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err);
+    static void recycled(void);
     static void btReady(int err);
 
     static struct bt_conn_cb connCallbacks;
@@ -107,6 +112,8 @@ private:
                                  uint16_t length);
 
     static void onBtPassKeyConfirmResponse(const BtPassKeyConfirmResponse &response);
+
+    static void advertisingWorkHandler(struct k_work *work);
 };
 
 #endif // BLE_COMM_H

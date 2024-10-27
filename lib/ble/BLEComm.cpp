@@ -13,6 +13,7 @@ LOG_MODULE_REGISTER(ib_ble);
 
 EventDispatcher *BLEComm::mDispatcher = nullptr;
 std::map<bt_addr_le_t, BleConnection *, BLEComm::CompareBtAddr> BLEComm::mConnections;
+std::array<BleConnection, BLEComm::MAX_CLIENT_CONNECTIONS> BLEComm::mClientConnections = {};
 
 const struct bt_data BLEComm::advertizingData[] = {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
@@ -21,7 +22,9 @@ const struct bt_data BLEComm::advertizingData[] = {
                   BT_UUID_16_ENCODE(BT_UUID_DIS_VAL))};
 
 const struct bt_le_adv_param BLEComm::advParam = *BT_LE_ADV_PARAM(
-    BT_LE_ADV_OPT_CONNECTABLE | BT_LE_ADV_OPT_USE_NAME, BT_GAP_ADV_SLOW_INT_MIN, BT_GAP_ADV_SLOW_INT_MAX, NULL);
+    BT_LE_ADV_OPT_CONN | BT_LE_ADV_OPT_USE_NAME, BT_GAP_ADV_SLOW_INT_MIN, BT_GAP_ADV_SLOW_INT_MAX, NULL);
+
+struct k_work BLEComm::advertisingWork;
 
 K_SEM_DEFINE(BLEComm::semBtReady, 0, 1);
 
@@ -34,6 +37,7 @@ namespace
 struct bt_conn_cb BLEComm::connCallbacks = {
     .connected = connected,
     .disconnected = disconnected,
+    .recycled = recycled,
     .security_changed = securityChanged,
 };
 
@@ -157,9 +161,25 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     {
         connection->callback->onConnected(conn, err);
     }
-    else
+    else if (connection == nullptr)
     {
         LOG_INF("Connection object not found");
+        // Find unused client connection object in array
+        for (auto &clientConnection : mClientConnections)
+        {
+            if (clientConnection.conn == nullptr)
+            {
+                clientConnection.conn = conn;
+                mConnections[*bt_conn_get_dst(conn)] = &clientConnection;
+                break;
+            }
+            else
+            {
+                LOG_ERR("No free client connection object found");
+                // disconnect
+                bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+            }
+        }
     }
 }
 
@@ -169,9 +189,17 @@ void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
-        bt_conn_unref(connection->conn);
         connection->callback->onDisconnected(conn, reason);
     }
+
+    // remove connection object from mConnections map
+    if (mConnections.find(*bt_conn_get_dst(conn)) != mConnections.end())
+    {
+        bt_conn_unref(connection->conn);
+        connection->conn = nullptr;
+        mConnections.erase(*bt_conn_get_dst(conn));
+    }
+    k_work_submit(&advertisingWork);
 }
 
 void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
@@ -198,6 +226,11 @@ void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt
     }
 }
 
+void BLEComm::recycled(void)
+{
+    // k_work_submit(&advertisingWork);
+}
+
 void BLEComm::btReady(int err)
 {
     if (err != 0)
@@ -217,6 +250,8 @@ void BLEComm::init(EventDispatcher *dispatcher)
     {
         mDispatcher->subscribe<BtPassKeyConfirmResponse>(BLEComm::onBtPassKeyConfirmResponse);
     }
+
+    k_work_init(&advertisingWork, advertisingWorkHandler);
 
     LOG_INF("Bluetooth initialising");
     int err = 0;
@@ -249,12 +284,7 @@ void BLEComm::init(EventDispatcher *dispatcher)
 
     bt_conn_cb_register(&connCallbacks);
 
-    err = bt_le_adv_start(&advParam, advertizingData, ARRAY_SIZE(advertizingData), NULL, 0);
-    if (err)
-    {
-        LOG_ERR("Advertising failed to start (ret %d)", err);
-        return;
-    }
+    k_work_submit(&advertisingWork);
 }
 
 void BLEComm::authCancel(struct bt_conn *conn)
@@ -316,6 +346,23 @@ void BLEComm::onBtPassKeyConfirmResponse(const BtPassKeyConfirmResponse &respons
         if (err)
         {
             LOG_ERR("Failed to cancel pairing.");
+        }
+    }
+}
+
+void BLEComm::advertisingWorkHandler(struct k_work *work)
+{
+    // Check if there is a free client connection
+    for (auto &clientConnection : mClientConnections)
+    {
+        if (clientConnection.conn == nullptr)
+        {
+            LOG_INF("Starting advertising");
+            int err = bt_le_adv_start(&advParam, advertizingData, ARRAY_SIZE(advertizingData), NULL, 0);
+            if (err)
+            {
+                LOG_WRN("Advertising failed to start (ret %d)", err);
+            }
         }
     }
 }
