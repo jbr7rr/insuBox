@@ -1,4 +1,4 @@
-name: Build
+name: Test and build
 
 on:
   push:
@@ -31,16 +31,16 @@ jobs:
         run: |
           pip install --user -r zephyr/scripts/requirements.txt
           pip install --user -r bootloader/mcuboot/scripts/requirements.txt
-
-      - name: Apply Zephyr patches
-        working-directory: zephyr
-        run: |
-          git apply ../insuBox/patches/fix_gtest_harness.patch
           
       - name: Twister Tests
         working-directory: insuBox
         run: |
           west twister -T tests --integration --jobs 1
+
+      - name: Build
+        working-directory: insuBox
+        run: |
+          west build -b native_sim app
 
       - name: Upload test logs
         if: ${{ always() }}
@@ -50,8 +50,9 @@ jobs:
           path: |
             insuBox/twister-out/native_posix/lib/lib.*/build.log
             insuBox/twister-out/twister.log
-          retention-days: 14
+          retention-days: 5
 
+  # This step is here purely to check if the doc builds, deployment of the doc is done in generate_docs.yml
   generate-docs:
     runs-on: ubuntu-22.04
     permissions:
@@ -81,10 +82,5 @@ jobs:
         with:
           name: doxygen-html
           path: doc/html
-          retention-days: 14
+          retention-days: 3
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: doc/html
