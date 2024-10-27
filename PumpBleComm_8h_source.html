@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>InsiBox: include/pump/medtrum/comm/PumpBleComm.h Source File</title>
+<title>InsiBox: include/pump/medtrum_bt/comm/PumpBleComm.h Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -101,7 +101,7 @@ $(document).ready(function(){initNavTree('PumpBleComm_8h_source.html',''); initR
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define PUMP_BLE_COMM_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;<a class="code" href="BLEComm_8h.html">ble/BLEComm.h</a>&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;<a class="code" href="WriteCommandPackets_8h.html">pump/medtrum/comm/WriteCommandPackets.h</a>&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;<a class="code" href="WriteCommandPackets_8h.html">pump/medtrum_bt/comm/WriteCommandPackets.h</a>&gt;</span></div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;optional&gt;</span></div>
 <div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="preprocessor">#include &lt;string&gt;</span></div>
@@ -203,7 +203,7 @@ $(document).ready(function(){initNavTree('PumpBleComm_8h_source.html',''); initR
 <div class="line"><a id="l00108" name="l00108"></a><span class="lineno">  108</span> </div>
 <div class="line"><a id="l00109" name="l00109"></a><span class="lineno">  109</span>    <span class="comment">// Task stuff</span></div>
 <div class="line"><a id="l00110" name="l00110"></a><span class="lineno"><a class="line" href="classPumpBleComm.html#a124528cc0266f5da2225c35a2546aec8">  110</a></span>    k_work_q <a class="code hl_variable" href="classPumpBleComm.html#a124528cc0266f5da2225c35a2546aec8">mWorkQueue</a>;</div>
-<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classPumpBleComm.html#a5bf92d7ef62541242736cbb72862a21a">  111</a></span>    <a class="code hl_function" href="classPumpBleComm.html#a5bf92d7ef62541242736cbb72862a21a">K_THREAD_STACK_MEMBER</a>(mWorkQueueBuffer, 2048);</div>
+<div class="line"><a id="l00111" name="l00111"></a><span class="lineno"><a class="line" href="classPumpBleComm.html#a657e39bf5e5d4d406575ed1eb881b18f">  111</a></span>    <a class="code hl_function" href="classPumpBleComm.html#a657e39bf5e5d4d406575ed1eb881b18f">K_KERNEL_STACK_MEMBER</a>(mWorkQueueBuffer, KB(2));</div>
 <div class="line"><a id="l00112" name="l00112"></a><span class="lineno">  112</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classPumpBleComm.html#af6d17af8bdcb4c5e8da702b798c75f8a">submitWork</a>(k_work_delayable &amp;task, k_timeout_t delay = K_MSEC(100));</div>
 <div class="line"><a id="l00113" name="l00113"></a><span class="lineno">  113</span>    <span class="comment">// Task related functions</span></div>
 <div class="line"><a id="l00114" name="l00114"></a><span class="lineno">  114</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classPumpBleComm.html#a4bce6af223470907c5140711dc028a66">_connect</a>();</div>
@@ -217,7 +217,7 @@ $(document).ready(function(){initNavTree('PumpBleComm_8h_source.html',''); initR
 <div class="line"><a id="l00121" name="l00121"></a><span class="lineno">  121</span><span class="preprocessor">#endif </span><span class="comment">// PUMP_BLE_COMM_H</span></div>
 <div class="ttc" id="aBLEComm_8h_html"><div class="ttname"><a href="BLEComm_8h.html">BLEComm.h</a></div></div>
 <div class="ttc" id="aWriteCommandPackets_8h_html"><div class="ttname"><a href="WriteCommandPackets_8h.html">WriteCommandPackets.h</a></div></div>
-<div class="ttc" id="aclassIBLECallback_html"><div class="ttname"><a href="classIBLECallback.html">IBLECallback</a></div><div class="ttdef"><b>Definition</b> BLEComm.h:14</div></div>
+<div class="ttc" id="aclassIBLECallback_html"><div class="ttname"><a href="classIBLECallback.html">IBLECallback</a></div><div class="ttdef"><b>Definition</b> BLEComm.h:28</div></div>
 <div class="ttc" id="aclassIScanCallback_html"><div class="ttname"><a href="classIScanCallback.html">IScanCallback</a></div><div class="ttdef"><b>Definition</b> PumpBleComm.h:21</div></div>
 <div class="ttc" id="aclassIScanCallback_html_aa78eca958a5b978b1d2ffe525479f654"><div class="ttname"><a href="classIScanCallback.html#aa78eca958a5b978b1d2ffe525479f654">IScanCallback::onDeviceFound</a></div><div class="ttdeci">virtual void onDeviceFound(bt_addr_le_t addr, ManufacturerData manufacturerData)=0</div></div>
 <div class="ttc" id="aclassPumpBleCallback_html"><div class="ttname"><a href="classPumpBleCallback.html">PumpBleCallback</a></div><div class="ttdef"><b>Definition</b> PumpBleComm.h:11</div></div>
@@ -238,7 +238,7 @@ $(document).ready(function(){initNavTree('PumpBleComm_8h_source.html',''); initR
 <div class="ttc" id="aclassPumpBleComm_html_a55e9d7f13e21ebe4dda3c7ac96db2c0f"><div class="ttname"><a href="classPumpBleComm.html#a55e9d7f13e21ebe4dda3c7ac96db2c0f">PumpBleComm::mConnection</a></div><div class="ttdeci">BleConnection mConnection</div><div class="ttdef"><b>Definition</b> PumpBleComm.h:97</div></div>
 <div class="ttc" id="aclassPumpBleComm_html_a58dbfea08d579073632478f6c8a4e8d9"><div class="ttname"><a href="classPumpBleComm.html#a58dbfea08d579073632478f6c8a4e8d9">PumpBleComm::mWriteCommandPackets</a></div><div class="ttdeci">std::optional&lt; WriteCommandPackets &gt; mWriteCommandPackets</div><div class="ttdef"><b>Definition</b> PumpBleComm.h:105</div></div>
 <div class="ttc" id="aclassPumpBleComm_html_a5adf3f0bb5ef18bdfbd167b64bc33d95"><div class="ttname"><a href="classPumpBleComm.html#a5adf3f0bb5ef18bdfbd167b64bc33d95">PumpBleComm::onDiscover</a></div><div class="ttdeci">uint8_t onDiscover(struct bt_conn *conn, const struct bt_gatt_attr *attr, struct bt_gatt_discover_params *params) override</div><div class="ttdef"><b>Definition</b> PumpBleComm.cpp:223</div></div>
-<div class="ttc" id="aclassPumpBleComm_html_a5bf92d7ef62541242736cbb72862a21a"><div class="ttname"><a href="classPumpBleComm.html#a5bf92d7ef62541242736cbb72862a21a">PumpBleComm::K_THREAD_STACK_MEMBER</a></div><div class="ttdeci">K_THREAD_STACK_MEMBER(mWorkQueueBuffer, 2048)</div></div>
+<div class="ttc" id="aclassPumpBleComm_html_a657e39bf5e5d4d406575ed1eb881b18f"><div class="ttname"><a href="classPumpBleComm.html#a657e39bf5e5d4d406575ed1eb881b18f">PumpBleComm::K_KERNEL_STACK_MEMBER</a></div><div class="ttdeci">K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, KB(2))</div></div>
 <div class="ttc" id="aclassPumpBleComm_html_a65980677fc9650a7e018e0bf21fed25c"><div class="ttname"><a href="classPumpBleComm.html#a65980677fc9650a7e018e0bf21fed25c">PumpBleComm::mSubscribeReadParams</a></div><div class="ttdeci">struct bt_gatt_subscribe_params mSubscribeReadParams</div><div class="ttdef"><b>Definition</b> PumpBleComm.h:101</div></div>
 <div class="ttc" id="aclassPumpBleComm_html_a68a4e5d1d4385ba32ef811616c6721b1"><div class="ttname"><a href="classPumpBleComm.html#a68a4e5d1d4385ba32ef811616c6721b1">PumpBleComm::mDiscoverParams</a></div><div class="ttdeci">struct bt_gatt_discover_params mDiscoverParams</div><div class="ttdef"><b>Definition</b> PumpBleComm.h:92</div></div>
 <div class="ttc" id="aclassPumpBleComm_html_a75fe94f37a1938092f07f4f1289127c0"><div class="ttname"><a href="classPumpBleComm.html#a75fe94f37a1938092f07f4f1289127c0">PumpBleComm::onSecurityChanged</a></div><div class="ttdeci">void onSecurityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err) override</div><div class="ttdef"><b>Definition</b> PumpBleComm.cpp:217</div></div>
@@ -263,7 +263,7 @@ $(document).ready(function(){initNavTree('PumpBleComm_8h_source.html',''); initR
 <div class="ttc" id="aclassPumpBleComm_html_afb69657c6ca0c3ff56d938400b5664b8"><div class="ttname"><a href="classPumpBleComm.html#afb69657c6ca0c3ff56d938400b5664b8">PumpBleComm::onDisconnected</a></div><div class="ttdeci">void onDisconnected(struct bt_conn *conn, uint8_t reason) override</div><div class="ttdef"><b>Definition</b> PumpBleComm.cpp:208</div></div>
 <div class="ttc" id="aclassPumpBleComm_html_afd6598182f45af5dbccf490d9c712afe"><div class="ttname"><a href="classPumpBleComm.html#afd6598182f45af5dbccf490d9c712afe">PumpBleComm::~PumpBleComm</a></div><div class="ttdeci">~PumpBleComm()</div><div class="ttdef"><b>Definition</b> PumpBleComm.cpp:43</div></div>
 <div class="ttc" id="aclassWriteCommandPackets_html_a508021fda9b2874a021caee24f6d9313"><div class="ttname"><a href="classWriteCommandPackets.html#a508021fda9b2874a021caee24f6d9313">WriteCommandPackets::PACKET_SIZE</a></div><div class="ttdeci">static const size_t PACKET_SIZE</div><div class="ttdef"><b>Definition</b> WriteCommandPackets.h:10</div></div>
-<div class="ttc" id="astructBleConnection_html"><div class="ttname"><a href="structBleConnection.html">BleConnection</a></div><div class="ttdef"><b>Definition</b> BLEComm.h:27</div></div>
+<div class="ttc" id="astructBleConnection_html"><div class="ttname"><a href="structBleConnection.html">BleConnection</a></div><div class="ttdef"><b>Definition</b> BLEComm.h:41</div></div>
 <div class="ttc" id="astructIScanCallback_1_1ManufacturerData_html"><div class="ttname"><a href="structIScanCallback_1_1ManufacturerData.html">IScanCallback::ManufacturerData</a></div><div class="ttdef"><b>Definition</b> PumpBleComm.h:24</div></div>
 <div class="ttc" id="astructIScanCallback_1_1ManufacturerData_html_a074fb23c49674d512fda06dd3d8af197"><div class="ttname"><a href="structIScanCallback_1_1ManufacturerData.html#a074fb23c49674d512fda06dd3d8af197">IScanCallback::ManufacturerData::version</a></div><div class="ttdeci">uint8_t version</div><div class="ttdef"><b>Definition</b> PumpBleComm.h:28</div></div>
 <div class="ttc" id="astructIScanCallback_1_1ManufacturerData_html_a383762fa7ee4376be111dab7a439c078"><div class="ttname"><a href="structIScanCallback_1_1ManufacturerData.html#a383762fa7ee4376be111dab7a439c078">IScanCallback::ManufacturerData::companyId</a></div><div class="ttdeci">uint16_t companyId</div><div class="ttdef"><b>Definition</b> PumpBleComm.h:25</div></div>
@@ -279,7 +279,7 @@ $(document).ready(function(){initNavTree('PumpBleComm_8h_source.html',''); initR
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_67741886f696d468ea8c7777bd0d7877.html">pump</a></li><li class="navelem"><a class="el" href="dir_26f32c1a88b45c40241d9a457c90448f.html">medtrum</a></li><li class="navelem"><a class="el" href="dir_89237296835632e1d7ccb894c5f2b100.html">comm</a></li><li class="navelem"><a class="el" href="PumpBleComm_8h.html">PumpBleComm.h</a></li>
+    <li class="navelem"><a class="el" href="dir_d44c64559bbebec7f509842c48db8b23.html">include</a></li><li class="navelem"><a class="el" href="dir_67741886f696d468ea8c7777bd0d7877.html">pump</a></li><li class="navelem"><a class="el" href="dir_a3ca48be7c16e4ab6184a976ee5d04e0.html">medtrum_bt</a></li><li class="navelem"><a class="el" href="dir_1c294a73223609ae6b80ff8cda7ee325.html">comm</a></li><li class="navelem"><a class="el" href="PumpBleComm_8h.html">PumpBleComm.h</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

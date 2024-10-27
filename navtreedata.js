@@ -88,13 +88,20 @@ var NAVTREE =
       [ "Battery Service", "BleInterfaceSpec.html#battery-service", null ],
       [ "Bond Management Service", "BleInterfaceSpec.html#bond-management-service", null ]
     ] ],
+    [ "Namespaces", "namespaces.html", [
+      [ "Namespace List", "namespaces.html", "namespaces_dup" ],
+      [ "Namespace Members", "namespacemembers.html", [
+        [ "All", "namespacemembers.html", null ],
+        [ "Functions", "namespacemembers_func.html", null ]
+      ] ]
+    ] ],
     [ "Classes", "annotated.html", [
       [ "Class List", "annotated.html", "annotated_dup" ],
       [ "Class Index", "classes.html", null ],
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", null ],
+        [ "Functions", "functions_func.html", "functions_func" ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
         [ "Enumerations", "functions_enum.html", null ],
@@ -115,8 +122,9 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "AuthPacket_8cpp.html",
-"classCommandType.html#acd440488cc03501502486fb0d465b015a8e76d9ad1535bf678d04635a14c1e77c",
-"classSetTempBasalPacketTest.html#a47c08a227ad4dc9c9f37d56654282a57"
+"classBasalType.html#a6899be7659ea5677d7f6ec478007eb83a558661cff122e91ad97a6408bc920fea",
+"classPumpBleComm.html#a124528cc0266f5da2225c35a2546aec8",
+"structHmiService_1_1PassKeyDisplayTask.html#abe3d00ac7b52b8c0d7b2086389b803b6"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

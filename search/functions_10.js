@@ -2,7 +2,7 @@ var searchData=
 [
   ['scan_5fcb_0',['scan_cb',['../classPumpScanner.html#a9916c75d658a07f64a3e1a79f2e2ca02',1,'PumpScanner']]],
   ['securitychanged_1',['securityChanged',['../classBLEComm.html#a538ead40d87b3978fd509895a1b37383',1,'BLEComm']]],
-  ['sendpacketandwaitforresponse_2',['sendPacketAndWaitForResponse',['../classMedtrumDevice.html#a9dcf983f159a8cdad891920595f2b70d',1,'MedtrumDevice']]],
+  ['sendpacketandwaitforresponse_2',['sendPacketAndWaitForResponse',['../classMedtrumBTDevice.html#a8a748bd3c14c00c89bee4247db634fc1',1,'MedtrumBTDevice']]],
   ['setboluspacket_3',['SetBolusPacket',['../classSetBolusPacket.html#a0432752afc47eaaa4d4a9ae875a80798',1,'SetBolusPacket']]],
   ['setcurrentsequencenumber_4',['setCurrentSequenceNumber',['../classMedtrumPumpSync.html#a3d931fd19fd5992536e3b8cca814bbc6',1,'MedtrumPumpSync']]],
   ['setdevicetype_5',['setDeviceType',['../classMedtrumPumpSync.html#acc1e7c8fddb0597550236d6c1bfe06fe',1,'MedtrumPumpSync']]],
@@ -20,7 +20,7 @@ var searchData=
   ['simpledecrypt_17',['simpleDecrypt',['../classCrypt.html#a72459e6403edf82ee5677387a198b897',1,'Crypt']]],
   ['startscan_18',['startScan',['../classPumpScanner.html#ac1b3c4fc99354f7f05f910a434345e6b',1,'PumpScanner']]],
   ['submitwork_19',['submitWork',['../classPumpBleComm.html#af6d17af8bdcb4c5e8da702b798c75f8a',1,'PumpBleComm']]],
-  ['subscribe_20',['subscribe',['../classBLEComm.html#a081b8aa552974b5892c079f31d5c67a2',1,'BLEComm']]],
+  ['subscribe_20',['subscribe',['../classBLEComm.html#a081b8aa552974b5892c079f31d5c67a2',1,'BLEComm::subscribe()'],['../classEventDispatcher.html#a787b104271e80549604769cfc82a6678',1,'EventDispatcher::subscribe()']]],
   ['subscribepacket_21',['SubscribePacket',['../classSubscribePacket.html#afb293fc4c75c8c5caa182350929cc73a',1,'SubscribePacket']]],
   ['synchronizepacket_22',['SynchronizePacket',['../classSynchronizePacket.html#a2e6d3cf5b2978d140f264cd60edbae0a',1,'SynchronizePacket']]]
 ];

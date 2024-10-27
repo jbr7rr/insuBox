@@ -12,7 +12,7 @@ var searchData=
   ['handlenewpatch_9',['handleNewPatch',['../classMedtrumPumpSync.html#a5190d73106c07fee8fcc35ab2dbc8480',1,'MedtrumPumpSync']]],
   ['handlenormalbolus_10',['handleNormalBolus',['../classNotificationPacket.html#a2e81399a7775518c8b2597b2aab9798d',1,'NotificationPacket']]],
   ['handlereservoir_11',['handleReservoir',['../classNotificationPacket.html#a5e8ec34e9c68a071ad18a71fb81c92e6',1,'NotificationPacket']]],
-  ['handleresponse_12',['handleresponse',['../classSetTempBasalPacket.html#a6be654913e28c36d5bf0ed70fa4071c6',1,'SetTempBasalPacket::handleResponse()'],['../classSynchronizePacket.html#aac66b737f96a40a76e49388ba74d3cbb',1,'SynchronizePacket::handleResponse()'],['../classMedtrumBasePacket.html#ac35525dc895f9c076586c3c2d59e8c2a',1,'MedtrumBasePacket::handleResponse()'],['../classAuthPacket.html#a6b891ac48e89e93355c61c4e9883a9da',1,'AuthPacket::handleResponse()']]],
+  ['handleresponse_12',['handleresponse',['../classSetTempBasalPacket.html#a6be654913e28c36d5bf0ed70fa4071c6',1,'SetTempBasalPacket::handleResponse()'],['../classMedtrumBasePacket.html#ac35525dc895f9c076586c3c2d59e8c2a',1,'MedtrumBasePacket::handleResponse()'],['../classAuthPacket.html#a6b891ac48e89e93355c61c4e9883a9da',1,'AuthPacket::handleResponse()'],['../classSynchronizePacket.html#aac66b737f96a40a76e49388ba74d3cbb',1,'SynchronizePacket::handleResponse()']]],
   ['handlerfunc_13',['HandlerFunc',['../classNotificationPacket.html#aba6afa607d35637ea4c082e594a927b6',1,'NotificationPacket']]],
   ['handlesetup_14',['handleSetup',['../classNotificationPacket.html#a6c245256f67dd16aa8cf6de717a6915c',1,'NotificationPacket']]],
   ['handlestarttime_15',['handleStartTime',['../classNotificationPacket.html#a4a66a23e0dafe91563306ecf88cf6653',1,'NotificationPacket']]],
@@ -22,7 +22,11 @@ var searchData=
   ['handleunusedcgm_19',['handleUnusedCGM',['../classNotificationPacket.html#a2ff5afa825326867bf6e83bd4285849f',1,'NotificationPacket']]],
   ['handleunusedcommandconfirm_20',['handleUnusedCommandConfirm',['../classNotificationPacket.html#abf2caa24b1ce900b6049f9553db64bec',1,'NotificationPacket']]],
   ['handleunusedlegacy_21',['handleUnusedLegacy',['../classNotificationPacket.html#a2e61803374176b0c13411d0022c6f9fc',1,'NotificationPacket']]],
-  ['holiday_22',['HOLIDAY',['../classBasalType.html#a6899be7659ea5677d7f6ec478007eb83a799bbcb7b2c163eaedc40107ac2f5e45',1,'BasalType']]],
-  ['hourly_5fmax_5fsuspended_23',['HOURLY_MAX_SUSPENDED',['../classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a84b2ba518f59424c13a964f6881495ad',1,'PumpState']]],
-  ['how_20to_20develop_24',['How to develop',['../index.html#autotoc_md4',1,'']]]
+  ['hmiservice_22',['hmiservice',['../classHmiService.html#a41b09bd49184bcf39ee65e95c7641d11',1,'HmiService::HmiService(EventDispatcher &amp;dispatcher)'],['../classHmiService.html#a1778b16fa43871cf3cabb0abc79d018d',1,'HmiService::HmiService(EventDispatcher &amp;dispatcher, IHmiDevice &amp;hmiDevice)'],['../classHmiService.html',1,'HmiService']]],
+  ['hmiservice_2ecpp_23',['HmiService.cpp',['../HmiService_8cpp.html',1,'']]],
+  ['hmiservice_2eh_24',['HmiService.h',['../HmiService_8h.html',1,'']]],
+  ['hmiservicetest_25',['hmiservicetest',['../classHmiServiceTest.html',1,'HmiServiceTest'],['../classHmiServiceTest.html#ac00f2657039a609983f1f7d8bec2b2f4',1,'HmiServiceTest::HmiServiceTest()']]],
+  ['holiday_26',['HOLIDAY',['../classBasalType.html#a6899be7659ea5677d7f6ec478007eb83a799bbcb7b2c163eaedc40107ac2f5e45',1,'BasalType']]],
+  ['hourly_5fmax_5fsuspended_27',['HOURLY_MAX_SUSPENDED',['../classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a84b2ba518f59424c13a964f6881495ad',1,'PumpState']]],
+  ['how_20to_20develop_28',['How to develop',['../index.html#autotoc_md4',1,'']]]
 ];

@@ -2,7 +2,7 @@
 <area shape="rect" id="Node000001" title=" " alt="" coords="463,112,665,137"/>
 <area shape="rect" id="Node000002" href="$classMedtrumPumpSync.html#aff5f0a7a33ce8f31cdcd9538407c5816" title=" " alt="" coords="236,112,415,137"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="449,127,415,127,415,122,449,122"/>
-<area shape="rect" id="Node000003" href="$classMedtrumDevice.html#aaabd0805845c7015af6e1464c07967a2" title=" " alt="" coords="19,5,174,31"/>
+<area shape="rect" id="Node000003" href="$classMedtrumBTDevice.html#a1b8798bd86a2c4cc62086fbf393ff3fc" title=" " alt="" coords="11,5,183,31"/>
 <area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="294,106,245,75,187,44,155,33,156,28,189,40,248,70,297,102"/>
 <area shape="rect" id="Node000004" href="$classAuthPacketTest.html#a7efab1769e71e03dc8dbc4f58befb50b" title=" " alt="" coords="13,55,180,80"/>
 <area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="260,111,147,83,149,77,261,106"/>

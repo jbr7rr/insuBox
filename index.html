@@ -118,11 +118,10 @@ west update
 </pre></li>
 <li>Build the project for your target board, for example: <a href="https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html">https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html</a></li>
 </ul>
-<h2><a class="anchor" id="autotoc_md6"></a>
+<p>To select an additional config file use: </p><div class="fragment"><div class="line">west build -b $BOARD app -- -DOVERLAY_CONFIG=medtrum_bt.conf</div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
 Run unit tests</h2>
-<p>Apply the patch in the <code>patches</code> folder to the zephyr repo (only first time needed): </p><pre class="fragment">cd ../zephyr
-git apply ../insuBox/patches/fix_gtest_harness.patch
-</pre><p>Run the tests (from the repo dir): </p><pre class="fragment">west twister -T tests --integration
+<p>Run the tests: </p><pre class="fragment">west twister -T tests --integration
 </pre><h1><a class="anchor" id="autotoc_md7"></a>
 Architecture</h1>
 <h2><a class="anchor" id="autotoc_md8"></a>

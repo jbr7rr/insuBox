@@ -12,7 +12,7 @@ var searchData=
   ['handlenewpatch_9',['handleNewPatch',['../classMedtrumPumpSync.html#a5190d73106c07fee8fcc35ab2dbc8480',1,'MedtrumPumpSync']]],
   ['handlenormalbolus_10',['handleNormalBolus',['../classNotificationPacket.html#a2e81399a7775518c8b2597b2aab9798d',1,'NotificationPacket']]],
   ['handlereservoir_11',['handleReservoir',['../classNotificationPacket.html#a5e8ec34e9c68a071ad18a71fb81c92e6',1,'NotificationPacket']]],
-  ['handleresponse_12',['handleresponse',['../classAuthPacket.html#a6b891ac48e89e93355c61c4e9883a9da',1,'AuthPacket::handleResponse()'],['../classSynchronizePacket.html#aac66b737f96a40a76e49388ba74d3cbb',1,'SynchronizePacket::handleResponse()'],['../classSetTempBasalPacket.html#a6be654913e28c36d5bf0ed70fa4071c6',1,'SetTempBasalPacket::handleResponse()'],['../classMedtrumBasePacket.html#ac35525dc895f9c076586c3c2d59e8c2a',1,'MedtrumBasePacket::handleResponse()']]],
+  ['handleresponse_12',['handleresponse',['../classMedtrumBasePacket.html#ac35525dc895f9c076586c3c2d59e8c2a',1,'MedtrumBasePacket::handleResponse()'],['../classSynchronizePacket.html#aac66b737f96a40a76e49388ba74d3cbb',1,'SynchronizePacket::handleResponse()'],['../classSetTempBasalPacket.html#a6be654913e28c36d5bf0ed70fa4071c6',1,'SetTempBasalPacket::handleResponse()'],['../classAuthPacket.html#a6b891ac48e89e93355c61c4e9883a9da',1,'AuthPacket::handleResponse()']]],
   ['handlesetup_13',['handleSetup',['../classNotificationPacket.html#a6c245256f67dd16aa8cf6de717a6915c',1,'NotificationPacket']]],
   ['handlestarttime_14',['handleStartTime',['../classNotificationPacket.html#a4a66a23e0dafe91563306ecf88cf6653',1,'NotificationPacket']]],
   ['handlestorage_15',['handleStorage',['../classNotificationPacket.html#ae29efd8b8393714e940a49be353b39dd',1,'NotificationPacket']]],
@@ -20,5 +20,7 @@ var searchData=
   ['handleunusedautostatus_17',['handleUnusedAutoStatus',['../classNotificationPacket.html#aaab2a875f50dfe945b8a1d16a7c673c3',1,'NotificationPacket']]],
   ['handleunusedcgm_18',['handleUnusedCGM',['../classNotificationPacket.html#a2ff5afa825326867bf6e83bd4285849f',1,'NotificationPacket']]],
   ['handleunusedcommandconfirm_19',['handleUnusedCommandConfirm',['../classNotificationPacket.html#abf2caa24b1ce900b6049f9553db64bec',1,'NotificationPacket']]],
-  ['handleunusedlegacy_20',['handleUnusedLegacy',['../classNotificationPacket.html#a2e61803374176b0c13411d0022c6f9fc',1,'NotificationPacket']]]
+  ['handleunusedlegacy_20',['handleUnusedLegacy',['../classNotificationPacket.html#a2e61803374176b0c13411d0022c6f9fc',1,'NotificationPacket']]],
+  ['hmiservice_21',['hmiservice',['../classHmiService.html#a41b09bd49184bcf39ee65e95c7641d11',1,'HmiService::HmiService(EventDispatcher &amp;dispatcher)'],['../classHmiService.html#a1778b16fa43871cf3cabb0abc79d018d',1,'HmiService::HmiService(EventDispatcher &amp;dispatcher, IHmiDevice &amp;hmiDevice)']]],
+  ['hmiservicetest_22',['HmiServiceTest',['../classHmiServiceTest.html#ac00f2657039a609983f1f7d8bec2b2f4',1,'HmiServiceTest']]]
 ];

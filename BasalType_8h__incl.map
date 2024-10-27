@@ -1,5 +1,5 @@
-<map id="include/pump/medtrum/comm/enums/BasalType.h" name="include/pump/medtrum/comm/enums/BasalType.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="33,5,230,45"/>
+<map id="include/pump/medtrum_bt/comm/enums/BasalType.h" name="include/pump/medtrum_bt/comm/enums/BasalType.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="23,5,240,45"/>
 <area shape="rect" id="Node000002" href="$BasalEndReason_8h.html" title=" " alt="" coords="5,93,148,119"/>
 <area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="120,47,95,84,90,80,116,44"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="98,167,165,192"/>

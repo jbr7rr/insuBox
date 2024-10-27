@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=11"/>
 <meta name="generator" content="Doxygen 1.9.8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>InsiBox: lib/pump/medtrum/comm/packets/SetBolusPacket.cpp File Reference</title>
+<title>InsiBox: lib/pump/medtrum_bt/comm/packets/SetBolusPacket.cpp File Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -93,34 +93,34 @@ $(document).ready(function(){initNavTree('SetBolusPacket_8cpp.html',''); initRes
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;cmath&gt;</code><br />
-<code>#include &lt;<a class="el" href="CommandType_8h_source.html">pump/medtrum/comm/enums/CommandType.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="SetBolusPacket_8h_source.html">pump/medtrum/comm/packets/SetBolusPacket.h</a>&gt;</code><br />
-<code>#include &lt;<a class="el" href="Vector_8h_source.html">pump/medtrum/utils/Vector.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="CommandType_8h_source.html">pump/medtrum_bt/comm/enums/CommandType.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="SetBolusPacket_8h_source.html">pump/medtrum_bt/comm/packets/SetBolusPacket.h</a>&gt;</code><br />
+<code>#include &lt;<a class="el" href="Vector_8h_source.html">pump/medtrum_bt/utils/Vector.h</a>&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for SetBolusPacket.cpp:</div>
 <div class="dyncontent">
-<div class="center"><img src="SetBolusPacket_8cpp__incl.png" border="0" usemap="#alib_2pump_2medtrum_2comm_2packets_2SetBolusPacket_8cpp" alt=""/></div>
-<map name="alib_2pump_2medtrum_2comm_2packets_2SetBolusPacket_8cpp" id="alib_2pump_2medtrum_2comm_2packets_2SetBolusPacket_8cpp">
-<area shape="rect" title=" " alt="" coords="173,5,380,45"/>
-<area shape="rect" title=" " alt="" coords="5,101,68,126"/>
-<area shape="poly" title=" " alt="" coords="217,48,80,96,75,98,73,93,78,91,216,43"/>
-<area shape="rect" href="CommandType_8h.html" title=" " alt="" coords="453,181,669,221"/>
-<area shape="poly" title=" " alt="" coords="309,43,520,172,517,176,306,48"/>
-<area shape="rect" href="SetBolusPacket_8h.html" title=" " alt="" coords="92,93,315,133"/>
-<area shape="poly" title=" " alt="" coords="262,47,230,85,226,81,258,44"/>
-<area shape="rect" href="Vector_8h.html" title=" " alt="" coords="274,181,429,221"/>
-<area shape="poly" title=" " alt="" coords="296,44,313,66,328,92,342,130,350,167,344,168,337,132,324,94,309,69,292,47"/>
-<area shape="rect" title=" " alt="" coords="318,269,385,295"/>
-<area shape="poly" title=" " alt="" coords="511,224,396,267,394,262,510,219"/>
-<area shape="rect" href="MedtrumBasePacket_8h.html" title=" " alt="" coords="28,181,251,221"/>
-<area shape="poly" title=" " alt="" coords="191,135,164,172,160,168,187,132"/>
-<area shape="poly" title=" " alt="" coords="191,219,308,262,306,267,189,224"/>
-<area shape="rect" title=" " alt="" coords="104,269,175,295"/>
-<area shape="poly" title=" " alt="" coords="142,222,142,255,137,255,137,222"/>
-<area shape="rect" title=" " alt="" coords="215,269,277,295"/>
-<area shape="poly" title=" " alt="" coords="167,219,220,259,217,263,164,224"/>
-<area shape="poly" title=" " alt="" coords="354,222,354,255,349,255,349,222"/>
-<area shape="poly" title=" " alt="" coords="327,224,274,263,271,259,324,219"/>
+<div class="center"><img src="SetBolusPacket_8cpp__incl.png" border="0" usemap="#alib_2pump_2medtrum__bt_2comm_2packets_2SetBolusPacket_8cpp" alt=""/></div>
+<map name="alib_2pump_2medtrum__bt_2comm_2packets_2SetBolusPacket_8cpp" id="alib_2pump_2medtrum__bt_2comm_2packets_2SetBolusPacket_8cpp">
+<area shape="rect" title=" " alt="" coords="150,5,401,45"/>
+<area shape="rect" title=" " alt="" coords="27,101,89,126"/>
+<area shape="poly" title=" " alt="" coords="225,48,102,96,97,98,95,93,100,91,223,43"/>
+<area shape="rect" href="CommandType_8h.html" title=" " alt="" coords="453,181,641,221"/>
+<area shape="poly" title=" " alt="" coords="306,43,508,172,505,176,304,48"/>
+<area shape="rect" href="SetBolusPacket_8h.html" title=" " alt="" coords="113,93,304,133"/>
+<area shape="poly" title=" " alt="" coords="263,47,234,84,230,81,258,44"/>
+<area shape="rect" href="Vector_8h.html" title=" " alt="" coords="255,181,429,221"/>
+<area shape="poly" title=" " alt="" coords="292,44,319,92,332,131,340,167,335,168,327,132,314,94,287,47"/>
+<area shape="rect" title=" " alt="" coords="309,269,375,295"/>
+<area shape="poly" title=" " alt="" coords="499,224,386,267,384,262,497,219"/>
+<area shape="rect" href="MedtrumBasePacket_8h.html" title=" " alt="" coords="5,181,231,221"/>
+<area shape="poly" title=" " alt="" coords="190,136,150,174,146,170,187,132"/>
+<area shape="poly" title=" " alt="" coords="173,219,297,262,295,267,171,224"/>
+<area shape="rect" title=" " alt="" coords="83,269,153,295"/>
+<area shape="poly" title=" " alt="" coords="121,222,121,255,115,255,115,222"/>
+<area shape="rect" title=" " alt="" coords="200,269,263,295"/>
+<area shape="poly" title=" " alt="" coords="147,219,205,259,202,263,144,224"/>
+<area shape="poly" title=" " alt="" coords="345,222,345,255,339,255,339,222"/>
+<area shape="poly" title=" " alt="" coords="317,224,260,263,257,259,314,219"/>
 </map>
 </div>
 </div></div><!-- contents -->
@@ -128,7 +128,7 @@ Include dependency graph for SetBolusPacket.cpp:</div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
-    <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_7989cad77e5ba20de9542f5f965439d8.html">pump</a></li><li class="navelem"><a class="el" href="dir_1644f6ac55dd183b3305a2efb8beba00.html">medtrum</a></li><li class="navelem"><a class="el" href="dir_a6f7181249d6284297a618e6a9096946.html">comm</a></li><li class="navelem"><a class="el" href="dir_e8445ebeb90a79008f29dd6d89bc20f6.html">packets</a></li><li class="navelem"><a class="el" href="SetBolusPacket_8cpp.html">SetBolusPacket.cpp</a></li>
+    <li class="navelem"><a class="el" href="dir_97aefd0d527b934f1d99a682da8fe6a9.html">lib</a></li><li class="navelem"><a class="el" href="dir_7989cad77e5ba20de9542f5f965439d8.html">pump</a></li><li class="navelem"><a class="el" href="dir_8f095e23004cfdcec8f790a5fff897fc.html">medtrum_bt</a></li><li class="navelem"><a class="el" href="dir_c97a7b90c9d815c9fe4e4ad12f1aa012.html">comm</a></li><li class="navelem"><a class="el" href="dir_af4f45fd0076f7cb850f2ed7077eedaf.html">packets</a></li><li class="navelem"><a class="el" href="SetBolusPacket_8cpp.html">SetBolusPacket.cpp</a></li>
     <li class="footer">Generated by <a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.9.8 </li>
   </ul>
 </div>

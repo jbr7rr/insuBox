@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['targetdevicesn_0',['targetDeviceSN',['../structPumpScanner_1_1scanRequest.html#a856afc61660c1f2c1217c71bdfc9ce0d',1,'PumpScanner::scanRequest']]]
+  ['newstate_0',['newState',['../structTestEvent2.html#ad599c196f2eed3fc82f6b236c4411df0',1,'TestEvent2']]],
+  ['numlisteners_1',['numListeners',['../structSubscribeParams.html#a8c2c3f45574dc4d3b4312a7ab79abeb4',1,'SubscribeParams']]]
 ];

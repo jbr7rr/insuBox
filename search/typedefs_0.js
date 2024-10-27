@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['handlerfunc_0',['HandlerFunc',['../classNotificationPacket.html#aba6afa607d35637ea4c082e594a927b6',1,'NotificationPacket']]]
+  ['eventcallback_0',['EventCallback',['../classCallbackHolder.html#a0d58756121a314494abaaad2c33f99a8',1,'CallbackHolder']]]
 ];

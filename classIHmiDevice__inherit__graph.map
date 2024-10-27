@@ -1,0 +1,7 @@
+<map id="IHmiDevice" name="IHmiDevice">
+<area shape="rect" id="Node000001" title=" " alt="" coords="99,5,198,31"/>
+<area shape="rect" id="Node000002" href="$classMockHmiDevice.html" title=" " alt="" coords="5,79,135,104"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="128,42,85,80,81,76,124,38"/>
+<area shape="rect" id="Node000003" href="$classVirtualHmiDevice.html" title=" " alt="" coords="159,79,296,104"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="173,38,216,76,213,80,170,42"/>
+</map>

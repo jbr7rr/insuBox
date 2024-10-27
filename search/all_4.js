@@ -22,5 +22,7 @@ var searchData=
   ['discovery_5fmt_5fwrite_19',['DISCOVERY_MT_WRITE',['../classPumpBleComm.html#a958d483883b6b8f1da0d8afc9103a9e0a1021c195ce840bf1aca474ce9c0be836',1,'PumpBleComm']]],
   ['discovery_5fmt_5fwrite_5fccc_20',['DISCOVERY_MT_WRITE_CCC',['../classPumpBleComm.html#a958d483883b6b8f1da0d8afc9103a9e0a95b4a2b9e65ceb07602243758f45de40',1,'PumpBleComm']]],
   ['discoverystate_21',['DiscoveryState',['../classPumpBleComm.html#a958d483883b6b8f1da0d8afc9103a9e0',1,'PumpBleComm']]],
-  ['documentation_22',['InsuBox Documentation',['../index.html',1,'']]]
+  ['dispatch_22',['dispatch',['../classEventDispatcher.html#a5dbb702e712e7c1ae0e6b8d381061052',1,'EventDispatcher']]],
+  ['dispatcher_23',['dispatcher',['../classEventDispatcherParameterizedTest.html#a9fd6446d07548f65b413ea686e74e033',1,'EventDispatcherParameterizedTest::dispatcher'],['../classEventDispatcherTest.html#a553c53a902b8f0e373d0872b3dd8581d',1,'EventDispatcherTest::dispatcher']]],
+  ['documentation_24',['InsuBox Documentation',['../index.html',1,'']]]
 ];

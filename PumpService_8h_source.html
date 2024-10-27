@@ -101,37 +101,30 @@ $(document).ready(function(){initNavTree('PumpService_8h_source.html',''); initR
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define PUMP_SERVICE_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
 <div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;<a class="code" href="IPumpDevice_8h.html">pump/IPumpDevice.h</a>&gt;</span></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;<a class="code" href="PumpService_8h.html">pump/PumpService.h</a>&gt;</span></div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span><span class="preprocessor">#include &lt;<a class="code" href="MedtrumDevice_8h.html">pump/medtrum/MedtrumDevice.h</a>&gt;</span></div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span> </div>
-<div class="foldopen" id="foldopen00009" data-start="{" data-end="};">
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno"><a class="line" href="classPumpService.html">    9</a></span><span class="keyword">class </span><a class="code hl_class" href="classPumpService.html">PumpService</a></div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>{</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <a class="code hl_function" href="classPumpService.html#a8212d0a3ad101882b5c7458e2f6988d4">PumpService</a>();</div>
-<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <a class="code hl_function" href="classPumpService.html#acc849f4c44f4691cc4749c3f22fce054">~PumpService</a>();</div>
-<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classPumpService.html#acf416da6faabd3b3a9166beb6a16bd60">init</a>();</div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span> </div>
+<div class="foldopen" id="foldopen00006" data-start="{" data-end="};">
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno"><a class="line" href="classPumpService.html">    6</a></span><span class="keyword">class </span><a class="code hl_class" href="classPumpService.html">PumpService</a></div>
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>{</div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <a class="code hl_class" href="classPumpService.html">PumpService</a>(<a class="code hl_class" href="classIPumpDevice.html">IPumpDevice</a> &amp;pumpDevice = <a class="code hl_function" href="classPumpService.html#aa1b3e09aa9a33b3e356ae6a8bd2a42d9">PumpService::getPumpDevice</a>());</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <a class="code hl_function" href="classPumpService.html#acc849f4c44f4691cc4749c3f22fce054">~PumpService</a>();</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classPumpService.html#acf416da6faabd3b3a9166beb6a16bd60">init</a>();</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span> </div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classPumpService.html#adab32f5421c6bc439fde968f462e831f">   14</a></span>    <a class="code hl_class" href="classIPumpDevice.html">IPumpDevice</a> &amp;<a class="code hl_variable" href="classPumpService.html#adab32f5421c6bc439fde968f462e831f">mPumpDevice</a>;</div>
 <div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
-<div class="line"><a id="l00016" name="l00016"></a><span class="lineno">   16</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classPumpService.html#a2e922fb468f18fef5379abbc493cb594">   17</a></span>    <a class="code hl_class" href="classIPumpDevice.html">IPumpDevice</a> *<a class="code hl_variable" href="classPumpService.html#a2e922fb468f18fef5379abbc493cb594">mPumpDevice</a>;</div>
-<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
-<div class="line"><a id="l00019" name="l00019"></a><span class="lineno"><a class="line" href="classPumpService.html#a134b06d4638d67fb69b26b5c21e12ca9">   19</a></span>    <a class="code hl_class" href="classMedtrumDevice.html">MedtrumDevice</a> <a class="code hl_variable" href="classPumpService.html#a134b06d4638d67fb69b26b5c21e12ca9">mMedtrumDevice</a>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>};</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>    <span class="keyword">static</span> <a class="code hl_class" href="classIPumpDevice.html">IPumpDevice</a> &amp;<a class="code hl_function" href="classPumpService.html#aa1b3e09aa9a33b3e356ae6a8bd2a42d9">getPumpDevice</a>();</div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>};</div>
 </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif </span><span class="comment">// PUMP_SERVICE_H</span></div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span> </div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span><span class="preprocessor">#endif </span><span class="comment">// PUMP_SERVICE_H</span></div>
 <div class="ttc" id="aIPumpDevice_8h_html"><div class="ttname"><a href="IPumpDevice_8h.html">IPumpDevice.h</a></div></div>
-<div class="ttc" id="aMedtrumDevice_8h_html"><div class="ttname"><a href="MedtrumDevice_8h.html">MedtrumDevice.h</a></div></div>
-<div class="ttc" id="aPumpService_8h_html"><div class="ttname"><a href="PumpService_8h.html">PumpService.h</a></div></div>
 <div class="ttc" id="aclassIPumpDevice_html"><div class="ttname"><a href="classIPumpDevice.html">IPumpDevice</a></div><div class="ttdef"><b>Definition</b> IPumpDevice.h:5</div></div>
-<div class="ttc" id="aclassMedtrumDevice_html"><div class="ttname"><a href="classMedtrumDevice.html">MedtrumDevice</a></div><div class="ttdef"><b>Definition</b> MedtrumDevice.h:14</div></div>
-<div class="ttc" id="aclassPumpService_html"><div class="ttname"><a href="classPumpService.html">PumpService</a></div><div class="ttdef"><b>Definition</b> PumpService.h:10</div></div>
-<div class="ttc" id="aclassPumpService_html_a134b06d4638d67fb69b26b5c21e12ca9"><div class="ttname"><a href="classPumpService.html#a134b06d4638d67fb69b26b5c21e12ca9">PumpService::mMedtrumDevice</a></div><div class="ttdeci">MedtrumDevice mMedtrumDevice</div><div class="ttdef"><b>Definition</b> PumpService.h:19</div></div>
-<div class="ttc" id="aclassPumpService_html_a2e922fb468f18fef5379abbc493cb594"><div class="ttname"><a href="classPumpService.html#a2e922fb468f18fef5379abbc493cb594">PumpService::mPumpDevice</a></div><div class="ttdeci">IPumpDevice * mPumpDevice</div><div class="ttdef"><b>Definition</b> PumpService.h:17</div></div>
-<div class="ttc" id="aclassPumpService_html_a8212d0a3ad101882b5c7458e2f6988d4"><div class="ttname"><a href="classPumpService.html#a8212d0a3ad101882b5c7458e2f6988d4">PumpService::PumpService</a></div><div class="ttdeci">PumpService()</div><div class="ttdef"><b>Definition</b> PumpService.cpp:4</div></div>
-<div class="ttc" id="aclassPumpService_html_acc849f4c44f4691cc4749c3f22fce054"><div class="ttname"><a href="classPumpService.html#acc849f4c44f4691cc4749c3f22fce054">PumpService::~PumpService</a></div><div class="ttdeci">~PumpService()</div><div class="ttdef"><b>Definition</b> PumpService.cpp:9</div></div>
+<div class="ttc" id="aclassPumpService_html"><div class="ttname"><a href="classPumpService.html">PumpService</a></div><div class="ttdef"><b>Definition</b> PumpService.h:7</div></div>
+<div class="ttc" id="aclassPumpService_html_aa1b3e09aa9a33b3e356ae6a8bd2a42d9"><div class="ttname"><a href="classPumpService.html#aa1b3e09aa9a33b3e356ae6a8bd2a42d9">PumpService::getPumpDevice</a></div><div class="ttdeci">static IPumpDevice &amp; getPumpDevice()</div><div class="ttdoc">Get the pump internal pump device object of the selected type in Kconfig.</div><div class="ttdef"><b>Definition</b> PumpService.cpp:20</div></div>
+<div class="ttc" id="aclassPumpService_html_acc849f4c44f4691cc4749c3f22fce054"><div class="ttname"><a href="classPumpService.html#acc849f4c44f4691cc4749c3f22fce054">PumpService::~PumpService</a></div><div class="ttdeci">~PumpService()</div><div class="ttdef"><b>Definition</b> PumpService.cpp:12</div></div>
 <div class="ttc" id="aclassPumpService_html_acf416da6faabd3b3a9166beb6a16bd60"><div class="ttname"><a href="classPumpService.html#acf416da6faabd3b3a9166beb6a16bd60">PumpService::init</a></div><div class="ttdeci">void init()</div><div class="ttdef"><b>Definition</b> PumpService.cpp:14</div></div>
+<div class="ttc" id="aclassPumpService_html_adab32f5421c6bc439fde968f462e831f"><div class="ttname"><a href="classPumpService.html#adab32f5421c6bc439fde968f462e831f">PumpService::mPumpDevice</a></div><div class="ttdeci">IPumpDevice &amp; mPumpDevice</div><div class="ttdef"><b>Definition</b> PumpService.h:14</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

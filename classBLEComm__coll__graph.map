@@ -1,5 +1,13 @@
 <map id="BLEComm" name="BLEComm">
-<area shape="rect" id="Node000001" title=" " alt="" coords="19,79,108,104"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,5,121,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="66,44,66,79,61,79,61,44"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="312,104,401,129"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="27,5,154,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="168,31,228,47,289,70,340,102,338,106,287,75,227,52,167,36"/>
+<area shape="rect" id="Node000003" title=" " alt="" coords="33,55,149,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="163,74,289,95,313,101,312,107,287,101,162,79"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="17,104,164,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="178,114,312,114,312,119,178,119"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="5,153,176,179"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="173,148,311,122,312,127,174,153"/>
+<area shape="rect" id="Node000006" href="$classEventDispatcher.html" title="Class responsible for dispatching events to registered listeners." alt="" coords="26,203,155,228"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="168,201,227,186,287,164,316,146,340,127,343,131,319,151,289,168,229,191,169,206"/>
 </map>

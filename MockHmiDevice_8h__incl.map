@@ -1,0 +1,9 @@
+<map id="tests/lib/hmi/mocks/MockHmiDevice.h" name="tests/lib/hmi/mocks/MockHmiDevice.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="72,5,223,45"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,132,119"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="130,47,92,85,88,82,126,44"/>
+<area shape="rect" id="Node000003" href="$IHmiDevice_8h.html" title=" " alt="" coords="157,93,295,119"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="168,44,206,82,203,85,164,47"/>
+<area shape="rect" id="Node000004" title=" " alt="" coords="193,167,259,192"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="229,119,229,153,223,153,223,119"/>
+</map>

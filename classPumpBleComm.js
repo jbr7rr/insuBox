@@ -15,7 +15,7 @@ var classPumpBleComm =
     [ "_write", "classPumpBleComm.html#a48ebc017d8a14840cc5db958107b42ff", null ],
     [ "connect", "classPumpBleComm.html#a01e1640e4b18e2db8154be859f737e6d", null ],
     [ "init", "classPumpBleComm.html#ac4b727300e0b63d509257ca090a1d47b", null ],
-    [ "K_THREAD_STACK_MEMBER", "classPumpBleComm.html#a5bf92d7ef62541242736cbb72862a21a", null ],
+    [ "K_KERNEL_STACK_MEMBER", "classPumpBleComm.html#a657e39bf5e5d4d406575ed1eb881b18f", null ],
     [ "onConnected", "classPumpBleComm.html#a41fa6a93b18b24c704a5ff64a259bf77", null ],
     [ "onDeviceFound", "classPumpBleComm.html#a399e1f1fb3c1a8d8b78d5e424453fa78", null ],
     [ "onDisconnected", "classPumpBleComm.html#afb69657c6ca0c3ff56d938400b5664b8", null ],
