@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 
-#include <pump/medtrum/comm/packets/SetBolusPacket.h>
+#include <pump/medtrum_bt/comm/packets/SetBolusPacket.h>
 
 TEST(SetBolusPacketTest, GetRequest_Given_Packet_Expect_RequestPacket)
 {

@@ -1,0 +1,9 @@
+
+choice IB_PUMP_TYPE
+
+config IB_PUMP_MEDTRUM_BT
+	bool "Medtrum insulin pump BT driver"
+	help
+	  This option adds support for Medtrum insulin pumps, to control a remote medtrum pump using Bleutooth.
+
+endchoice

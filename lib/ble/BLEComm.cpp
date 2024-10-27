@@ -11,7 +11,21 @@
 
 LOG_MODULE_REGISTER(ib_ble);
 
+EventDispatcher *BLEComm::mDispatcher = nullptr;
 std::map<bt_addr_le_t, BleConnection *, BLEComm::CompareBtAddr> BLEComm::mConnections;
+std::array<BleConnection, BLEComm::MAX_CLIENT_CONNECTIONS> BLEComm::mClientConnections = {};
+
+const struct bt_data BLEComm::advertizingData[] = {
+    BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
+    BT_DATA_BYTES(BT_DATA_GAP_APPEARANCE, BT_BYTES_LIST_LE16(BT_APPEARANCE_GENERIC_INSULIN_PUMP)),
+    BT_DATA_BYTES(BT_DATA_UUID16_ALL, BT_UUID_16_ENCODE(BT_UUID_IDS_VAL), BT_UUID_16_ENCODE(BT_UUID_CTS_VAL),
+                  BT_UUID_16_ENCODE(BT_UUID_DIS_VAL))};
+
+const struct bt_le_adv_param BLEComm::advParam = *BT_LE_ADV_PARAM(
+    BT_LE_ADV_OPT_CONN | BT_LE_ADV_OPT_USE_NAME, BT_GAP_ADV_SLOW_INT_MIN, BT_GAP_ADV_SLOW_INT_MAX, NULL);
+
+struct k_work BLEComm::advertisingWork;
+
 K_SEM_DEFINE(BLEComm::semBtReady, 0, 1);
 
 namespace
@@ -23,7 +37,19 @@ namespace
 struct bt_conn_cb BLEComm::connCallbacks = {
     .connected = connected,
     .disconnected = disconnected,
+    .recycled = recycled,
     .security_changed = securityChanged,
+};
+
+struct bt_conn_auth_cb BLEComm::connAuthCallbacks = {
+    .passkey_display = passkeyDisplay,
+    .passkey_confirm = passkeyConfirm,
+    .cancel = authCancel,
+};
+
+struct bt_conn_auth_info_cb BLEComm::connAuthInfoCallbacks = {
+    .pairing_complete = pairingComplete,
+    .pairing_failed = pairingFailed,
 };
 
 int BLEComm::connect(bt_addr_le_t &peer, BleConnection *connection)
@@ -124,17 +150,36 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     }
     else
     {
-        LOG_INF("Connected");
+        char addr[BT_ADDR_LE_STR_LEN];
+        bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+        LOG_INF("Connected to %s", addr);
     }
+
     // get connection object from mConnections map
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
         connection->callback->onConnected(conn, err);
     }
-    else
+    else if (connection == nullptr)
     {
-        LOG_ERR("Connection object not found");
+        LOG_INF("Connection object not found");
+        // Find unused client connection object in array
+        for (auto &clientConnection : mClientConnections)
+        {
+            if (clientConnection.conn == nullptr)
+            {
+                clientConnection.conn = conn;
+                mConnections[*bt_conn_get_dst(conn)] = &clientConnection;
+                break;
+            }
+            else
+            {
+                LOG_ERR("No free client connection object found");
+                // disconnect
+                bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+            }
+        }
     }
 }
 
@@ -144,9 +189,17 @@ void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
-        bt_conn_unref(connection->conn);
         connection->callback->onDisconnected(conn, reason);
     }
+
+    // remove connection object from mConnections map
+    if (mConnections.find(*bt_conn_get_dst(conn)) != mConnections.end())
+    {
+        bt_conn_unref(connection->conn);
+        connection->conn = nullptr;
+        mConnections.erase(*bt_conn_get_dst(conn));
+    }
+    k_work_submit(&advertisingWork);
 }
 
 void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
@@ -158,12 +211,24 @@ void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt
     else
     {
         LOG_ERR("Security failed: level %u, err %d", level, err);
+        // Check if we have the device in bond memory, if so delete
+        int err = bt_unpair(BT_ID_DEFAULT, bt_conn_get_dst(conn));
+        if (err)
+        {
+            LOG_ERR("Failed to unpair device: %d", err);
+        }
     }
+
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
         connection->callback->onSecurityChanged(conn, level, err);
     }
+}
+
+void BLEComm::recycled(void)
+{
+    // k_work_submit(&advertisingWork);
 }
 
 void BLEComm::btReady(int err)
@@ -177,10 +242,32 @@ void BLEComm::btReady(int err)
     k_sem_give(&semBtReady);
 }
 
-void BLEComm::init()
+void BLEComm::init(EventDispatcher *dispatcher)
 {
+    mDispatcher = dispatcher;
+
+    if (mDispatcher)
+    {
+        mDispatcher->subscribe<BtPassKeyConfirmResponse>(BLEComm::onBtPassKeyConfirmResponse);
+    }
+
+    k_work_init(&advertisingWork, advertisingWorkHandler);
+
     LOG_INF("Bluetooth initialising");
     int err = 0;
+
+    err = bt_conn_auth_cb_register(&connAuthCallbacks);
+    if (err)
+    {
+        LOG_ERR("Failed to register auth callback: %d", err);
+    }
+
+    err = bt_conn_auth_info_cb_register(&connAuthInfoCallbacks);
+    if (err)
+    {
+        LOG_ERR("Failed to register auth info callback: %d", err);
+    }
+
     err = bt_enable(btReady);
     if (err)
     {
@@ -196,4 +283,86 @@ void BLEComm::init()
     LOG_DBG("Bluetooth initialized");
 
     bt_conn_cb_register(&connCallbacks);
+
+    k_work_submit(&advertisingWork);
+}
+
+void BLEComm::authCancel(struct bt_conn *conn)
+{
+    char addr[BT_ADDR_LE_STR_LEN];
+
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+    LOG_DBG("Pairing cancelled: %s", addr);
+}
+
+void BLEComm::passkeyConfirm(struct bt_conn *conn, unsigned int passkey)
+{
+    char addr[BT_ADDR_LE_STR_LEN];
+
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+    LOG_DBG("Passkey for %s: %06u", addr, passkey);
+
+    if (mDispatcher)
+    {
+        mDispatcher->dispatch<BtPassKeyConfirmRequest>({conn, passkey});
+    }
+}
+
+void BLEComm::passkeyDisplay(struct bt_conn *conn, unsigned int passkey)
+{
+    char addr[BT_ADDR_LE_STR_LEN];
+
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+
+    LOG_DBG("Passkey for %s: %06u", addr, passkey);
+}
+
+void BLEComm::pairingComplete(struct bt_conn *conn, bool bonded)
+{
+    LOG_INF("Pairing complete, bonded: %d", bonded);
+}
+
+void BLEComm::pairingFailed(struct bt_conn *conn, enum bt_security_err reason)
+{
+    LOG_ERR("Pairing failed: %d", reason);
+}
+
+void BLEComm::onBtPassKeyConfirmResponse(const BtPassKeyConfirmResponse &response)
+{
+    int err = 0;
+    if (response.accept)
+    {
+        err = bt_conn_auth_passkey_confirm(response.conn);
+        if (err)
+        {
+            LOG_ERR("Failed to confirm passkey.");
+        }
+    }
+    else
+    {
+        err = bt_conn_auth_cancel(response.conn);
+        if (err)
+        {
+            LOG_ERR("Failed to cancel pairing.");
+        }
+    }
+}
+
+void BLEComm::advertisingWorkHandler(struct k_work *work)
+{
+    // Check if there is a free client connection
+    for (auto &clientConnection : mClientConnections)
+    {
+        if (clientConnection.conn == nullptr)
+        {
+            LOG_INF("Starting advertising");
+            int err = bt_le_adv_start(&advParam, advertizingData, ARRAY_SIZE(advertizingData), NULL, 0);
+            if (err)
+            {
+                LOG_WRN("Advertising failed to start (ret %d)", err);
+            }
+        }
+    }
 }

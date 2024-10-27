@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
-#include <pump/medtrum/MedtrumPumpSync.h>
-#include <pump/medtrum/comm/WriteCommandPackets.h>
-#include <pump/medtrum/comm/packets/SetTempBasalPacket.h>
+#include <pump/medtrum_bt/MedtrumPumpSync.h>
+#include <pump/medtrum_bt/comm/WriteCommandPackets.h>
+#include <pump/medtrum_bt/comm/packets/SetTempBasalPacket.h>
 
 class SetTempBasalPacketTest : public ::testing::Test
 {

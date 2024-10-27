@@ -1,15 +1,22 @@
 #include <ble/BLEComm.h>
+#include <control/ControlService.h>
+#include <hmi/HmiService.h>
 #include <pump/PumpService.h>
 
 namespace
 {
-    BLEComm bleComm = BLEComm();
+    EventDispatcher eventDispatcher;
     PumpService pumpService;
+    ControlService controlService;
+    HmiService hmiService(eventDispatcher);
 }
 
-extern "C" int main(void)
+int main(void)
 {
-    bleComm.init();
+    BLEComm::init(&eventDispatcher);
     pumpService.init();
+    controlService.init();
+    hmiService.init();
+
     return 0;
 }

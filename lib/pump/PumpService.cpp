@@ -1,17 +1,30 @@
 #include <pump/PumpService.h>
-#include <pump/medtrum/MedtrumDevice.h>
+#include <pump/VirtualPumpDevice.h>
+#include <pump/medtrum_bt/MedtrumBTDevice.h>
 
-PumpService::PumpService()
-{
-    mPumpDevice = &mMedtrumDevice;
-}
+#define LOG_LEVEL LOG_LEVEL_DBG
+#include <zephyr/logging/log.h>
 
-PumpService::~PumpService()
-{
-    delete mPumpDevice;
-}
+LOG_MODULE_REGISTER(ib_pump_service);
+
+PumpService::PumpService(IPumpDevice &pumpDevice) : mPumpDevice(pumpDevice) {}
+
+PumpService::~PumpService() {}
 
 void PumpService::init()
 {
-    mPumpDevice->init();
+    LOG_DBG("Initializing PumpService");
+    mPumpDevice.init();
+}
+
+IPumpDevice &PumpService::getPumpDevice()
+{
+#ifdef CONFIG_IB_PUMP_MEDTRUM_BT
+    static MedtrumBTDevice pumpDevice;
+#elif defined(CONFIG_IB_PUMP_VIRTUAL)
+    static VirtualPumpDevice pumpDevice;
+#else
+#error "No pump device selected, error in config"
+#endif
+    return pumpDevice;
 }

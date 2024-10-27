@@ -5,6 +5,21 @@ config IB_PUMP
     help
         This option enables support for insulin pumps.
 
-rsource "medtrum/Kconfig"
+if IB_PUMP
+
+choice IB_PUMP_TYPE
+    prompt "Insulin Pump Type"
+    default IB_PUMP_VIRTUAL
+
+config IB_PUMP_VIRTUAL
+    bool "Virtual Insulin Pump"
+    help
+        This option enables support for a virtual insulin pump.
+
+endchoice
+
+endif
+
+rsource "medtrum_bt/Kconfig"
 
 endmenu

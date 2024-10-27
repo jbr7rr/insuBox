@@ -1,5 +1,5 @@
 #include "gtest/gtest.h"
-#include <pump/medtrum/crypt/Crypt.h>
+#include <pump/medtrum_bt/crypt/Crypt.h>
 
 TEST(CryptTest, Given_SN_Expect_Key)
 {
