@@ -6,6 +6,11 @@
 
 LOG_MODULE_REGISTER(ib_insulin_delivery_device);
 
+namespace
+{
+    const bt_gatt_service_static idsService = bt_ids::getService();
+}
+
 InsulinDeliveryDevice::InsulinDeliveryDevice() {}
 
 InsulinDeliveryDevice::~InsulinDeliveryDevice() {}
@@ -14,6 +19,9 @@ void InsulinDeliveryDevice::init()
 {
     LOG_DBG("Initializing IDS service");
     bt_ids::init(*this);
+
+    auto attr = idsService.attrs[0];
+    LOG_DBG("attr: %d", attr.handle);
 }
 
 ssize_t InsulinDeliveryDevice::onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf,

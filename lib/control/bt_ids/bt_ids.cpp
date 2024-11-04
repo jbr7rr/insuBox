@@ -161,4 +161,9 @@ namespace bt_ids
         BT_GATT_CHARACTERISTIC(BT_UUID_IDS_IDD_HISTORY_DATA, BT_GATT_CHRC_NOTIFY, BT_GATT_PERM_READ_AUTHEN, NULL, NULL,
                                NULL),
         BT_GATT_CCC(NULL, BT_GATT_PERM_READ_AUTHEN | BT_GATT_PERM_WRITE_AUTHEN));
+
+    const bt_gatt_service_static &getService()
+    {
+        return bt_ids;
+    }
 }
