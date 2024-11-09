@@ -4,5 +4,6 @@ rsource "ble/Kconfig"
 rsource "control/Kconfig"
 rsource "hmi/Kconfig"
 rsource "pump/Kconfig"
+rsource "utils/Kconfig"
 
 endmenu
