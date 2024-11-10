@@ -4,13 +4,29 @@
 #ifdef CONFIG_IB_PUMP_VIRTUAL
 
 #include <pump/IPumpDevice.h>
+#include <pump/PumpService.h>
+
+#include <zephyr/kernel.h>
+
 
 class VirtualPumpDevice : public IPumpDevice
 {
 public:
-    VirtualPumpDevice();
+    VirtualPumpDevice(IPumpServiceCallback &pumpServiceCallback);
     ~VirtualPumpDevice();
     void init() override;
+
+private:
+    struct SubContainer
+    {
+        VirtualPumpDevice *pumpDevice;
+        k_work_delayable statusWork;
+    };
+
+    SubContainer mSubContainer;
+    IPumpServiceCallback &mPumpServiceCallback;
+
+    void _updateStatus();
 };
 
 #endif // CONFIG_IB_VIRTUAL_PUMP

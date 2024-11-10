@@ -2,8 +2,6 @@
 #include <hmi/HmiService.h>
 #include <hmi/VirtualHmiDevice.h>
 
-#include <zephyr/zbus/zbus.h>
-
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 

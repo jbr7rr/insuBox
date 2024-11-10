@@ -5,8 +5,6 @@
 #include <events/EventDispatcher.h>
 #include <hmi/IHmiDevice.h>
 
-#include <zephyr/zbus/zbus.h>
-
 class IHmiCallback
 {
 public:

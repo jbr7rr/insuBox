@@ -39,7 +39,7 @@ namespace bt_ids
     void init(IInsulinDeliveryDeviceCallback &insulinDeliveryDevice)
     {
         mInsulinDeliveryDevice = &insulinDeliveryDevice;
-        LOG_DBG("Initializing IDS service");
+        LOG_DBG("Initializing IDS bt service");
     }
 
     static ssize_t readIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf, uint16_t len,

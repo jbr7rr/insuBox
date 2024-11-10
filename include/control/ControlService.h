@@ -2,14 +2,18 @@
 #define CONTROL_SERVICE_H
 
 #include <control/bt_ids/InsulinDeliveryDevice.h>
+#include <events/EventDispatcher.h>
 
 class ControlService
 {
 public:
-    ControlService(IInsulinDeliveryDevice &insulinDeliveryDevice = ControlService::getInsulinDeliveryDevice());
+    ControlService(EventDispatcher &dispatcher);
+    ControlService(EventDispatcher &dispatcher, IInsulinDeliveryDevice &insulinDeliveryDevice);
     ~ControlService();
     void init();
+
 private:
+    EventDispatcher &mDispatcher;
     IInsulinDeliveryDevice &mInsulinDeliveryDevice;
 
     static IInsulinDeliveryDevice &getInsulinDeliveryDevice();

@@ -7,7 +7,13 @@
 
 LOG_MODULE_REGISTER(ib_pump_service);
 
-PumpService::PumpService(IPumpDevice &pumpDevice) : mPumpDevice(pumpDevice) {}
+PumpService::PumpService(EventDispatcher &dispatcher) : PumpService(dispatcher, getPumpDevice(*this)) {}
+
+PumpService::PumpService(EventDispatcher &dispatcher, IPumpDevice &pumpDevice)
+    : mDispatcher(dispatcher), mPumpDevice(pumpDevice)
+{
+    LOG_DBG("PumpService constructor");
+}
 
 PumpService::~PumpService() {}
 
@@ -17,12 +23,17 @@ void PumpService::init()
     mPumpDevice.init();
 }
 
-IPumpDevice &PumpService::getPumpDevice()
+void PumpService::pumpStatusUpdated(const PumpStatusUpdated &status)
+{
+    mDispatcher.dispatch<PumpStatusUpdated>(status);
+}
+
+IPumpDevice &PumpService::getPumpDevice(IPumpServiceCallback &pumpServiceCallback)
 {
 #ifdef CONFIG_IB_PUMP_MEDTRUM_BT
     static MedtrumBTDevice pumpDevice;
 #elif defined(CONFIG_IB_PUMP_VIRTUAL)
-    static VirtualPumpDevice pumpDevice;
+    static VirtualPumpDevice pumpDevice(pumpServiceCallback);
 #else
 #error "No pump device selected, error in config"
 #endif
