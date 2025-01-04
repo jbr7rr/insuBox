@@ -17,7 +17,7 @@ ControlService::ControlService(EventDispatcher &dispatcher, IInsulinDeliveryDevi
     LOG_DBG("ControlService constructor");
 
     mDispatcher.subscribe<PumpStatusUpdated>(
-        [this](const PumpStatusUpdated &status) { this->mInsulinDeliveryDevice.insulinPumpStatusUpdated(status); });
+        [this](const PumpStatusUpdated &status) { this->mInsulinDeliveryDevice.iddStatusUpdated(status); });
 }
 
 ControlService::~ControlService() {}

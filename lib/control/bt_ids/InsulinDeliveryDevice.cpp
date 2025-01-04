@@ -29,20 +29,37 @@ void InsulinDeliveryDevice::init()
     LOG_DBG("attr: %d", attr.handle);
 }
 
-void InsulinDeliveryDevice::insulinPumpStatusUpdated(const PumpStatusUpdated &status)
+void InsulinDeliveryDevice::iddStatusUpdated(const PumpStatusUpdated &status)
 {
-    LOG_DBG("Pump status updated with values: therapyControlState=%u, operationalState=%u, reservoirLevel=%d, "
-            "reservoirAttached=%d",
-            static_cast<uint8_t>(status.therapyControlState), static_cast<uint8_t>(status.operationalState),
-            status.reservoirLevel.value(), status.reservoirAttached);
+    uint16_t flagsStatusChanged = sys_get_le16(mStatusChangedCharData.flags);
+    
+    if (status.therapyControlState.has_value())
+    {
+        LOG_DBG("Therapy control state: %d", static_cast<uint8_t>(status.therapyControlState.value()));
+        mStatusCharData.therapyControlState = static_cast<uint8_t>(status.therapyControlState.value());
+        flagsStatusChanged |= static_cast<uint16_t>(StatusChangedFlags::THERAPY_CONTROL_STATE_CHANGED);
+    }
 
-    // Update status characteristic and indicate it
-    mStatusCharData.therapyControlState = static_cast<uint8_t>(status.therapyControlState);
-    mStatusCharData.operationalState = static_cast<uint8_t>(status.operationalState);
-    sys_put_le16(status.reservoirLevel.value(), mStatusCharData.reservoirLevel);
-    // reservoir attached is the only flag so far, and will be the only one we will support most likely in future
-    // versions
-    mStatusCharData.flags = status.reservoirAttached ? 0x01 : 0x00;
+    if (status.operationalState.has_value())
+    {
+        LOG_DBG("Operational state: %d", static_cast<uint8_t>(status.operationalState.value()));
+        mStatusCharData.operationalState = static_cast<uint8_t>(status.operationalState.value());
+        flagsStatusChanged |= static_cast<uint16_t>(StatusChangedFlags::OPERATIONAL_STATE_CHANGED);
+    }
+
+    if (status.reservoirLevel.has_value())
+    {
+        LOG_DBG("Reservoir level: %d", status.reservoirLevel.value().value());
+        sys_put_le16(status.reservoirLevel.value().value(), mStatusCharData.reservoirLevel);
+        flagsStatusChanged |= static_cast<uint16_t>(StatusChangedFlags::RESERVOIR_CHANGED);
+    }
+
+    if (status.reservoirAttached.has_value())
+    {
+        LOG_DBG("Reservoir attached: %d", status.reservoirAttached.value());
+        mStatusCharData.flags = status.reservoirAttached.value() ? 0x01 : 0x00;
+        flagsStatusChanged |= static_cast<uint16_t>(StatusChangedFlags::RESERVOIR_CHANGED);
+    }
 
     static struct bt_gatt_indicate_params indicateStatusParams;
     indicateStatusParams.attr = &idsService.attrs[IDD_STATUS_IDX];
@@ -55,14 +72,6 @@ void InsulinDeliveryDevice::insulinPumpStatusUpdated(const PumpStatusUpdated &st
         LOG_WRN("Indicate status failed (err %d)", err);
     }
 
-    // Update status changed flags and indicate it
-    uint16_t flagsStatusChanged = sys_get_le16(mStatusChangedCharData.flags);
-    flagsStatusChanged |= static_cast<uint16_t>(StatusChangedFlags::THERAPY_CONTROL_STATE_CHANGED);
-    flagsStatusChanged |= static_cast<uint16_t>(StatusChangedFlags::OPERATIONAL_STATE_CHANGED);
-    flagsStatusChanged |= static_cast<uint16_t>(StatusChangedFlags::RESERVOIR_CHANGED);
-
-    sys_put_le16(flagsStatusChanged, mStatusChangedCharData.flags);
-
     static struct bt_gatt_indicate_params indicateStatusChangedParams;
     indicateStatusChangedParams.attr = &idsService.attrs[IDD_STATUS_CHANGED_IDX];
     indicateStatusChangedParams.data = &mStatusChangedCharData;
@@ -74,6 +83,13 @@ void InsulinDeliveryDevice::insulinPumpStatusUpdated(const PumpStatusUpdated &st
         LOG_WRN("Indicate status changed failed (err %d)", err);
     }
 }
+
+void InsulinDeliveryDevice::iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel)
+{
+    // TODO
+    ;
+}
+
 
 ssize_t InsulinDeliveryDevice::onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf,
                                                       uint16_t len, uint16_t offset)

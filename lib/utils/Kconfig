@@ -1,5 +1,10 @@
 menu "Libraries"
 
+config IB_UTILS
+    bool "InsuBox Utilities"
+    help
+        This option enables support for InsuBox utilities.
+
 rsource "sfloat/Kconfig"
 
 endmenu

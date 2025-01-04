@@ -5,13 +5,20 @@
 #include <events/EventDispatcher.h>
 #include <pump/IPumpDevice.h>
 #include <utils/sfloat.h>
+#include <optional>
 
 struct PumpStatusUpdated
 {
-    TherapyControlState therapyControlState;
-    OperationalState operationalState;
-    SFloat reservoirLevel;
-    bool reservoirAttached;
+    std::optional<TherapyControlState> therapyControlState;
+    std::optional<OperationalState> operationalState;
+    std::optional<SFloat> reservoirLevel;
+    std::optional<bool> reservoirAttached;
+};
+
+struct PumpAnnunciationStatusUpdated
+{
+    AnnunciationType annunciation;
+    bool cancel;
 };
 
 class IPumpServiceCallback

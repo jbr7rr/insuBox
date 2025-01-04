@@ -10,7 +10,8 @@ public:
     virtual ~IInsulinDeliveryDevice() = default;
     virtual void init() = 0;
 
-    virtual void insulinPumpStatusUpdated(const PumpStatusUpdated &status) = 0;
+    virtual void iddStatusUpdated(const PumpStatusUpdated &status) = 0;
+    virtual void iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) = 0;
 };
 
 class IInsulinDeliveryDeviceCallback
@@ -41,7 +42,8 @@ public:
     ~InsulinDeliveryDevice();
     void init();
 
-    void insulinPumpStatusUpdated(const PumpStatusUpdated &status) override;
+    void iddStatusUpdated(const PumpStatusUpdated &status) override;
+    void iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) override;
 
 protected:
     ssize_t onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf, uint16_t len,
@@ -73,8 +75,18 @@ private:
         uint8_t flags;
     };
 
+    struct IddAnnunciationChar
+    {
+        uint8_t flags;
+        uint16_t id;
+        AnnunciationType type;
+        AnnunciationStatus status;
+        uint8_t aux[10];
+    };
+
     IddStatusChangedChar mStatusChangedCharData = {};
     IddStatusChar mStatusCharData = {};
+    IddAnnunciationChar mAnnunciationCharData = {};
 };
 
 #endif // INSULIN_DELIVERY_DEVICE_H
