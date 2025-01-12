@@ -1,0 +1,68 @@
+#include <zephyr/dt-bindings/gpio/gpio.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+
+/ {
+	 zephyr,user {
+		 stepper-motors = <&motor_1 0>;
+	 };
+};
+
+/ {
+	 motor_1: motor_1 {
+		 status = "okay";
+		 compatible = "ti,drv8424";
+
+		 dir-gpios = <&gpio0 4 0>;
+		 step-gpios = <&gpio0 5 0>; 
+		 sleep-gpios = <&gpio0 1 GPIO_ACTIVE_LOW>;
+		 en-gpios  = <&gpio0 2 0>; 
+		 m0-gpios = <&gpio0 8 0>; // TODO: We should be able to remove this somehow, as we have hardcoded this in the hw
+		 m1-gpios = <&gpio0 9 0>;
+		//  counter = <&timer2>;
+
+		 #address-cells = <1>;
+		 #size-cells = <0>;
+		 #stepper-motor-cells = <0>;
+	 };
+};
+
+// &timer2 {
+// 	 status = "okay";
+// 	 prescaler = <10>;
+// };
+
+/ {
+	aliases {
+		pwm-0 = &ledc0;
+		pwm-step-vref = &pwm_step_vref;
+	};
+
+	pwmleds {
+		compatible = "pwm-leds";
+		pwm_step_vref: pwm_led_gpio0_6 {
+			label = "VREF";
+			pwms = <&ledc0 0 1000 PWM_POLARITY_NORMAL>;
+		};
+	};
+};
+
+&pinctrl {
+	ledc0_default: ledc0_default {
+		group1 {
+			pinmux = <LEDC_CH0_GPIO6>;
+			output-enable;
+		};
+	};
+};
+
+&ledc0 {
+	pinctrl-0 = <&ledc0_default>;
+	pinctrl-names = "default";
+	status = "okay";
+	#address-cells = <1>;
+	#size-cells = <0>;
+	channel0@0 {
+		reg = <0x0>;
+		timer = <0>;
+	};
+};

@@ -1,0 +1,9 @@
+
+choice IB_PUMP_TYPE
+
+config IB_PUMP_INSUBOX
+	bool "InsuBox DIY pump"
+	help
+	  This option adds support for InsuBox DIY pump.
+
+endchoice

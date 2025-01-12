@@ -1,5 +1,6 @@
 #include <pump/PumpService.h>
 #include <pump/VirtualPumpDevice.h>
+#include <pump/insubox/InsuBoxDevice.h>
 #include <pump/medtrum_bt/MedtrumBTDevice.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -19,7 +20,9 @@ void PumpService::init()
 
 IPumpDevice &PumpService::getPumpDevice()
 {
-#ifdef CONFIG_IB_PUMP_MEDTRUM_BT
+#ifdef CONFIG_IB_PUMP_INSUBOX
+    static InsuBoxDevice pumpDevice;
+#elif defined(CONFIG_IB_PUMP_MEDTRUM_BT)
     static MedtrumBTDevice pumpDevice;
 #elif defined(CONFIG_IB_PUMP_VIRTUAL)
     static VirtualPumpDevice pumpDevice;
