@@ -4,6 +4,7 @@
 #ifdef CONFIG_IB_PUMP_INSUBOX
 
 #include <pump/IPumpDevice.h>
+#include <zephyr/kernel.h>
 
 class InsuBoxDevice : public IPumpDevice
 {
@@ -11,6 +12,16 @@ public:
     InsuBoxDevice();
     ~InsuBoxDevice();
     void init() override;
+
+private:
+    struct SubContainer
+    {
+        InsuBoxDevice *mDevice;
+        k_work_delayable sensorWork;
+    } mSubContainer;
+
+    void sensorWork();
+
 };
 
 #endif // CONFIG_IB_PUMP_INSUBOX
