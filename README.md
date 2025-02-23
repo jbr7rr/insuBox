@@ -1,5 +1,7 @@
 # InsuBox
 
+This repo contains the software for the InsuBox project, for the InsuBox Pump project checkout: [InsuBoxPump](https://github.com/jbr7rr/InsuBoxPump)
+
 ## Description
 
 **This software is still in development, it's not ready for use.**
