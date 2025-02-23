@@ -4,7 +4,7 @@ This repo contains the software for the InsuBox project, for the InsuBox Pump pr
 
 ## Description
 
-**This software is still in development, it's not ready for use.**
+**This software is still in development, it's not ready for release.**
 
 InsuBox is Artificial Pancreas system (APS) which targets embedded systems, so the hardware size can be minimized. It uses ZephyrOS as a base and can run a variety of hardware.
 
