@@ -22,6 +22,13 @@ namespace
     static constexpr uint16_t SFLOAT_SPECIAL_POS_INFINTY = 0x07FE;
     static constexpr uint16_t SFLOAT_SPECIAL_NAN = 0x07FF;
     static constexpr uint16_t SFLOAT_SPECIAL_NOT_RES = 0x0800;
+    static constexpr uint16_t SFLOAT_SPECIAL_EXP = 0x0000;
+    static constexpr uint16_t SFLOAT_SPECIAL_MANTISSA_MIN = 2046;
+
+    constexpr int divAndCeil(int a, int b)
+    {
+        return (a + b - 1) / b;
+    }
 }
 
 SFloat::SFloat(float value)
@@ -43,7 +50,15 @@ float SFloat::toFloat() const
 
     if (exponent == 0 && mantissa >= SFLOAT_SPECIAL_POS_INFINTY)
     {
-        return mantissa == SFLOAT_MANTISSA_MAX ? INFINITY : NAN;
+        if (mantissa == SFLOAT_SPECIAL_POS_INFINTY)
+        {
+            return INFINITY;
+        }
+        if (mantissa == SFLOAT_SPECIAL_NEG_INFINTY)
+        {
+            return -INFINITY;
+        }
+        return NAN;
     }
 
     if (mantissa > SFLOAT_MANTISSA_MAX)
@@ -111,7 +126,9 @@ uint16_t SFloat::sfloatFromFloat(float floatInput)
         else
         {
             if ((floatAbs * 10) > mantissaMax)
+            {
                 break;
+            }
             floatAbs *= 10;
             exp--;
         }
@@ -122,8 +139,14 @@ uint16_t SFloat::sfloatFromFloat(float floatInput)
     {
         mantissa = mantissaMax;
     }
-
     exponent = exp >= 0 ? (exp & 0x0F) : ((~(-exp) & 0x0F) + 1);
+
+    if ((exponent == SFLOAT_SPECIAL_EXP) && (mantissa >= SFLOAT_SPECIAL_MANTISSA_MIN))
+    {
+        exponent++;
+        mantissa = divAndCeil(SFLOAT_SPECIAL_MANTISSA_MIN, 10);
+    }
+
     mantissa = mantissa & SFLOAT_MANTISSA_MASK;
     if (floatEnc.sign)
     {

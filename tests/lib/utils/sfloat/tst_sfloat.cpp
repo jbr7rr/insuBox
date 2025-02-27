@@ -93,11 +93,16 @@ class SFloatToFloatTest : public ::testing::TestWithParam<SFloatTestParams> {};
 TEST_P(SFloatToFloatTest, Should_ConvertSFloatToFloatCorrectly)
 {
     SFloatTestParams params = GetParam();
-    SFloat sfloat(params.sFloatVal);
-    float result = sfloat.toFloat();
+    float result = SFloat(params.sFloatVal).toFloat();
+
     if (std::isnan(params.floatVal))
     {
         EXPECT_TRUE(std::isnan(result)) << "Expected NaN, got: " << result;
+    }
+    else if (std::isinf(params.floatVal))
+    {
+        EXPECT_TRUE(std::isinf(result) && (std::signbit(result) == std::signbit(params.floatVal)))
+            << "Expected Inf with correct sign, got: " << result;
     }
     else
     {

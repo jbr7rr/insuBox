@@ -6,6 +6,7 @@
 class SFloat
 {
 public:
+    SFloat() = default;
     explicit SFloat(float value);
     explicit SFloat(uint16_t rawValue);
 
