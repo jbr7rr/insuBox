@@ -42,5 +42,11 @@ void VirtualPumpDevice::_updateStatus()
 
     mPumpServiceCallback.pumpStatusUpdated(status);
 
-    k_work_reschedule(&mSubContainer.statusWork, K_SECONDS(15));
+    PumpAnnunciationStatusUpdated type = {
+        .type = AnnunciationType::BATTERY_FULL,
+    };
+
+    mPumpServiceCallback.pumpAnnunciationStatusUpdated(type);
+
+    k_work_reschedule(&mSubContainer.statusWork, K_SECONDS(60));
 }

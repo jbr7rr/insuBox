@@ -2,6 +2,7 @@
 #include <pump/VirtualPumpDevice.h>
 #include <pump/medtrum_bt/MedtrumBTDevice.h>
 
+
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 
@@ -26,6 +27,11 @@ void PumpService::init()
 void PumpService::pumpStatusUpdated(const PumpStatusUpdated &status)
 {
     mDispatcher.dispatch<PumpStatusUpdated>(status);
+}
+
+void PumpService::pumpAnnunciationStatusUpdated(const PumpAnnunciationStatusUpdated &status)
+{
+    mDispatcher.dispatch<PumpAnnunciationStatusUpdated>(status);
 }
 
 IPumpDevice &PumpService::getPumpDevice(IPumpServiceCallback &pumpServiceCallback)

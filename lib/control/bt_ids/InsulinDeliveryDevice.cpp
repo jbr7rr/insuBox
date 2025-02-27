@@ -32,7 +32,7 @@ void InsulinDeliveryDevice::init()
 void InsulinDeliveryDevice::iddStatusUpdated(const PumpStatusUpdated &status)
 {
     uint16_t flagsStatusChanged = sys_get_le16(mStatusChangedCharData.flags);
-    
+
     if (status.therapyControlState.has_value())
     {
         LOG_DBG("Therapy control state: %d", static_cast<uint8_t>(status.therapyControlState.value()));
@@ -84,12 +84,40 @@ void InsulinDeliveryDevice::iddStatusUpdated(const PumpStatusUpdated &status)
     }
 }
 
-void InsulinDeliveryDevice::iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel)
+void InsulinDeliveryDevice::iddAnnunciationStatusUpdated(const PumpAnnunciationStatusUpdated status)
 {
-    // TODO
-    ;
-}
+    PumpAnnunciationStatus annunciation = {
+        .type = status.type,
+        .status = status.status,
+        .id = status.id.value_or(0),
+    };
 
+    // Assign new id if not provided
+    if (annunciation.id == 0)
+    {
+        // _annunciation.id = mAnnunciationBuffer.back().value_or(PumpAnnunciationStatus()).id + 1;
+    }
+    else
+    {
+        // Get the type from the buffer
+        auto annunciationOpt = mAnnunciationBuffer.find_if([&](const PumpAnnunciationStatus &a) { return a.id == annunciation.id; });
+        if (annunciationOpt.has_value())
+        {
+            // Update the type
+            // TODO
+
+        }
+        else
+        {
+            LOG_WRN("Annunciation with id %d not found", annunciation.id);
+            // Add the type to the buffer
+            // TODO
+
+        }
+    }
+
+    // Update the char with the last changed type
+}
 
 ssize_t InsulinDeliveryDevice::onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf,
                                                       uint16_t len, uint16_t offset)

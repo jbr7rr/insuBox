@@ -18,6 +18,10 @@ ControlService::ControlService(EventDispatcher &dispatcher, IInsulinDeliveryDevi
 
     mDispatcher.subscribe<PumpStatusUpdated>(
         [this](const PumpStatusUpdated &status) { this->mInsulinDeliveryDevice.iddStatusUpdated(status); });
+
+    mDispatcher.subscribe<PumpAnnunciationStatusUpdated>([this](const PumpAnnunciationStatusUpdated &status) {
+        this->mInsulinDeliveryDevice.iddAnnunciationStatusUpdated(status);
+    });
 }
 
 ControlService::~ControlService() {}

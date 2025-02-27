@@ -17,14 +17,16 @@ struct PumpStatusUpdated
 
 struct PumpAnnunciationStatusUpdated
 {
-    AnnunciationType annunciation;
-    bool cancel;
+    AnnunciationType type;
+    AnnunciationStatus status;
+    std::optional<uint16_t> id;
 };
 
 class IPumpServiceCallback
 {
 public:
     virtual void pumpStatusUpdated(const PumpStatusUpdated &status) = 0;
+    virtual void pumpAnnunciationStatusUpdated(const PumpAnnunciationStatusUpdated &status) = 0;
 };
 
 class PumpService : public IPumpServiceCallback
@@ -37,6 +39,7 @@ public:
 
 protected:
     void pumpStatusUpdated(const PumpStatusUpdated &status) override;
+    void pumpAnnunciationStatusUpdated(const PumpAnnunciationStatusUpdated &status) override;
 
 private:
     EventDispatcher &mDispatcher;

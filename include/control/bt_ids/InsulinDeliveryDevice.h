@@ -3,6 +3,7 @@
 
 #include <pump/PumpService.h> // PumpStatusUpdated
 #include <zephyr/bluetooth/gatt.h>
+#include <utils/CircularBuffer.h>
 
 class IInsulinDeliveryDevice
 {
@@ -11,7 +12,7 @@ public:
     virtual void init() = 0;
 
     virtual void iddStatusUpdated(const PumpStatusUpdated &status) = 0;
-    virtual void iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) = 0;
+    virtual void iddAnnunciationStatusUpdated(const PumpAnnunciationStatusUpdated) = 0;
 };
 
 class IInsulinDeliveryDeviceCallback
@@ -43,7 +44,7 @@ public:
     void init();
 
     void iddStatusUpdated(const PumpStatusUpdated &status) override;
-    void iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) override;
+    void iddAnnunciationStatusUpdated(const PumpAnnunciationStatusUpdated) override;
 
 protected:
     ssize_t onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf, uint16_t len,
@@ -78,11 +79,20 @@ private:
     struct IddAnnunciationChar
     {
         uint8_t flags;
-        uint16_t id;
-        AnnunciationType type;
-        AnnunciationStatus status;
+        uint8_t id[2];  // LE 16 id
+        uint8_t type[2]; // LE 16 AnnunciationType type;
+        uint8_t status;
         uint8_t aux[10];
     };
+    
+    struct PumpAnnunciationStatus
+    {
+        AnnunciationType type;
+        AnnunciationStatus status;
+        uint16_t id;
+    };
+
+    CircularBuffer<PumpAnnunciationStatus, 20> mAnnunciationBuffer;
 
     IddStatusChangedChar mStatusChangedCharData = {};
     IddStatusChar mStatusCharData = {};
