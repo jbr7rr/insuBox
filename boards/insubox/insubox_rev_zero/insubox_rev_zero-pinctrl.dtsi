@@ -11,11 +11,11 @@
 &pinctrl {
 	i2c0_default: i2c0_default {
 		group1 {
-			pinmux = <I2C0_SDA_GPIO14>,
-				 <I2C0_SCL_GPIO18>;
-			bias-pull-up;
-			drive-open-drain;
-			output-high;
+			pinmux = <I2C0_SCL_GPIO18>,
+				 <I2C0_SDA_GPIO14>;
+			// bias-pull-up;
+			// drive-open-drain;
+			// output-high;
 		};
 	};
 

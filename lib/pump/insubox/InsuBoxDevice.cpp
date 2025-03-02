@@ -9,11 +9,17 @@ LOG_MODULE_REGISTER(ib_insubox_pump_device);
 #include <cmath>
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/kernel.h>
+#include <zephyr/device.h>
+#include <zephyr/drivers/sensor.h>
 
 // Stepper device
 #include <zephyr/drivers/stepper.h>
 static const struct pwm_dt_spec pwm_step_vref = PWM_DT_SPEC_GET(DT_ALIAS(pwm_step_vref));
 static const struct device *stepper_dev = DEVICE_DT_GET(DT_NODELABEL(motor_1));
+
+// Sensor devices
+static const struct device *sensor0 = DEVICE_DT_GET(DT_ALIAS(magn0));
+static const struct device *sensor1 = DEVICE_DT_GET(DT_ALIAS(magn1));
 
 // Buzzer device
 static const struct pwm_dt_spec pwm_buzzer = PWM_DT_SPEC_GET(DT_ALIAS(pwm_buzzer));
@@ -159,19 +165,41 @@ void InsuBoxDevice::init()
 
     // pwm_set_dt(&pwm_buzzer, period, 0);
 
-    // k_work_reschedule(&mSubContainer.sensorWork, K_NO_WAIT);
+    k_work_reschedule(&mSubContainer.sensorWork, K_NO_WAIT);
 
     // movePlunger(10, false);
     // k_sleep(K_SECONDS(30));
     // movePlunger(-350, true);
     // k_sleep(K_SECONDS(90));
-    movePlunger(300, false);
+    movePlunger(30, false);
     // k_sleep(K_SECONDS(30));
     // movePlunger(10, false);
 }
 
+void read_sensor(const struct device *sensor) {
+    if (!device_is_ready(sensor)) {
+        printk("Device %s is not ready\n", sensor->name);
+        return;
+    }
+
+    struct sensor_value mag_x, mag_y, mag_z;
+
+    if (sensor_sample_fetch(sensor) < 0) {
+        printk("Failed to fetch samples\n");
+        return;
+    }
+
+    sensor_channel_get(sensor, SENSOR_CHAN_MAGN_X, &mag_x);
+    sensor_channel_get(sensor, SENSOR_CHAN_MAGN_Y, &mag_y);
+    sensor_channel_get(sensor, SENSOR_CHAN_MAGN_Z, &mag_z);
+
+    printk("%s Magnetic field (uT): X=%d, Y=%d, Z=%d\n",
+           sensor->name, mag_x.val1, mag_y.val1, mag_z.val1);
+}
+
 void InsuBoxDevice::sensorWork()
 {
-    LOG_DBG("sensorWork");
-    k_work_reschedule(&mSubContainer.sensorWork, K_MSEC(500));
+    read_sensor(sensor0);
+    read_sensor(sensor1);
+    k_work_reschedule(&mSubContainer.sensorWork, K_MSEC(1000));
 }

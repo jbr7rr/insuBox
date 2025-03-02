@@ -4,8 +4,10 @@ choice IB_PUMP_TYPE
 config IB_PUMP_INSUBOX
 	bool "InsuBox DIY pump"
 	imply PWM
-	imply PWM_CAPTURE
 	imply STEPPER
+	imply SENSOR
+	imply I2C
+	imply TMAG5273
 	help
 	  This option adds support for InsuBox DIY pump.
 
