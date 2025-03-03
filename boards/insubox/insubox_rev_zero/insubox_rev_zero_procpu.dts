@@ -8,6 +8,7 @@
 #include <espressif/esp32s3/esp32s3_wroom_n8.dtsi>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
 #include <zephyr/dt-bindings/pwm/pwm.h>
+#include <zephyr/dt-bindings/mipi_dbi/mipi_dbi.h>
 #include <zephyr/dt-bindings/sensor/tmag5273.h>
 #include <espressif/partitions_0x0_amp.dtsi>
 #include "insubox_rev_zero-pinctrl.dtsi"
@@ -52,9 +53,9 @@
 		status = "okay";
 		compatible = "ti,drv8424";
 
-		dir-gpios = <&gpio0 43 0>;
+		dir-gpios = <&gpio1 11 0>;
 		step-gpios = <&gpio0 2 0>; 
-		// sleep-gpios = <&gpio0 44 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		sleep-gpios = <&gpio1 12 (GPIO_ACTIVE_LOW)>;
 		en-gpios  = <&gpio0 7 0>; 
 		m0-gpios = <&gpio0 5 0>;
 		m1-gpios = <&gpio0 3 0>;
@@ -74,6 +75,44 @@
 		pwm_buzzer: pwm_gpio0_16 {
 			label = "Buzzer";
 			pwms = <&mcpwm0 1 0 PWM_POLARITY_NORMAL>;
+		};
+	};
+
+	mipi_dbi {
+		compatible = "zephyr,mipi-dbi-spi";
+		spi-dev = <&spi2>;
+		dc-gpios = <&gpio1 33 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio1 48 GPIO_ACTIVE_LOW>;
+		write-only;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		st7789v: st7789v@0 {
+			compatible = "sitronix,st7789v";
+			reg = <0>;
+			mipi-max-frequency = <27000000>;
+
+			width = <284>;
+			height = <76>;
+			x-offset = <2>;
+			y-offset = <1>;
+
+			vcom = <0x28>;
+			gctrl = <0x35>;
+			vrhs = <0x10>;
+			vdvs = <0x20>;
+			mdac = <0x00>;
+			gamma = <0x01>;
+			colmod = <0x55>;
+			lcm = <0x0c>;
+			porch-param = [0c 0c 00 33 33];
+			cmd2en-param = [5a 69 02 00];
+			pwctrl1-param = [a4 a1];
+			pvgam-param = [d0 00 02 07 0a 28 32 44 42 06 0e 12 14 17];
+			nvgam-param = [d0 00 02 07 0a 28 31 54 47 0e 1c 17 1b 1e];
+			ram-param = [00 E0];
+			rgb-param = [40 02 14];
+			mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
 		};
 	};
 };
@@ -96,6 +135,10 @@
 	prescale = <10>;
 	prescale-timer0 = <10>;
 	status = "okay";
+};
+
+&uart0 {
+	status = "disabled";
 };
 
 &i2c0 {
@@ -124,8 +167,9 @@
 &spi2 {
 	#address-cells = <1>;
 	#size-cells = <0>;
-	status = "disabled";
+	status = "okay";
 	pinctrl-0 = <&spim2_default>;
+	cs-gpios = <&gpio1 34 GPIO_ACTIVE_LOW>;
 	pinctrl-names = "default";
 };
 

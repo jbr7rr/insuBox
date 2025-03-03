@@ -98,7 +98,7 @@ void movePlunger(double units, bool probe)
     // Duty cycle: 20% (360mv: I = 360/3 = 120mA)
 
     uint32_t period = 10000;
-    uint32_t pulse = probe ? period / 6 : period / 3;
+    uint32_t pulse = probe ? period / 5 : period / 3;
     int ret = pwm_set_dt(&pwm_step_vref, period, pulse);
     if (ret)
     {
@@ -107,19 +107,19 @@ void movePlunger(double units, bool probe)
     }
 
     // stepper_set_reference_position(stepper_dev, 0);
-    stepper_set_micro_step_res(stepper_dev, STEPPER_MICRO_STEP_2);
+    stepper_set_micro_step_res(stepper_dev, STEPPER_MICRO_STEP_4);
 
-    int interval = probe ? 1000000 : 5000000;
+    int interval = probe ? 250000 : 1000000;
     stepper_set_microstep_interval(stepper_dev, interval);
 
     stepper_enable(stepper_dev, true);
 
     // TODO: For now just to show it works
-    int steps = static_cast<int>(round(units * 380));
+    int steps = static_cast<int>(round(units * 2 * 380));
 
     LOG_DBG("Moving plunger by %d steps", steps);
     // Need to reverse direction, as the motor is mounted in reverse
-    stepper_move_by(stepper_dev, -steps);
+    stepper_move_by(stepper_dev, steps);
 }
 
 void InsuBoxDevice::init()
