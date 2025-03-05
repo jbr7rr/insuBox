@@ -23,6 +23,7 @@
 		zephyr,shell-uart = &usb_serial;
 		zephyr,flash = &flash0;
 		zephyr,code-partition = &slot0_partition;
+		zephyr,display = &st7789v;
 		zephyr,bt-hci = &esp32_bt_hci;
 	};
 
@@ -81,8 +82,8 @@
 	mipi_dbi {
 		compatible = "zephyr,mipi-dbi-spi";
 		spi-dev = <&spi2>;
-		dc-gpios = <&gpio1 33 GPIO_ACTIVE_HIGH>;
-		reset-gpios = <&gpio1 48 GPIO_ACTIVE_LOW>;
+		dc-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
 		write-only;
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -94,24 +95,24 @@
 
 			width = <284>;
 			height = <76>;
-			x-offset = <2>;
-			y-offset = <1>;
+			x-offset = <20>;
+			y-offset = <82>;
 
-			vcom = <0x28>;
+			vcom = <0x2b>;
 			gctrl = <0x35>;
-			vrhs = <0x10>;
+			vrhs = <0x0f>;
 			vdvs = <0x20>;
-			mdac = <0x00>;
+			mdac = <0x60>;
 			gamma = <0x01>;
 			colmod = <0x55>;
-			lcm = <0x0c>;
+			lcm = <0x2c>;
 			porch-param = [0c 0c 00 33 33];
 			cmd2en-param = [5a 69 02 00];
-			pwctrl1-param = [a4 a1];
-			pvgam-param = [d0 00 02 07 0a 28 32 44 42 06 0e 12 14 17];
-			nvgam-param = [d0 00 02 07 0a 28 31 54 47 0e 1c 17 1b 1e];
-			ram-param = [00 E0];
-			rgb-param = [40 02 14];
+			pwctrl1-param = [52 a1];
+			pvgam-param = [D0 00 02 07 0B 1A 31 54 40 29 12 12 12 17];
+			nvgam-param = [D0 00 02 07 05 15 2D 44 44 1C 18 16 1C 1D];
+			ram-param = [00 F8];
+			rgb-param = [CD 08 14];
 			mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
 		};
 	};
@@ -169,7 +170,6 @@
 	#size-cells = <0>;
 	status = "okay";
 	pinctrl-0 = <&spim2_default>;
-	cs-gpios = <&gpio1 34 GPIO_ACTIVE_LOW>;
 	pinctrl-names = "default";
 };
 
