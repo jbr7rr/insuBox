@@ -24,6 +24,16 @@ static const struct device *sensor1 = DEVICE_DT_GET(DT_ALIAS(magn1));
 // Buzzer device
 static const struct pwm_dt_spec pwm_buzzer = PWM_DT_SPEC_GET(DT_ALIAS(pwm_buzzer));
 
+#include <zephyr/drivers/gpio.h>
+// Buttons (sw1 - sw3)
+static const struct gpio_dt_spec button_sw1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(sw1), gpios, {0});
+static const struct gpio_dt_spec button_sw2 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(sw2), gpios, {0});
+static const struct gpio_dt_spec button_sw3 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(sw3), gpios, {0});
+
+// Stat1, stat2
+static const struct gpio_dt_spec stat1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(stat1), gpios, {0});
+static const struct gpio_dt_spec stat2 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(stat2), gpios, {0});
+
 // Define note frequencies (in Hz)
 enum notes
 {
@@ -73,6 +83,74 @@ static void drv_callback(const struct device *dev, enum stepper_event event, voi
     default:
         break;
     }
+}
+
+// static void gpio_callback(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
+// {
+//     // Print the state of the button, and name of the button
+//     LOG_DBG("Button %s pressed", dev->name);
+// }
+
+static void setup_gpio_demo()
+{
+    // Initialize buttons
+    if (!gpio_is_ready_dt(&button_sw1))
+    {
+        LOG_ERR("Error: GPIO device %s is not ready\n", button_sw1.port->name);
+        return;
+    }
+    if (!gpio_is_ready_dt(&button_sw2))
+    {
+        LOG_ERR("Error: GPIO device %s is not ready\n", button_sw2.port->name);
+        return;
+    }
+    if (!gpio_is_ready_dt(&button_sw3))
+    {
+        LOG_ERR("Error: GPIO device %s is not ready\n", button_sw3.port->name);
+        return;
+    }
+    if (!gpio_is_ready_dt(&stat1))
+    {
+        LOG_ERR("Error: GPIO device %s is not ready\n", stat1.port->name);
+        return;
+    }
+    if (!gpio_is_ready_dt(&stat2))
+    {
+        LOG_ERR("Error: GPIO device %s is not ready\n", stat2.port->name);
+        return;
+    }
+
+    int err = gpio_pin_configure_dt(&button_sw1, GPIO_INPUT);
+    if (err)
+    {
+        LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw1.pin);
+        return;
+    }
+    err = gpio_pin_configure_dt(&button_sw2, GPIO_INPUT);
+    if (err)
+    {
+        LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw2.pin);
+        return;
+    }
+    err = gpio_pin_configure_dt(&button_sw3, GPIO_INPUT);
+    if (err)
+    {
+        LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw3.pin);
+        return;
+    }
+    err = gpio_pin_configure_dt(&stat1, GPIO_INPUT);
+    if (err)
+    {
+        LOG_ERR("Error %d: failed to configure pin %d\n", err, stat1.pin);
+        return;
+    }
+    err = gpio_pin_configure_dt(&stat2, GPIO_INPUT);
+    if (err)
+    {
+        LOG_ERR("Error %d: failed to configure pin %d\n", err, stat2.pin);
+        return;
+    }
+    
 }
 
 InsuBoxDevice::InsuBoxDevice()
@@ -174,6 +252,8 @@ void InsuBoxDevice::init()
     movePlunger(30, false);
     // k_sleep(K_SECONDS(30));
     // movePlunger(10, false);
+
+    setup_gpio_demo();
 }
 
 void read_sensor(const struct device *sensor) {
@@ -201,5 +281,19 @@ void InsuBoxDevice::sensorWork()
 {
     read_sensor(sensor0);
     read_sensor(sensor1);
+
+    int val = 0;
+    val = gpio_pin_get_dt(&button_sw1);
+    LOG_DBG("Button sw1 state: %d", val);
+    val = gpio_pin_get_dt(&button_sw2);
+    LOG_DBG("Button sw2 state: %d", val);
+    val = gpio_pin_get_dt(&button_sw3);
+    LOG_DBG("Button sw3 state: %d", val);
+
+    val = gpio_pin_get_dt(&stat1);
+    LOG_DBG("Button stat1 state: %d", val);
+    val = gpio_pin_get_dt(&stat2);
+    LOG_DBG("Button stat2 state: %d", val);
+
     k_work_reschedule(&mSubContainer.sensorWork, K_MSEC(1000));
 }
