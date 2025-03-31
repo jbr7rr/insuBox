@@ -13,6 +13,7 @@ doc/latex
 # build
 /build*
 /twister-out*
+flash.bin
 
 __pycache__/
 _gtestCache/

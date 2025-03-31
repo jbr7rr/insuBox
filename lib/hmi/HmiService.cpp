@@ -1,6 +1,7 @@
 #include <ble/BLEComm.h>
 #include <hmi/HmiService.h>
 #include <hmi/VirtualHmiDevice.h>
+#include <hmi/insubox/InsuBoxHmiDevice.h>
 
 #include <zephyr/zbus/zbus.h>
 
@@ -50,6 +51,8 @@ IHmiDevice &HmiService::getHmiDevice(IHmiCallback &hmiCallback)
 {
 #ifdef CONFIG_IB_HMI_VIRTUAL
     static VirtualHmiDevice hmiDevice(hmiCallback);
+#elif defined(CONFIG_IB_HMI_INSUBOX)
+    static InsuBoxHmiDevice hmiDevice(hmiCallback);
 #else
 #error "No hmi device selected, error in config"
 #endif
