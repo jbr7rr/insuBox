@@ -43,7 +43,7 @@ private:
     };
     PassKeyDisplayTask mPassKeyDisplayTask;
 
-    k_work_q mWorkQueue;
+    static k_work_q mWorkQueue;
     K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, KB(2));
 
     /**

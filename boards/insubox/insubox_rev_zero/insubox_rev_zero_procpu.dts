@@ -7,6 +7,7 @@
 
 #include <espressif/esp32s3/esp32s3_wroom_n8.dtsi>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/lvgl/lvgl.h>
 #include <zephyr/dt-bindings/pwm/pwm.h>
 #include <zephyr/dt-bindings/mipi_dbi/mipi_dbi.h>
 #include <zephyr/dt-bindings/sensor/tmag5273.h>
@@ -30,9 +31,9 @@
 	aliases {
 		i2c-0 = &i2c0;
 		watchdog0 = &wdt0;
-		sw1 = &button1;
-		sw2 = &button2;
-		sw3 = &button3;
+		sw1 = &button_enter;
+		sw2 = &button_up;
+		sw3 = &button_down;
 		stat1 = &stat1;
 		stat2 = &stat2;
 		
@@ -42,20 +43,26 @@
 		magn1 = &tmag5273_c1;
 	};
 
-	buttons {
+	keys: keys {
 		compatible = "gpio-keys";
-		button1: button_1 {
+		button_enter: button_enter {
 			gpios = <&gpio0 17 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-			label = "Button 1";
+			label = "Enter";
+			zephyr,code = <INPUT_KEY_ENTER>;
 		};
-		button2: button_2 {
+		button_up: button_up {
 			gpios = <&gpio0 12 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-			label = "Button 2";
+			label = "Up";
+			zephyr,code = <INPUT_KEY_UP>;
 		};
-		button3: button_3 {
+		button_down: button_down {
 			gpios = <&gpio1 7 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
-			label = "Button 3";
+			label = "Down";
+			zephyr,code = <INPUT_KEY_DOWN>;
 		};
+	};
+
+	charg_status{ 
 		stat1: stat_1 {
 			gpios = <&gpio1 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
 			label = "Stat 1";
@@ -64,6 +71,13 @@
 			gpios = <&gpio1 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
 			label = "Stat 2";
 		};
+	};
+
+	lvgl_keypad_input {
+		compatible = "zephyr,lvgl-keypad-input";
+		input = <&keys>;
+		input-codes = <INPUT_KEY_UP INPUT_KEY_DOWN INPUT_KEY_ENTER>;
+		lvgl-codes = <LV_KEY_LEFT LV_KEY_RIGHT LV_KEY_ENTER>;
 	};
 
 	zephyr,user {

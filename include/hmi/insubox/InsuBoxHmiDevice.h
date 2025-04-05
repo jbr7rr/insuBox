@@ -3,6 +3,7 @@
 
 #include <hmi/HmiService.h>
 #include <hmi/IHmiDevice.h>
+#include <lvgl.h>
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/display.h>
@@ -10,19 +11,27 @@
 class InsuBoxHmiDevice : public IHmiDevice
 {
 public:
-    InsuBoxHmiDevice(IHmiCallback &hmiCallback);
+    InsuBoxHmiDevice(IHmiCallback &hmiCallback, k_work_q &workQueue);
     ~InsuBoxHmiDevice() override;
     void init() override;
 
     void onUserBtPairingRequest(struct bt_conn *conn, uint32_t passkey) override;
 
 private:
+    struct DisplayUpdateTask
+    {
+        InsuBoxHmiDevice *device;
+        struct k_work_delayable work;
+    };
+    DisplayUpdateTask mDisplayUpdateTask;
+
     IHmiCallback &mHmiCallback;
+    k_work_q &mWorkQueue;
 
     const struct device *mDisplayDevice;
-    struct k_work_delayable mDisplayUpdateTask;
+    const struct device *mKeypadDevice;
 
-    void updateDisplay();
+    void showMainScreen();
 };
 
 #endif // INSUBOX_HMI_DEVICE_H

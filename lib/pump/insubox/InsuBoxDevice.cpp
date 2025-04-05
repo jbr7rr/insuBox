@@ -190,7 +190,7 @@ void movePlunger(double units, bool probe)
     int interval = probe ? 250000 : 1000000;
     stepper_set_microstep_interval(stepper_dev, interval);
 
-    stepper_enable(stepper_dev, true);
+    stepper_enable(stepper_dev);
 
     // TODO: For now just to show it works
     int steps = static_cast<int>(round(units * 2 * 380));
@@ -243,7 +243,6 @@ void InsuBoxDevice::init()
 
     // pwm_set_dt(&pwm_buzzer, period, 0);
 
-    k_work_reschedule(&mSubContainer.sensorWork, K_NO_WAIT);
 
     // movePlunger(10, false);
     // k_sleep(K_SECONDS(30));
@@ -253,7 +252,8 @@ void InsuBoxDevice::init()
     // k_sleep(K_SECONDS(30));
     // movePlunger(10, false);
 
-    setup_gpio_demo();
+    // setup_gpio_demo();
+    // k_work_reschedule(&mSubContainer.sensorWork, K_NO_WAIT);
 }
 
 void read_sensor(const struct device *sensor) {

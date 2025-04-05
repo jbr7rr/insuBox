@@ -5,7 +5,16 @@ config IB_HMI_INSUBOX
 	bool "InsuBox HMI"
 	imply LVGL
 	imply DISPLAY
+	imply INPUT
 	help
 		This option enables support for the InsuBoxPump HMI.
+
+if IB_HMI_INSUBOX
+
+# Override lvgl auto init
+config LV_Z_AUTO_INIT
+	default n
+
+endif
 
 endchoice
