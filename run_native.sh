@@ -1,12 +1,15 @@
+#!/bin/bash
+
 # Script used to run zepher on local host
 # If a bluetooth device is present it will be powered off and used
 
-# To use this first build the zephyr project with the native_sim target:
-# west build -b native_sim app -DOVERLAY_CONFIG="boards/native_sim.conf"
-
-west build
+if [ ! -d "build_native" ]; then
+    west build -d build_native -b native_sim app -DOVERLAY_CONFIG="boards/native_sim.conf" 
+else
+    west build -d build_native
+fi
 
 if [ $? -eq 0 ]; then
     bluetoothctl power off
-    sudo ./build/zephyr/zephyr.exe --bt-dev=hci0
+    sudo ./build_native/zephyr/zephyr.exe --bt-dev=hci0
 fi
