@@ -146,7 +146,6 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     if (err)
     {
         LOG_ERR("Connection failed (err %u)", err);
-        bt_conn_unref(conn);
     }
     else
     {
@@ -165,22 +164,27 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     {
         LOG_INF("Connection object not found");
         // Find unused client connection object in array
+        bool foundFreeConnection = false;
         for (auto &clientConnection : mClientConnections)
         {
             if (clientConnection.conn == nullptr)
             {
                 clientConnection.conn = conn;
                 mConnections[*bt_conn_get_dst(conn)] = &clientConnection;
+                foundFreeConnection = true;
                 break;
             }
-            else
-            {
-                LOG_ERR("No free client connection object found");
-                // disconnect
-                bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
-            }
+        }
+
+        if (!foundFreeConnection)
+        {
+            LOG_ERR("No free client connection object found");
+            // disconnect
+            bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
         }
     }
+
+    bt_conn_ref(conn);
 }
 
 void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)
@@ -192,12 +196,14 @@ void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)
         connection->callback->onDisconnected(conn, reason);
     }
 
-    // remove connection object from mConnections map
-    if (mConnections.find(*bt_conn_get_dst(conn)) != mConnections.end())
+    if (connection != nullptr)
     {
+        LOG_DBG("Removing connection object from map");
+        
         bt_conn_unref(connection->conn);
         connection->conn = nullptr;
         mConnections.erase(*bt_conn_get_dst(conn));
+
     }
     k_work_submit(&advertisingWork);
 }
@@ -363,6 +369,7 @@ void BLEComm::advertisingWorkHandler(struct k_work *work)
             {
                 LOG_WRN("Advertising failed to start (ret %d)", err);
             }
+            break;
         }
     }
 }
