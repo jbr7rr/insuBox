@@ -94,7 +94,7 @@ private:
     };
 
     static EventDispatcher *mDispatcher;
-    static std::map<bt_addr_le_t, BleConnection *, CompareBtAddr> mConnections;
+    static std::array<BleConnection *, CONFIG_BT_MAX_CONN> mConnectionsArray;
     static std::array<BleConnection, MAX_CLIENT_CONNECTIONS> mClientConnections;
     static const struct bt_data advertizingData[];
     static const struct bt_le_adv_param advParam;
@@ -126,6 +126,10 @@ private:
     static void onBtPassKeyConfirmResponse(const BtPassKeyConfirmResponse &response);
 
     static void advertisingWorkHandler(struct k_work *work);
+
+    static void storeConnectionRef(BleConnection *connection);
+    static void removeConnectionRef(BleConnection *connection);
+    static BleConnection *findStoredConnection(struct bt_conn *conn);
 };
 
 #endif // BLE_COMM_H
