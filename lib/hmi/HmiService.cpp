@@ -27,6 +27,12 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
 
     LOG_DBG("HmiService constructor");
 
+    mInitTask.service = this;
+    k_work_init(&mInitTask.work, [](struct k_work *work) {
+        auto *container = CONTAINER_OF(work, SimpleTask, work);
+        container->service->mHmiDevice.init();
+    });
+
     mPassKeyDisplayTask.service = this;
     k_work_init(&mPassKeyDisplayTask.work, [](struct k_work *work) {
         auto *container = CONTAINER_OF(work, PassKeyDisplayTask, work);
@@ -37,6 +43,7 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
         if (k_work_busy_get(&mPassKeyDisplayTask.work))
         {
             LOG_ERR("Passkey display task is busy");
+            mDispatcher.dispatch<BtPassKeyConfirmResponse>({request.conn, false});
             return;
         }
         this->mPassKeyDisplayTask.conn = request.conn;
@@ -50,19 +57,7 @@ HmiService::~HmiService() {}
 void HmiService::init()
 {
     LOG_DBG("Initializing HmiService");
-
-    struct task
-    {
-        HmiService *service;
-        struct k_work work;
-    };
-    static task initWork;
-    initWork.service = this;
-    k_work_init(&initWork.work, [](struct k_work *work) {
-        auto *container = CONTAINER_OF(work, task, work);
-        container->service->mHmiDevice.init();
-    });
-    k_work_submit_to_queue(&mWorkQueue, &initWork.work);
+    k_work_submit_to_queue(&mWorkQueue, &mInitTask.work);
 }
 
 void HmiService::onUserBtPairingResponse(struct bt_conn *conn, bool accepted)

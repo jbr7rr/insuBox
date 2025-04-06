@@ -6,11 +6,11 @@
 		compatible = "gpio-keys";
 		button_up: button_up {
 			gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
-			zephyr,code = <INPUT_KEY_LEFT>;
+			zephyr,code = <INPUT_KEY_UP>;
 		};
 		button_down: button_down {
 			gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
-			zephyr,code = <INPUT_KEY_RIGHT>;
+			zephyr,code = <INPUT_KEY_DOWN>;
 		};
 
 		button_enter: button_enter {
@@ -22,7 +22,7 @@
 	lvgl_keypad_input {
 		compatible = "zephyr,lvgl-keypad-input";
 		input = <&keys>;
-		input-codes = <INPUT_KEY_LEFT INPUT_KEY_RIGHT INPUT_KEY_ENTER>;
+		input-codes = <INPUT_KEY_UP INPUT_KEY_DOWN INPUT_KEY_ENTER>;
 		lvgl-codes = <LV_KEY_LEFT LV_KEY_RIGHT LV_KEY_ENTER>;
 	};
 };

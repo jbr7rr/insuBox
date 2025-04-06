@@ -34,6 +34,13 @@ private:
     EventDispatcher &mDispatcher;
     IHmiDevice &mHmiDevice;
 
+    struct SimpleTask
+    {
+        HmiService *service;
+        struct k_work work;
+    };
+    SimpleTask mInitTask;
+
     struct PassKeyDisplayTask
     {
         HmiService *service;
