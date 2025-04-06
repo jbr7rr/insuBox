@@ -12,6 +12,18 @@
 
 #include <optional>
 
+enum BtState
+{
+    BT_STATE_DISCONNECTED,
+    BT_STATE_CONNECTED,
+};
+
+struct BtBluetoothStateChanged
+{
+    struct bt_conn *conn;
+    BtState state;
+};
+
 struct BtPassKeyConfirmRequest
 {
     struct bt_conn *conn;

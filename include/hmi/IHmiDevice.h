@@ -16,6 +16,7 @@ public:
      * @param passkey Passkey to be displayed to the user
      */
     virtual void onUserBtPairingRequest(struct bt_conn *conn, uint32_t passkey) = 0;
+    virtual void onBtBluetoothStateChanged(struct bt_conn *conn, BtState state) = 0;
 };
 
 #endif // IHMI_DEVICE_H

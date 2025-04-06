@@ -72,15 +72,16 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
 
     // Define colors
     lv_color_t purple_color = lv_color_hex(0xff00ff);
-    lv_color_t black_color = lv_color_hex(0x000000);
-
-    // Clear the display
-    lv_obj_clean(lv_screen_active());
-    // Set black background
-    lv_obj_set_style_bg_color(lv_screen_active(), black_color, LV_PART_MAIN);
+    lv_color_t black_color = lv_color_hex(0x000000);;
 
     // Create container to organize content - sized to fit the small display (76x284)
     lv_obj_t *cont = lv_obj_create(lv_screen_active());
+    if (!storePairingScreen(conn, cont))
+    {
+        LOG_ERR("Failed to store pairing screen");
+        mHmiCallback.onUserBtPairingResponse(conn, false);
+        return;
+    }
     lv_obj_set_size(cont, 260, 70);
     lv_obj_set_style_bg_color(cont, black_color, LV_PART_MAIN);
     lv_obj_set_style_border_width(cont, 0, LV_PART_MAIN);
@@ -136,7 +137,8 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
         [](lv_event_t *e) {
             auto *data = static_cast<CallbackData *>(lv_event_get_user_data(e));
             data->device->mHmiCallback.onUserBtPairingResponse(data->conn, true);
-            data->device->showMainScreen();
+            // data->device->showMainScreen();
+            data->device->removePairingScreen(data->conn);
         },
         LV_EVENT_CLICKED, &callbackData);
 
@@ -146,12 +148,23 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
         [](lv_event_t *e) {
             auto *data = static_cast<CallbackData *>(lv_event_get_user_data(e));
             data->device->mHmiCallback.onUserBtPairingResponse(data->conn, false);
-            data->device->showMainScreen();
+            // data->device->showMainScreen();
+            data->device->removePairingScreen(data->conn);
         },
         LV_EVENT_CLICKED, &callbackData);
 
     lv_group_add_obj(lv_group_get_default(), cont);
     lv_group_focus_obj(cont);
+}
+
+void InsuBoxHmiDevice::onBtBluetoothStateChanged(struct bt_conn *conn, BtState state)
+{
+    LOG_DBG("onBtBluetoothStateChanged: state=%d", static_cast<int>(state));
+    if (state == BtState::BT_STATE_DISCONNECTED)
+    {
+        // Remove the pairing screen if it exists
+        removePairingScreen(conn);
+    }
 }
 
 void InsuBoxHmiDevice::showMainScreen()
@@ -167,4 +180,31 @@ void InsuBoxHmiDevice::showMainScreen()
     lv_label_set_text(label, "Hello, InsuBox!");
     lv_obj_set_style_text_color(label, lv_color_hex(0xff00ff), LV_PART_MAIN);
     lv_obj_align(label, LV_ALIGN_CENTER, 0, 0);
+}
+
+bool InsuBoxHmiDevice::storePairingScreen(bt_conn *conn, lv_obj_t *screen)
+{
+    for (auto &entry : mPairingScreens) {
+        if (entry.conn == nullptr) {
+            entry.conn = conn;
+            entry.screen = screen;
+            return true;
+        }
+    }
+    LOG_WRN("Max pairing screens reached, cannot store new screen");
+    return false;
+}
+
+void InsuBoxHmiDevice::removePairingScreen(bt_conn *conn)
+{
+    for (auto &entry : mPairingScreens) {
+        if (entry.conn == conn) {
+            if (entry.screen) {
+                lv_obj_del(entry.screen);
+            }
+            entry.conn = nullptr;
+            entry.screen = nullptr;
+            return;
+        }
+    }
 }

@@ -172,6 +172,7 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
                 clientConnection.conn = conn;
                 mConnections[*bt_conn_get_dst(conn)] = &clientConnection;
                 foundFreeConnection = true;
+                LOG_INF("Connection object stored");
                 break;
             }
         }
@@ -185,11 +186,19 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     }
 
     bt_conn_ref(conn);
+
+    // Emit event to dispatcher
+    if (mDispatcher)
+    {
+        mDispatcher->dispatch<BtBluetoothStateChanged>({conn, BtState::BT_STATE_CONNECTED});
+    }
 }
 
 void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)
 {
-    LOG_INF("Disconnected (reason 0x%02x)", reason);
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    LOG_INF("Disconnected (reason 0x%02x), dst: %s", reason, addr);
     auto connection = mConnections[*bt_conn_get_dst(conn)];
     if (connection != nullptr && connection->callback != nullptr)
     {
@@ -206,6 +215,11 @@ void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)
 
     }
     k_work_submit(&advertisingWork);
+    // Emit event to dispatcher
+    if (mDispatcher)
+    {
+        mDispatcher->dispatch<BtBluetoothStateChanged>({conn, BtState::BT_STATE_DISCONNECTED});
+    }
 }
 
 void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)

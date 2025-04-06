@@ -50,6 +50,23 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
         this->mPassKeyDisplayTask.passkey = request.passkey;
         k_work_submit_to_queue(&mWorkQueue, &mPassKeyDisplayTask.work);
     });
+
+    mBtBluetoothStateChangedTask.service = this;
+    k_work_init(&mBtBluetoothStateChangedTask.work, [](struct k_work *work) {
+        auto *container = CONTAINER_OF(work, BtBluetoothStateChangedTask, work);
+        container->service->mHmiDevice.onBtBluetoothStateChanged(container->conn, container->state);
+    });
+
+    mDispatcher.subscribe<BtBluetoothStateChanged>([this](const BtBluetoothStateChanged &state) {
+        if (k_work_busy_get(&mBtBluetoothStateChangedTask.work))
+        {
+            LOG_ERR("Bluetooth state change task is busy");
+            return;
+        }
+        this->mBtBluetoothStateChangedTask.conn = state.conn;
+        this->mBtBluetoothStateChangedTask.state = state.state;
+        k_work_submit_to_queue(&mWorkQueue, &mBtBluetoothStateChangedTask.work);
+    });
 }
 
 HmiService::~HmiService() {}

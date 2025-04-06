@@ -50,6 +50,15 @@ private:
     };
     PassKeyDisplayTask mPassKeyDisplayTask;
 
+    struct BtBluetoothStateChangedTask
+    {
+        HmiService *service;
+        struct k_work work;
+        struct bt_conn *conn;
+        BtState state;
+    };
+    BtBluetoothStateChangedTask mBtBluetoothStateChangedTask;
+
     static k_work_q mWorkQueue;
     K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, KB(2));
 
