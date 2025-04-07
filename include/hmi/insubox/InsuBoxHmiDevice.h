@@ -1,6 +1,8 @@
 #ifndef INSUBOX_HMI_DEVICE_H
 #define INSUBOX_HMI_DEVICE_H
 
+#ifdef CONFIG_IB_HMI_INSUBOX
+
 #include <hmi/HmiService.h>
 #include <hmi/IHmiDevice.h>
 #include <lvgl.h>
@@ -45,4 +47,5 @@ private:
     void removePairingScreen(bt_conn *conn);
 };
 
+#endif // CONFIG_IB_HMI_INSUBOX
 #endif // INSUBOX_HMI_DEVICE_H

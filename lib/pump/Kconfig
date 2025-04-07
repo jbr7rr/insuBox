@@ -1,4 +1,3 @@
-menu "Libraries"
 
 config IB_PUMP
 	bool "Insulin Pump"
@@ -24,5 +23,3 @@ endif
 
 rsource "medtrum_bt/Kconfig"
 rsource "insubox/Kconfig"
-
-endmenu

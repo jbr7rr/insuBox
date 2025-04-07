@@ -11,8 +11,9 @@ doc/html
 doc/latex
 
 # build
-/build*
-/twister-out*
+debug*/
+build*/
+twister-out*/
 flash.bin
 
 __pycache__/

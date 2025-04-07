@@ -17,7 +17,6 @@ InsuBoxHmiDevice::InsuBoxHmiDevice(IHmiCallback &hmiCallback, k_work_q &workQueu
 {
     LOG_DBG("InsuBoxHmiDevice constructor");
 
-    // TODO: Not sure if we want this on the kernel thread
     mDisplayUpdateTask.device = this;
     k_work_init_delayable(&mDisplayUpdateTask.work, [](struct k_work *work) {
         // LOG_DBG("Display update task");
