@@ -1,8 +1,8 @@
 /*
- * Copyright (c) 2024 Espressif Systems (Shanghai) Co., Ltd.
- *
- * SPDX-License-Identifier: Apache-2.0
- */
+* Copyright (c) 2024 Espressif Systems (Shanghai) Co., Ltd.
+*
+* SPDX-License-Identifier: Apache-2.0
+*/
 /dts-v1/;
 
 #include <espressif/esp32s3/esp32s3_wroom_n8.dtsi>
@@ -17,7 +17,7 @@
 / {
 	model = "InsuBox Rev Zero PROCPU";
 	compatible = "espressif,esp32s3";
-
+	
 	chosen {
 		zephyr,sram = &sram1;
 		zephyr,console = &usb_serial;
@@ -27,80 +27,88 @@
 		zephyr,display = &st7789v;
 		zephyr,bt-hci = &esp32_bt_hci;
 	};
-
+	
 	aliases {
 		i2c-0 = &i2c0;
 		watchdog0 = &wdt0;
-		sw1 = &button_enter;
-		sw2 = &button_up;
-		sw3 = &button_down;
-		stat1 = &stat1;
-		stat2 = &stat2;
+		
+		chrg-pg = &chrg_pg;
+		chrg-stat1 = &chrg_stat1;
+		chrg-stat2 = &chrg_stat2;
+		en-vaux = &en_vaux;
 		
 		pwm-step-vref = &pwm_step_vref;
 		pwm-buzzer = &pwm_buzzer;
-		magn0 = &tmag5273_b1;
+		magn0 = &tmag5273_d1;
 		magn1 = &tmag5273_c1;
 	};
-
+	
 	keys: keys {
 		compatible = "gpio-keys";
 		button_enter: button_enter {
-			gpios = <&gpio0 17 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			gpios = <&gpio0 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
 			label = "Enter";
 			zephyr,code = <INPUT_KEY_ENTER>;
 		};
 		button_up: button_up {
-			gpios = <&gpio0 12 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			gpios = <&gpio0 17 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
 			label = "Up";
 			zephyr,code = <INPUT_KEY_UP>;
 		};
 		button_down: button_down {
-			gpios = <&gpio1 7 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			gpios = <&gpio1 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 34
 			label = "Down";
 			zephyr,code = <INPUT_KEY_DOWN>;
 		};
 	};
-
-	charg_status{ 
-		stat1: stat_1 {
-			gpios = <&gpio1 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+	
+	power_management {
+		chrg_pg: chrg_pg {
+			gpios = <&gpio0 12 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 12
+			label = "Power Good";
+		};
+		chrg_stat1: chrg_stat_1 {
+			gpios = <&gpio1 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 41
 			label = "Stat 1";
 		};
-		stat2: stat_2 {
-			gpios = <&gpio1 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		chrg_stat2: chrg_stat_2 {
+			gpios = <&gpio1 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 42
 			label = "Stat 2";
 		};
+		en_vaux: en_vaux {
+			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;// GPIO 47
+			label = "Enable Vaux";
+		};
 	};
-
+	
 	lvgl_keypad_input {
 		compatible = "zephyr,lvgl-keypad-input";
 		input = <&keys>;
 		input-codes = <INPUT_KEY_UP INPUT_KEY_DOWN INPUT_KEY_ENTER>;
 		lvgl-codes = <LV_KEY_LEFT LV_KEY_RIGHT LV_KEY_ENTER>;
 	};
-
+	
 	zephyr,user {
 		stepper-motors = <&motor_1 0>;
 	};
-
+	
 	motor_1: motor_1 {
 		status = "okay";
 		compatible = "ti,drv8424";
-
-		dir-gpios = <&gpio1 11 0>;
-		step-gpios = <&gpio0 2 0>; 
-		sleep-gpios = <&gpio1 12 (GPIO_ACTIVE_LOW)>;
-		en-gpios  = <&gpio0 7 0>; 
+		
+		dir-gpios = <&gpio1 11 0>;// GPIO 43
+		step-gpios = <&gpio0 2 0>;
+		sleep-gpios = <&gpio1 12 (GPIO_ACTIVE_LOW)>;// GPIO 44
+		en-gpios  = <&gpio0 7 0>;
 		m0-gpios = <&gpio0 5 0>;
 		m1-gpios = <&gpio0 3 0>;
-	    // counter = <&timer2>;
-
+		// counter = <&timer2>;
+		
 		#address-cells = <1>;
 		#size-cells = <0>;
 		#stepper-motor-cells = <0>;
 	};
-
+	
 	pwms {
 		compatible = "pwm-leds";
 		pwm_step_vref: pwm_gpio0_8 {
@@ -112,7 +120,7 @@
 			pwms = <&mcpwm0 1 0 PWM_POLARITY_NORMAL>;
 		};
 	};
-
+	
 	mipi_dbi {
 		compatible = "zephyr,mipi-dbi-spi";
 		spi-dev = <&spi2>;
@@ -121,17 +129,20 @@
 		write-only;
 		#address-cells = <1>;
 		#size-cells = <0>;
-
+		
 		st7789v: st7789v@0 {
 			compatible = "sitronix,st7789v";
+			// Do init in driver, to ensure display driver is in same thread as lvgl
+			zephyr,deferred-init;
+			
 			reg = <0>;
 			mipi-max-frequency = <27000000>;
-
+			
 			width = <284>;
 			height = <76>;
 			x-offset = <20>;
 			y-offset = <82>;
-
+			
 			vcom = <0x2b>;
 			gctrl = <0x35>;
 			vrhs = <0x0f>;
@@ -181,22 +192,22 @@
 	clock-frequency = <I2C_BITRATE_STANDARD>;
 	pinctrl-0 = <&i2c0_default>;
 	pinctrl-names = "default";
-
-	tmag5273_b1: tmag5273@22 {
-        compatible = "ti,tmag5273";
-        reg = <0x22>;
-		label = "tmag5273_b1";
-        operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
-        angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
-    };
-
-    tmag5273_c1: tmag5273@78 {
-        compatible = "ti,tmag5273";
-        reg = <0x78>;
+	
+	tmag5273_d1: tmag5273@44 {
+		compatible = "ti,tmag5273";
+		reg = <0x44>;
+		label = "tmag5273_d1";
+		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
+		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
+	};
+	
+	tmag5273_c1: tmag5273@78 {
+		compatible = "ti,tmag5273";
+		reg = <0x78>;
 		label = "tmag5273_c1";
-        operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
-        angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
-    };
+		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
+		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
+	};
 };
 
 &spi2 {

@@ -91,67 +91,66 @@ static void drv_callback(const struct device *dev, enum stepper_event event, voi
 //     LOG_DBG("Button %s pressed", dev->name);
 // }
 
-static void setup_gpio_demo()
-{
-    // Initialize buttons
-    if (!gpio_is_ready_dt(&button_sw1))
-    {
-        LOG_ERR("Error: GPIO device %s is not ready\n", button_sw1.port->name);
-        return;
-    }
-    if (!gpio_is_ready_dt(&button_sw2))
-    {
-        LOG_ERR("Error: GPIO device %s is not ready\n", button_sw2.port->name);
-        return;
-    }
-    if (!gpio_is_ready_dt(&button_sw3))
-    {
-        LOG_ERR("Error: GPIO device %s is not ready\n", button_sw3.port->name);
-        return;
-    }
-    if (!gpio_is_ready_dt(&stat1))
-    {
-        LOG_ERR("Error: GPIO device %s is not ready\n", stat1.port->name);
-        return;
-    }
-    if (!gpio_is_ready_dt(&stat2))
-    {
-        LOG_ERR("Error: GPIO device %s is not ready\n", stat2.port->name);
-        return;
-    }
+// static void setup_gpio_demo()
+// {
+//     // Initialize buttons
+//     if (!gpio_is_ready_dt(&button_sw1))
+//     {
+//         LOG_ERR("Error: GPIO device %s is not ready\n", button_sw1.port->name);
+//         return;
+//     }
+//     if (!gpio_is_ready_dt(&button_sw2))
+//     {
+//         LOG_ERR("Error: GPIO device %s is not ready\n", button_sw2.port->name);
+//         return;
+//     }
+//     if (!gpio_is_ready_dt(&button_sw3))
+//     {
+//         LOG_ERR("Error: GPIO device %s is not ready\n", button_sw3.port->name);
+//         return;
+//     }
+//     if (!gpio_is_ready_dt(&stat1))
+//     {
+//         LOG_ERR("Error: GPIO device %s is not ready\n", stat1.port->name);
+//         return;
+//     }
+//     if (!gpio_is_ready_dt(&stat2))
+//     {
+//         LOG_ERR("Error: GPIO device %s is not ready\n", stat2.port->name);
+//         return;
+//     }
 
-    int err = gpio_pin_configure_dt(&button_sw1, GPIO_INPUT);
-    if (err)
-    {
-        LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw1.pin);
-        return;
-    }
-    err = gpio_pin_configure_dt(&button_sw2, GPIO_INPUT);
-    if (err)
-    {
-        LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw2.pin);
-        return;
-    }
-    err = gpio_pin_configure_dt(&button_sw3, GPIO_INPUT);
-    if (err)
-    {
-        LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw3.pin);
-        return;
-    }
-    err = gpio_pin_configure_dt(&stat1, GPIO_INPUT);
-    if (err)
-    {
-        LOG_ERR("Error %d: failed to configure pin %d\n", err, stat1.pin);
-        return;
-    }
-    err = gpio_pin_configure_dt(&stat2, GPIO_INPUT);
-    if (err)
-    {
-        LOG_ERR("Error %d: failed to configure pin %d\n", err, stat2.pin);
-        return;
-    }
-    
-}
+//     int err = gpio_pin_configure_dt(&button_sw1, GPIO_INPUT);
+//     if (err)
+//     {
+//         LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw1.pin);
+//         return;
+//     }
+//     err = gpio_pin_configure_dt(&button_sw2, GPIO_INPUT);
+//     if (err)
+//     {
+//         LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw2.pin);
+//         return;
+//     }
+//     err = gpio_pin_configure_dt(&button_sw3, GPIO_INPUT);
+//     if (err)
+//     {
+//         LOG_ERR("Error %d: failed to configure pin %d\n", err, button_sw3.pin);
+//         return;
+//     }
+//     err = gpio_pin_configure_dt(&stat1, GPIO_INPUT);
+//     if (err)
+//     {
+//         LOG_ERR("Error %d: failed to configure pin %d\n", err, stat1.pin);
+//         return;
+//     }
+//     err = gpio_pin_configure_dt(&stat2, GPIO_INPUT);
+//     if (err)
+//     {
+//         LOG_ERR("Error %d: failed to configure pin %d\n", err, stat2.pin);
+//         return;
+//     }
+// }
 
 InsuBoxDevice::InsuBoxDevice()
 {
