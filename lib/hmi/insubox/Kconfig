@@ -10,12 +10,15 @@ config IB_HMI_INSUBOX
 	help
 		This option enables support for the InsuBoxPump HMI.
 
+endchoice
+
 if IB_HMI_INSUBOX
 
 # Override lvgl auto init
 config LV_Z_AUTO_INIT
 	default n
 
-endif
+config IB_HMI_STACK_SIZE
+    default 4096
 
-endchoice
+endif

@@ -60,7 +60,7 @@ private:
     BtBluetoothStateChangedTask mBtBluetoothStateChangedTask;
 
     static k_work_q mWorkQueue;
-    K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, KB(2));
+    K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, CONFIG_IB_HMI_STACK_SIZE);
 
     /**
      * @brief Get the hmi internal hmi device object of the selected type in Kconfig
