@@ -51,27 +51,28 @@
 			zephyr,code = <INPUT_KEY_UP>;
 		};
 		button_down: button_down {
-			gpios = <&gpio1 2 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 34
+			gpios = <&gpio1 6 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 38
 			label = "Down";
 			zephyr,code = <INPUT_KEY_DOWN>;
 		};
 	};
 	
-	power_management {
+	charg_status {
+		compatible = "gpio-leds";
 		chrg_pg: chrg_pg {
 			gpios = <&gpio0 12 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 12
 			label = "Power Good";
 		};
-		chrg_stat1: chrg_stat_1 {
+		chrg_stat1: stat1 {
 			gpios = <&gpio1 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 41
 			label = "Stat 1";
 		};
-		chrg_stat2: chrg_stat_2 {
+		chrg_stat2: stat2 {
 			gpios = <&gpio1 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 42
 			label = "Stat 2";
 		};
 		en_vaux: en_vaux {
-			gpios = <&gpio1 15 GPIO_ACTIVE_LOW>;// GPIO 47
+			gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
 			label = "Enable Vaux";
 		};
 	};
@@ -112,7 +113,7 @@
 		};
 		pwm_buzzer: pwm_gpio0_16 {
 			label = "Buzzer";
-			pwms = <&mcpwm0 1 0 PWM_POLARITY_NORMAL>;
+			pwms = <&mcpwm0 2 0 PWM_POLARITY_NORMAL>;
 		};
 	};
 	
@@ -129,13 +130,14 @@
 			compatible = "sitronix,st7789v";
 			// Do init in driver, to ensure display driver is in same thread as lvgl
 			zephyr,deferred-init;
+			inversion-off;
 			
 			reg = <0>;
 			mipi-max-frequency = <27000000>;
 			
 			width = <284>;
 			height = <76>;
-			x-offset = <20>;
+			x-offset = <18>;
 			y-offset = <82>;
 			
 			vcom = <0x2b>;
@@ -175,6 +177,7 @@
 	pinctrl-names = "default";
 	prescale = <10>;
 	prescale-timer0 = <10>;
+	prescale-timer1 = <10>;
 	status = "okay";
 };
 

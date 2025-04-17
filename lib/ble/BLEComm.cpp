@@ -285,6 +285,7 @@ void BLEComm::init(EventDispatcher *dispatcher)
     if (err)
     {
         LOG_ERR("Bluetooth enable failed: %d", err);
+        return;
     }
 
     k_sem_take(&semBtReady, K_FOREVER);

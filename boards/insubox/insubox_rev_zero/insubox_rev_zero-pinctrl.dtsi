@@ -30,7 +30,7 @@
 			bias-pull-up;
 		};
 		group2 {
-			pinmux = <MCPWM0_OUT0B_GPIO16>;
+			pinmux = <MCPWM0_OUT1A_GPIO16>;
 			bias-pull-down;
 			output-enable;
 		};
