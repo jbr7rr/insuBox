@@ -42,6 +42,7 @@ private:
     const struct device *mKeypadDevice;
 
     void showMainScreen();
+    void showBolusScreen();
 
     bool storePairingScreen(bt_conn *conn, lv_obj_t *screen);
     void removePairingScreen(bt_conn *conn);
