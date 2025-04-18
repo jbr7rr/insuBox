@@ -64,6 +64,10 @@ void InsuBoxHmiDevice::init()
     lv_indev_set_type(inputDevice, LV_INDEV_TYPE_ENCODER);
     lv_indev_set_group(inputDevice, keypad);
 
+    lv_theme_t *theme = lv_theme_default_init(lv_disp_get_default(), lv_palette_main(LV_PALETTE_PURPLE),
+                                              lv_palette_main(LV_PALETTE_CYAN), true, LV_FONT_DEFAULT);
+    lv_display_set_theme(lv_disp_get_default(), theme);
+
     showMainScreen();
     k_work_schedule_for_queue(&mWorkQueue, &mDisplayUpdateTask.work, K_NO_WAIT);
 }
@@ -87,7 +91,7 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
     }
     lv_obj_set_size(cont, 260, 70);
     lv_obj_set_style_bg_color(cont, black_color, LV_PART_MAIN);
-    lv_obj_set_style_border_width(cont, 0, LV_PART_MAIN);
+    lv_obj_set_style_border_width(cont, 3, LV_PART_MAIN);
     lv_obj_set_style_pad_all(cont, 2, LV_PART_MAIN);
     lv_obj_align(cont, LV_ALIGN_CENTER, 0, 0);
     lv_gridnav_add(cont, LV_GRIDNAV_CTRL_ROLLOVER);
@@ -103,11 +107,6 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
     lv_obj_t *acceptBtn = lv_btn_create(cont);
     lv_obj_set_size(acceptBtn, 55, 22);
     lv_obj_align(acceptBtn, LV_ALIGN_RIGHT_MID, -10, -15);
-    lv_obj_set_style_bg_color(acceptBtn, purple_color, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(acceptBtn, black_color, LV_STATE_FOCUSED);
-    lv_obj_set_style_border_color(acceptBtn, purple_color, LV_STATE_FOCUSED);
-    lv_obj_set_style_border_width(acceptBtn, 2, LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(acceptBtn, lv_color_darken(purple_color, 30), LV_STATE_PRESSED);
     lv_obj_t *acceptLabel = lv_label_create(acceptBtn);
     lv_label_set_text(acceptLabel, "Accept");
     lv_obj_center(acceptLabel);
@@ -116,11 +115,6 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
     lv_obj_t *rejectBtn = lv_btn_create(cont);
     lv_obj_set_size(rejectBtn, 55, 22);
     lv_obj_align(rejectBtn, LV_ALIGN_RIGHT_MID, -10, 15);
-    lv_obj_set_style_bg_color(rejectBtn, purple_color, LV_PART_MAIN);
-    lv_obj_set_style_bg_color(rejectBtn, black_color, LV_STATE_FOCUSED);
-    lv_obj_set_style_border_color(rejectBtn, purple_color, LV_STATE_FOCUSED);
-    lv_obj_set_style_border_width(rejectBtn, 2, LV_STATE_FOCUSED);
-    lv_obj_set_style_bg_color(rejectBtn, lv_color_darken(purple_color, 30), LV_STATE_PRESSED);
     lv_obj_t *rejectLabel = lv_label_create(rejectBtn);
     lv_label_set_text(rejectLabel, "Reject");
     lv_obj_center(rejectLabel);
@@ -179,6 +173,25 @@ void InsuBoxHmiDevice::showMainScreen()
     lv_label_set_text(label, "Hello, InsuBox!");
     lv_obj_set_style_text_color(label, lv_color_hex(0xff00ff), LV_PART_MAIN);
     lv_obj_align(label, LV_ALIGN_TOP_LEFT, 10, 10);
+
+    // Show off some colors
+    const int segmentCount = 6;
+    const lv_color_t rainbowColors[segmentCount] = {
+        lv_color_hex(0xFF0000), // Red
+        lv_color_hex(0xFF7F00), // Orange
+        lv_color_hex(0xFFFF00), // Yellow
+        lv_color_hex(0x00FF00), // Green
+        lv_color_hex(0x0000FF), // Blue
+        lv_color_hex(0x8B00FF)  // Violet
+    };
+
+    for (int i = 0; i < segmentCount; ++i)
+    {
+        lv_obj_t *segment = lv_obj_create(lv_screen_active());
+        lv_obj_set_size(segment, 20, 20);
+        lv_obj_set_style_bg_color(segment, rainbowColors[i], LV_PART_MAIN);
+        lv_obj_align(segment, LV_ALIGN_TOP_LEFT, 10 + i * 22, 40);
+    }
 
     lv_obj_t *bolusBtn = lv_btn_create(lv_screen_active());
     lv_obj_set_size(bolusBtn, 55, 22);

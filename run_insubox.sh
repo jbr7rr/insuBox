@@ -6,8 +6,6 @@ port="/dev/ttyACM0"
 
 if [ ! -d "build" ]; then
     west build -b insubox_rev_zero/esp32s3/procpu app -DOVERLAY_CONFIG="hw_insubox.conf" 
-else
-    west build
 fi
 
 west flash --esp-device=$port
