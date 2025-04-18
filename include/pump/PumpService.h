@@ -1,16 +1,45 @@
 #ifndef PUMP_SERVICE_H
 #define PUMP_SERVICE_H
 
+#include <control/IdsEnums.h>
+#include <events/EventDispatcher.h>
 #include <pump/IPumpDevice.h>
+#include <utils/sfloat.h>
+#include <optional>
 
-class PumpService
+struct PumpStatusUpdated
+{
+    std::optional<TherapyControlState> therapyControlState;
+    std::optional<OperationalState> operationalState;
+    std::optional<SFloat> reservoirLevel;
+    std::optional<bool> reservoirAttached;
+};
+
+struct PumpAnnunciationStatusUpdated
+{
+    AnnunciationType annunciation;
+    bool cancel;
+};
+
+class IPumpServiceCallback
 {
 public:
-    PumpService(IPumpDevice &pumpDevice = PumpService::getPumpDevice());
+    virtual void pumpStatusUpdated(const PumpStatusUpdated &status) = 0;
+};
+
+class PumpService : public IPumpServiceCallback
+{
+public:
+    PumpService(EventDispatcher &dispatcher);
+    PumpService(EventDispatcher &dispatcher, IPumpDevice &pumpDevice);
     ~PumpService();
     void init();
 
+protected:
+    void pumpStatusUpdated(const PumpStatusUpdated &status) override;
+
 private:
+    EventDispatcher &mDispatcher;
     IPumpDevice &mPumpDevice;
 
     /**
@@ -18,7 +47,7 @@ private:
      *
      * @return IPumpDevice&
      */
-    static IPumpDevice &getPumpDevice();
+    static IPumpDevice &getPumpDevice(IPumpServiceCallback &pumpServiceCallback);
 };
 
 #endif // PUMP_SERVICE_H

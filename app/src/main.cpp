@@ -6,8 +6,8 @@
 namespace
 {
     EventDispatcher eventDispatcher;
-    PumpService pumpService;
-    ControlService controlService;
+    ControlService controlService(eventDispatcher);
+    PumpService pumpService(eventDispatcher);
     HmiService hmiService(eventDispatcher);
 }
 

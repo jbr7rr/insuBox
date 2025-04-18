@@ -1,0 +1,6 @@
+
+config IB_SFLOAT
+    bool "Enable sfloat support"
+    default y
+    help
+        Enable support for sfloat data type.
