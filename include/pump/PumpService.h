@@ -2,10 +2,11 @@
 #define PUMP_SERVICE_H
 
 #include <control/IdsEnums.h>
+#include <ctime>
 #include <events/EventDispatcher.h>
+#include <optional>
 #include <pump/IPumpDevice.h>
 #include <utils/sfloat.h>
-#include <optional>
 
 struct PumpStatusUpdated
 {
@@ -21,10 +22,26 @@ struct PumpAnnunciationStatusUpdated
     bool cancel;
 };
 
+struct BolusRequest
+{
+    float amount;
+    time_t timestamp;
+};
+
+struct BolusProgressUpdate
+{
+    float requestedAmount;
+    time_t requestedTimestamp;
+    float deliveredAmount;
+    time_t deliveredTimestamp;
+    bool completed;
+};
+
 class IPumpServiceCallback
 {
 public:
     virtual void pumpStatusUpdated(const PumpStatusUpdated &status) = 0;
+    virtual void onBolusProgressUpdate(const BolusProgressUpdate &update) = 0;
 };
 
 class PumpService : public IPumpServiceCallback
@@ -37,6 +54,7 @@ public:
 
 protected:
     void pumpStatusUpdated(const PumpStatusUpdated &status) override;
+    void onBolusProgressUpdate(const BolusProgressUpdate &update) override;
 
 private:
     EventDispatcher &mDispatcher;

@@ -30,3 +30,9 @@ void VirtualHmiDevice::onBtBluetoothStateChanged(struct bt_conn *conn, BtState s
 {
     LOG_DBG("onBtBluetoothStateChanged: state=%d", static_cast<int>(state));
 }
+
+void VirtualHmiDevice::onBolusProgressUpdate(BolusProgressUpdate &update)
+{
+    LOG_DBG("onBolusProgressUpdate: requestedAmount=%f, deliveredAmount=%f, completed=%d",
+            static_cast<double>(update.requestedAmount), static_cast<double>(update.deliveredAmount), update.completed);
+}

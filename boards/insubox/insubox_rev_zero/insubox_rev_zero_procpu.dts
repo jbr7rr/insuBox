@@ -36,6 +36,8 @@
 		pwm-buzzer = &pwm_buzzer;
 		magn0 = &tmag5273_d1;
 		magn1 = &tmag5273_c1;
+		
+		stepper = &drv8424;
 	};
 	
 	keys: keys {
@@ -84,13 +86,9 @@
 		lvgl-codes = <LV_KEY_RIGHT LV_KEY_LEFT LV_KEY_ENTER>;
 	};
 	
-	zephyr,user {
-		stepper-motors = <&motor_1 0>;
-	};
-	
-	motor_1: motor_1 {
+	drv8424: drv8424 {
 		status = "okay";
-		compatible = "ti,drv8424";
+		compatible = "ti,drv84xx";
 		
 		dir-gpios = <&gpio1 11 0>;// GPIO 43
 		step-gpios = <&gpio0 2 0>;
@@ -151,8 +149,8 @@
 			porch-param = [0c 0c 00 33 33];
 			cmd2en-param = [5a 69 02 00];
 			pwctrl1-param = [52 a1];
-		    pvgam-param = [D0 00 02 07 0B 1A 35 32 4A 29 12 12 12 17];
-		    nvgam-param = [D0 00 02 07 05 15 3E 33 5C 1C 18 16 1C 1D];
+			pvgam-param = [D0 00 02 07 0B 1A 35 32 4A 29 12 12 12 17];
+			nvgam-param = [D0 00 02 07 05 15 3E 33 5C 1C 18 16 1C 1D];
 			ram-param = [00 F8];
 			rgb-param = [CD 08 14];
 			mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";

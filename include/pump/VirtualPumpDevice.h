@@ -5,9 +5,7 @@
 
 #include <pump/IPumpDevice.h>
 #include <pump/PumpService.h>
-
 #include <zephyr/kernel.h>
-
 
 class VirtualPumpDevice : public IPumpDevice
 {
@@ -16,11 +14,16 @@ public:
     ~VirtualPumpDevice();
     void init() override;
 
+    void onBolusRequest(float amount, time_t timestamp) override;
+
 private:
     struct SubContainer
     {
         VirtualPumpDevice *pumpDevice;
         k_work_delayable statusWork;
+        float requestedBolus;
+        float deliveredBolus;
+        time_t requestedTimestamp;
     };
 
     SubContainer mSubContainer;

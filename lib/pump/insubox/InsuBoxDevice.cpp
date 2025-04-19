@@ -16,7 +16,7 @@ LOG_MODULE_REGISTER(ib_insubox_pump_device);
 
 // Stepper device
 static const struct pwm_dt_spec pwm_step_vref = PWM_DT_SPEC_GET(DT_ALIAS(pwm_step_vref));
-static const struct device *stepper_dev = DEVICE_DT_GET(DT_NODELABEL(motor_1));
+static const struct device *stepper_dev = DEVICE_DT_GET(DT_ALIAS(stepper));
 
 // Sensor devices
 static const struct device *sensor0 = DEVICE_DT_GET(DT_ALIAS(magn0));
@@ -221,7 +221,7 @@ void InsuBoxDevice::init()
     // k_sleep(K_SECONDS(90));
     // movePlunger(30, false);
     // k_sleep(K_SECONDS(30));
-    movePlunger(20, false);
+    // movePlunger(20, false);
 
     k_work_reschedule(&mSubContainer.sensorWork, K_NO_WAIT);
 
@@ -246,6 +246,13 @@ void InsuBoxDevice::init()
     }
 
     pwm_set_dt(&pwm_buzzer, period, 0);
+}
+
+void InsuBoxDevice::onBolusRequest(float amount, time_t timestamp)
+{
+    LOG_DBG("Bolus request: %.2f units at %lld", static_cast<double>(amount), timestamp);
+    movePlunger(amount, false);
+    // TODO: Update etc
 }
 
 void read_sensor(const struct device *sensor)

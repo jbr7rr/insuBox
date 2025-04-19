@@ -12,6 +12,7 @@ public:
     InsuBoxDevice();
     ~InsuBoxDevice();
     void init() override;
+    void onBolusRequest(float amount, time_t timestamp) override;
 
 private:
     struct SubContainer
@@ -21,7 +22,6 @@ private:
     } mSubContainer;
 
     void sensorWork();
-
 };
 
 #endif // CONFIG_IB_PUMP_INSUBOX

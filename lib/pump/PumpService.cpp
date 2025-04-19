@@ -14,6 +14,11 @@ PumpService::PumpService(EventDispatcher &dispatcher, IPumpDevice &pumpDevice)
     : mDispatcher(dispatcher), mPumpDevice(pumpDevice)
 {
     LOG_DBG("PumpService constructor");
+
+    mDispatcher.subscribe<BolusRequest>([this](const BolusRequest &request) {
+        LOG_DBG("Bolus request received: %f", static_cast<double>(request.amount));
+        mPumpDevice.onBolusRequest(request.amount, request.timestamp);
+    });
 }
 
 PumpService::~PumpService() {}
@@ -27,6 +32,14 @@ void PumpService::init()
 void PumpService::pumpStatusUpdated(const PumpStatusUpdated &status)
 {
     mDispatcher.dispatch<PumpStatusUpdated>(status);
+}
+
+void PumpService::onBolusProgressUpdate(const BolusProgressUpdate &update)
+{
+    LOG_DBG("Bolus progress update: requested %.2f, delivered %.2f, timestamp %lld",
+            static_cast<double>(update.requestedAmount), static_cast<double>(update.deliveredAmount),
+            update.deliveredTimestamp);
+    mDispatcher.dispatch<BolusProgressUpdate>(update);
 }
 
 IPumpDevice &PumpService::getPumpDevice(IPumpServiceCallback &pumpServiceCallback)

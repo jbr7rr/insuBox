@@ -7,6 +7,7 @@ config IB_HMI_INSUBOX
 	imply DISPLAY
 	imply INPUT
 	imply LV_USE_GRIDNAV
+	imply LV_USE_FLOAT
 	help
 		This option enables support for the InsuBoxPump HMI.
 

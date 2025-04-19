@@ -2,6 +2,7 @@
 #define IHMI_DEVICE_H
 
 #include <cstdint>
+#include <pump/PumpService.h>
 
 class IHmiDevice
 {
@@ -17,6 +18,7 @@ public:
      */
     virtual void onUserBtPairingRequest(struct bt_conn *conn, uint32_t passkey) = 0;
     virtual void onBtBluetoothStateChanged(struct bt_conn *conn, BtState state) = 0;
+    virtual void onBolusProgressUpdate(BolusProgressUpdate &update) = 0;
 };
 
 #endif // IHMI_DEVICE_H

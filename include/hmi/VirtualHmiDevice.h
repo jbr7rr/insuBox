@@ -13,6 +13,7 @@ public:
 
     void onUserBtPairingRequest(struct bt_conn *conn, uint32_t passkey) override;
     void onBtBluetoothStateChanged(struct bt_conn *conn, BtState state) override;
+    void onBolusProgressUpdate(BolusProgressUpdate &update) override;
 
 private:
     IHmiCallback &mHmiCallback;

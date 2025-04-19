@@ -4,6 +4,7 @@
 #include <ble/BLEComm.h>
 #include <events/EventDispatcher.h>
 #include <hmi/IHmiDevice.h>
+#include <pump/PumpService.h>
 
 class IHmiCallback
 {
@@ -15,6 +16,7 @@ public:
      * @param accepted True if the user accepted the pairing request, false otherwise
      */
     virtual void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) = 0;
+    virtual void onBolusRequest(float amount, time_t timestamp) = 0;
 };
 
 class HmiService : public IHmiCallback
@@ -27,6 +29,7 @@ public:
     void init();
 
     void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) override;
+    void onBolusRequest(float amount, time_t timestamp) override;
 
 private:
     EventDispatcher &mDispatcher;
@@ -56,6 +59,14 @@ private:
         BtState state;
     };
     BtBluetoothStateChangedTask mBtBluetoothStateChangedTask;
+
+    struct BolusProgressUpdateTask
+    {
+        HmiService *service;
+        struct k_work work;
+        BolusProgressUpdate update;
+    };
+    BolusProgressUpdateTask mBolusProgressUpdateTask;
 
     static k_work_q mWorkQueue;
     K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, CONFIG_IB_HMI_STACK_SIZE);

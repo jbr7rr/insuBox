@@ -2,6 +2,7 @@
 #include <hmi/HmiService.h>
 #include <hmi/VirtualHmiDevice.h>
 #include <hmi/insubox/InsuBoxHmiDevice.h>
+#include <pump/PumpService.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -16,11 +17,7 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
     : mDispatcher(dispatcher), mHmiDevice(hmiDevice)
 {
     k_work_queue_init(&mWorkQueue);
-    static k_work_queue_config config = {
-        .name = "hmi_work_queue",
-        .no_yield = false,
-        .essential = true
-    };
+    static k_work_queue_config config = {.name = "hmi_work_queue", .no_yield = false, .essential = true};
     k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 0, &config);
 
     LOG_DBG("HmiService constructor");
@@ -65,6 +62,22 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
         this->mBtBluetoothStateChangedTask.state = state.state;
         k_work_submit_to_queue(&mWorkQueue, &mBtBluetoothStateChangedTask.work);
     });
+
+    mBolusProgressUpdateTask.service = this;
+    k_work_init(&mBolusProgressUpdateTask.work, [](struct k_work *work) {
+        auto *container = CONTAINER_OF(work, BolusProgressUpdateTask, work);
+        container->service->mHmiDevice.onBolusProgressUpdate(container->update);
+    });
+
+    mDispatcher.subscribe<BolusProgressUpdate>([this](const BolusProgressUpdate &update) {
+        if (k_work_busy_get(&mBolusProgressUpdateTask.work))
+        {
+            LOG_ERR("Bolus progress update task is busy");
+            return;
+        }
+        this->mBolusProgressUpdateTask.update = update;
+        k_work_submit_to_queue(&mWorkQueue, &mBolusProgressUpdateTask.work);
+    });
 }
 
 HmiService::~HmiService() {}
@@ -78,6 +91,11 @@ void HmiService::init()
 void HmiService::onUserBtPairingResponse(struct bt_conn *conn, bool accepted)
 {
     mDispatcher.dispatch<BtPassKeyConfirmResponse>({conn, accepted});
+}
+
+void HmiService::onBolusRequest(float amount, time_t timestamp)
+{
+    mDispatcher.dispatch<BolusRequest>({amount, timestamp});
 }
 
 IHmiDevice &HmiService::getHmiDevice(IHmiCallback &hmiCallback)

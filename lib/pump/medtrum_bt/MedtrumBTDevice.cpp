@@ -46,6 +46,13 @@ void MedtrumBTDevice::init()
     LOG_DBG("Reservoir level: %f", static_cast<double>(level));
 }
 
+void MedtrumBTDevice::onBolusRequest(float amount, time_t timestamp)
+{
+    // Handle a bolus request
+    LOG_DBG("Bolus request: %.2f units at %lld", static_cast<double>(amount), timestamp);
+    LOG_ERR("Bolus request not implemented (yet)");
+}
+
 void MedtrumBTDevice::onReadyForCommands()
 {
     // Callback when the device is connected

@@ -1,5 +1,6 @@
 #include <hmi/insubox/InsuBoxHmiDevice.h>
 
+#include <ctime>
 #include <lvgl.h>
 #include <lvgl_input_device.h>
 #include <lvgl_zephyr.h>
@@ -79,7 +80,6 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
     // Define colors
     lv_color_t purple_color = lv_color_hex(0xff00ff);
     lv_color_t black_color = lv_color_hex(0x000000);
-    ;
 
     // Create container to organize content - sized to fit the small display (76x284)
     lv_obj_t *cont = lv_obj_create(lv_screen_active());
@@ -94,7 +94,6 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
     lv_obj_set_style_border_width(cont, 3, LV_PART_MAIN);
     lv_obj_set_style_pad_all(cont, 2, LV_PART_MAIN);
     lv_obj_align(cont, LV_ALIGN_CENTER, 0, 0);
-    lv_gridnav_add(cont, LV_GRIDNAV_CTRL_ROLLOVER);
 
     // Show the passkey
     lv_obj_t *passkeyLabel = lv_label_create(cont);
@@ -134,7 +133,6 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
         [](lv_event_t *e) {
             auto *data = static_cast<CallbackData *>(lv_event_get_user_data(e));
             data->device->mHmiCallback.onUserBtPairingResponse(data->conn, true);
-            // data->device->showMainScreen();
             data->device->removePairingScreen(data->conn);
         },
         LV_EVENT_CLICKED, &callbackData);
@@ -145,7 +143,6 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
         [](lv_event_t *e) {
             auto *data = static_cast<CallbackData *>(lv_event_get_user_data(e));
             data->device->mHmiCallback.onUserBtPairingResponse(data->conn, false);
-            // data->device->showMainScreen();
             data->device->removePairingScreen(data->conn);
         },
         LV_EVENT_CLICKED, &callbackData);
@@ -161,6 +158,61 @@ void InsuBoxHmiDevice::onBtBluetoothStateChanged(struct bt_conn *conn, BtState s
     {
         // Remove the pairing screen if it exists
         removePairingScreen(conn);
+    }
+}
+
+void InsuBoxHmiDevice::onBolusProgressUpdate(BolusProgressUpdate &update)
+{
+    mBolusUi.currentUpdate = update;
+
+    if (update.requestedAmount == 0.0f)
+    {
+        return;
+    }
+
+    if (mBolusUi.popup == nullptr && mBolusUi.mainScreenLabel == nullptr)
+    {
+        createBolusProgressPopup();
+        return;
+    }
+
+    if (update.completed)
+    {
+        if (mBolusUi.popup)
+        {
+            lv_obj_del(mBolusUi.popup);
+            mBolusUi.popup = nullptr;
+        }
+        if (mBolusUi.mainScreenLabel)
+        {
+            lv_label_set_text(mBolusUi.mainScreenLabel, "Bolus completed");
+            mBolusUi.mainScreenLabel = nullptr;
+        }
+    }
+    else
+    {
+        if (mBolusUi.popup)
+        {
+            LOG_DBG("Updating bolus progress popup");
+            lv_obj_t *progressBar = lv_obj_get_child(mBolusUi.popup, 0);
+            uint32_t progress = static_cast<uint32_t>(update.deliveredAmount * 100.0f / update.requestedAmount);
+            lv_bar_set_value(progressBar, progress, LV_ANIM_ON);
+
+            char progressText[50];
+            snprintf(progressText, sizeof(progressText), "%.2fU / %.2fU", static_cast<double>(update.deliveredAmount),
+                     static_cast<double>(update.requestedAmount));
+            LOG_DBG("Bolus progress: %s", progressText);
+            lv_label_set_text(lv_obj_get_child(mBolusUi.popup, 1), progressText);
+        }
+        if (mBolusUi.mainScreenLabel)
+        {
+            LOG_DBG("Updating main screen label");
+            char progressText[50];
+            snprintf(progressText, sizeof(progressText), "%.2fU / %.2fU", static_cast<double>(update.deliveredAmount),
+                     static_cast<double>(update.requestedAmount));
+            LOG_DBG("Bolus progress: %s", progressText);
+            lv_label_set_text(mBolusUi.mainScreenLabel, progressText);
+        }
     }
 }
 
@@ -263,14 +315,98 @@ void InsuBoxHmiDevice::showBolusScreen()
             auto *data = static_cast<BolusSpinboxData *>(lv_event_get_user_data(e));
             int32_t value = lv_spinbox_get_value(data->spinbox);
             float bolus = value / 100.0f;
-            LOG_INF("Bolus requested: %.2f", static_cast<double>(bolus));
-            // TODO: Send bolus request
+            struct timespec currentTime;
+            clock_gettime(CLOCK_REALTIME, &currentTime);
+            LOG_INF("Bolus requested: %.2f, time: %lld", static_cast<double>(bolus), currentTime.tv_sec);
+            data->device->mHmiCallback.onBolusRequest(bolus, currentTime.tv_sec);
             data->device->showMainScreen();
         },
         LV_EVENT_CLICKED, &cbData);
 
     lv_group_focus_obj(spinbox);
     lv_group_set_editing(lv_group_get_default(), true);
+}
+
+void InsuBoxHmiDevice::createBolusProgressPopup()
+{
+    lv_obj_t *cont = lv_obj_create(lv_screen_active());
+    mBolusUi.popup = cont;
+
+    // setup container style
+    lv_obj_set_size(cont, 260, 70);
+    lv_obj_set_style_bg_color(cont, lv_color_hex(0x000000), LV_PART_MAIN);
+    lv_obj_set_style_border_width(cont, 3, LV_PART_MAIN);
+    lv_obj_set_style_pad_all(cont, 2, LV_PART_MAIN);
+    lv_obj_align(cont, LV_ALIGN_CENTER, 0, 0);
+    lv_gridnav_add(cont, LV_GRIDNAV_CTRL_ROLLOVER);
+
+    // Show progress bar
+    lv_obj_t *progressBar = lv_bar_create(cont);
+    lv_obj_set_size(progressBar, 170, 18);
+    lv_obj_align(progressBar, LV_ALIGN_CENTER, -35, -10);
+    uint32_t progress =
+        static_cast<uint32_t>(mBolusUi.currentUpdate.deliveredAmount * 100.0f / mBolusUi.currentUpdate.requestedAmount);
+    lv_bar_set_value(progressBar, progress, LV_ANIM_ON);
+
+    // Label for progress
+    lv_obj_t *progressLabel = lv_label_create(cont);
+    char progressText[50];
+    snprintf(progressText, sizeof(progressText), "%.2fU / %.2fU",
+             static_cast<double>(mBolusUi.currentUpdate.deliveredAmount),
+             static_cast<double>(mBolusUi.currentUpdate.requestedAmount));
+    LOG_DBG("Bolus progress: %s", progressText);
+    lv_label_set_text(progressLabel, progressText);
+    lv_obj_align(progressLabel, LV_ALIGN_CENTER, -35, 10);
+
+    // Hide button
+    lv_obj_t *hideBtn = lv_btn_create(cont);
+    lv_obj_set_size(hideBtn, 55, 22);
+    lv_obj_align(hideBtn, LV_ALIGN_RIGHT_MID, -10, -15);
+    lv_obj_t *hideLabel = lv_label_create(hideBtn);
+    lv_label_set_text(hideLabel, "Hide");
+    lv_obj_center(hideLabel);
+
+    // Stop button
+    lv_obj_t *stopBtn = lv_btn_create(cont);
+    lv_obj_set_size(stopBtn, 55, 22);
+    lv_obj_align(stopBtn, LV_ALIGN_RIGHT_MID, -10, 15);
+    lv_obj_t *stopLabel = lv_label_create(stopBtn);
+    lv_label_set_text(stopLabel, "Stop");
+    lv_obj_center(stopLabel);
+
+    lv_obj_add_event_cb(
+        stopBtn,
+        [](lv_event_t *e) {
+            auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
+            lv_obj_del(device->mBolusUi.popup);
+            device->mBolusUi.popup = nullptr;
+            // TODO: Cancel request
+        },
+        LV_EVENT_CLICKED, this);
+
+    lv_obj_add_event_cb(
+        hideBtn,
+        [](lv_event_t *e) {
+            auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
+            lv_obj_del(device->mBolusUi.popup);
+            device->mBolusUi.popup = nullptr;
+            lv_obj_t *mainScreenLabel = lv_obj_get_child(lv_screen_active(), 0);
+            if (mainScreenLabel)
+            {
+                device->mBolusUi.mainScreenLabel = mainScreenLabel;
+                char progressText[50];
+                snprintf(progressText, sizeof(progressText), "%.2fU / %.2fU",
+                         static_cast<double>(device->mBolusUi.currentUpdate.deliveredAmount),
+                         static_cast<double>(device->mBolusUi.currentUpdate.requestedAmount));
+                LOG_DBG("Bolus progress: %s", progressText);
+                lv_label_set_text(mainScreenLabel, progressText);
+            }
+            else
+            {
+                LOG_ERR("Failed to get main screen label");
+            }
+        },
+        LV_EVENT_CLICKED, this);
 }
 
 bool InsuBoxHmiDevice::storePairingScreen(bt_conn *conn, lv_obj_t *screen)
