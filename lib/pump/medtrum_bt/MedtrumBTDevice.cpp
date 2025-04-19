@@ -53,6 +53,13 @@ void MedtrumBTDevice::onBolusRequest(float amount, time_t timestamp)
     LOG_ERR("Bolus request not implemented (yet)");
 }
 
+void MedtrumBTDevice::onStopBolus()
+{
+    // Handle a stop bolus request
+    LOG_DBG("Stop bolus request");
+    LOG_ERR("Stop bolus request not implemented (yet)");
+}
+
 void MedtrumBTDevice::onReadyForCommands()
 {
     // Callback when the device is connected

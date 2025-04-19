@@ -373,9 +373,8 @@ void InsuBoxHmiDevice::createBolusProgressPopup()
         stopBtn,
         [](lv_event_t *e) {
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
-            lv_obj_del(device->mBolusUi.popup);
-            device->mBolusUi.popup = nullptr;
-            // TODO: Cancel request
+            device->mHmiCallback.onStopBolus();
+            // Do not remove the widget yet, wait for the progress update
         },
         LV_EVENT_CLICKED, this);
 

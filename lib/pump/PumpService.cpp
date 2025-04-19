@@ -19,6 +19,11 @@ PumpService::PumpService(EventDispatcher &dispatcher, IPumpDevice &pumpDevice)
         LOG_DBG("Bolus request received: %f", static_cast<double>(request.amount));
         mPumpDevice.onBolusRequest(request.amount, request.timestamp);
     });
+
+    mDispatcher.subscribe<StopBolus>([this](const StopBolus &stop) {
+        LOG_DBG("Stop bolus request received");
+        mPumpDevice.onStopBolus();
+    });
 }
 
 PumpService::~PumpService() {}

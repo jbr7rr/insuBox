@@ -28,6 +28,10 @@ struct BolusRequest
     time_t timestamp;
 };
 
+struct StopBolus
+{
+};
+
 struct BolusProgressUpdate
 {
     float requestedAmount;

@@ -255,6 +255,12 @@ void InsuBoxDevice::onBolusRequest(float amount, time_t timestamp)
     // TODO: Update etc
 }
 
+void InsuBoxDevice::onStopBolus()
+{
+    LOG_DBG("Stop bolus");
+    LOG_WRN("Stop bolus not implemented yet");
+}
+
 void read_sensor(const struct device *sensor)
 {
     if (!device_is_ready(sensor))

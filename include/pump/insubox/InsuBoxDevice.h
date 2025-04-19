@@ -13,6 +13,7 @@ public:
     ~InsuBoxDevice();
     void init() override;
     void onBolusRequest(float amount, time_t timestamp) override;
+    void onStopBolus() override;
 
 private:
     struct SubContainer

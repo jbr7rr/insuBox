@@ -17,6 +17,7 @@ public:
      */
     virtual void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) = 0;
     virtual void onBolusRequest(float amount, time_t timestamp) = 0;
+    virtual void onStopBolus() = 0;
 };
 
 class HmiService : public IHmiCallback
@@ -30,6 +31,7 @@ public:
 
     void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) override;
     void onBolusRequest(float amount, time_t timestamp) override;
+    void onStopBolus() override;
 
 private:
     EventDispatcher &mDispatcher;

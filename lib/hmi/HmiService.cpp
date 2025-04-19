@@ -98,6 +98,11 @@ void HmiService::onBolusRequest(float amount, time_t timestamp)
     mDispatcher.dispatch<BolusRequest>({amount, timestamp});
 }
 
+void HmiService::onStopBolus()
+{
+    mDispatcher.dispatch<StopBolus>({});
+}
+
 IHmiDevice &HmiService::getHmiDevice(IHmiCallback &hmiCallback)
 {
 #ifdef CONFIG_IB_HMI_VIRTUAL

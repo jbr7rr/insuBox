@@ -41,6 +41,22 @@ void VirtualPumpDevice::onBolusRequest(float amount, time_t timestamp)
     k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
 }
 
+void VirtualPumpDevice::onStopBolus()
+{
+    LOG_DBG("Stop bolus request");
+    BolusProgressUpdate progress = {
+        .requestedAmount = mSubContainer.requestedBolus,
+        .requestedTimestamp = mSubContainer.requestedTimestamp,
+        .deliveredAmount = mSubContainer.deliveredBolus,
+        .deliveredTimestamp = 0,
+        .completed = true,
+    };
+    mPumpServiceCallback.onBolusProgressUpdate(progress);
+
+    mSubContainer.requestedBolus = 0.0f;
+    k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
+}
+
 void VirtualPumpDevice::_updateStatus()
 {
     LOG_DBG("VirtualPumpDevice update status");
@@ -56,7 +72,7 @@ void VirtualPumpDevice::_updateStatus()
 
     mPumpServiceCallback.pumpStatusUpdated(status);
 
-    if (mSubContainer.deliveredBolus <= mSubContainer.requestedBolus)
+    if (mSubContainer.deliveredBolus < mSubContainer.requestedBolus)
     {
         intervalSec = 2;
         mSubContainer.deliveredBolus += 0.1f;
