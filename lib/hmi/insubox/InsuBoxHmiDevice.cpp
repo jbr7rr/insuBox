@@ -6,6 +6,7 @@
 #include <lvgl_zephyr.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/display.h>
+#include <zephyr/init.h>
 #include <zephyr/kernel.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
@@ -434,3 +435,28 @@ void InsuBoxHmiDevice::removePairingScreen(bt_conn *conn)
         }
     }
 }
+
+/**** Display Splash Screen Initialization ****/
+extern const uint8_t logo_flat_displ_map[];
+extern const lv_image_dsc_t logo_flat_displ;
+
+static int display_splash_init(void)
+{
+    const struct device *display = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
+    if (!device_is_ready(display))
+    {
+        return -ENODEV;
+    }
+    display_blanking_off(display);
+
+    const struct display_buffer_descriptor desc = {
+        .buf_size = static_cast<uint32_t>(logo_flat_displ.data_size),
+        .width = static_cast<uint16_t>(logo_flat_displ.header.w),
+        .height = static_cast<uint16_t>(logo_flat_displ.header.h),
+        .pitch = static_cast<uint16_t>(logo_flat_displ.header.w),
+    };
+    display_write(display, 0, 0, &desc, logo_flat_displ_map);
+
+    return 0;
+}
+SYS_INIT(display_splash_init, POST_KERNEL, CONFIG_APPLICATION_INIT_PRIORITY);
