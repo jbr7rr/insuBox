@@ -37,11 +37,6 @@ void InsuBoxHmiDevice::init()
     LOG_DBG("InsuBoxHmiDevice init");
 
     mDisplayDevice = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
-    if (device_init(mDisplayDevice) != 0)
-    {
-        LOG_ERR("Failed to initialize display device");
-        return;
-    }
     if (!device_is_ready(mDisplayDevice))
     {
         LOG_ERR("Display device not ready");

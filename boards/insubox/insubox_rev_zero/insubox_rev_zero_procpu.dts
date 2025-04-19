@@ -126,8 +126,6 @@
 		
 		st7789v: st7789v@0 {
 			compatible = "sitronix,st7789v";
-			// Do init in driver, to ensure display driver is in same thread as lvgl
-			zephyr,deferred-init;
 			inversion-off;
 			
 			reg = <0>;

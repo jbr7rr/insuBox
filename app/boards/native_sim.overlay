@@ -42,7 +42,4 @@
 	compatible = "zephyr,sdl-dc";
 	height = <76>;
 	width = <284>;
-
-	// Do init in driver, to ensure display driver is in same thread as lvgl
-	zephyr,deferred-init;
 };
