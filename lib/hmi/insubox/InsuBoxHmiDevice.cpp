@@ -8,6 +8,7 @@
 #include <zephyr/drivers/display.h>
 #include <zephyr/init.h>
 #include <zephyr/kernel.h>
+#include <zephyr/pm/device.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -23,6 +24,22 @@ InsuBoxHmiDevice::InsuBoxHmiDevice(IHmiCallback &hmiCallback, k_work_q &workQueu
     k_work_init_delayable(&mDisplayUpdateTask.work, [](struct k_work *work) {
         // LOG_DBG("Display update task");
         auto *container = CONTAINER_OF(work, DisplayUpdateTask, work);
+        constexpr uint32_t DISPLAY_TIMEOUT = CONFIG_IB_HMI_DISPLAY_TIMEOUT_SEC * 1000;
+        if (lv_disp_get_inactive_time(nullptr) > DISPLAY_TIMEOUT && container->device->mDisplayOn)
+        {
+            LOG_DBG("Display off");
+            container->device->mDisplayOn = false;
+            display_blanking_on(container->device->mDisplayDevice);
+            pm_device_action_run(container->device->mDisplayDevice, PM_DEVICE_ACTION_SUSPEND);
+        }
+        else if (lv_disp_get_inactive_time(nullptr) < DISPLAY_TIMEOUT && !container->device->mDisplayOn)
+        {
+            LOG_DBG("Display on");
+            container->device->mDisplayOn = true;
+            display_blanking_off(container->device->mDisplayDevice);
+            pm_device_action_run(container->device->mDisplayDevice, PM_DEVICE_ACTION_RESUME);
+        }
+
         uint32_t sleepMs = lv_timer_handler();
         k_work_schedule_for_queue(&container->device->mWorkQueue, k_work_delayable_from_work(work), K_MSEC(sleepMs));
     });
@@ -79,12 +96,14 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
 
     // Create container to organize content - sized to fit the small display (76x284)
     lv_obj_t *cont = lv_obj_create(lv_screen_active());
-    if (!storePairingScreen(conn, cont))
+    PairingScreenEntry *pairingScreenEntry = storePairingScreen(conn, cont);
+    if (pairingScreenEntry == nullptr)
     {
         LOG_ERR("Failed to store pairing screen");
         mHmiCallback.onUserBtPairingResponse(conn, false);
         return;
     }
+
     lv_obj_set_size(cont, 260, 70);
     lv_obj_set_style_bg_color(cont, black_color, LV_PART_MAIN);
     lv_obj_set_style_border_width(cont, 3, LV_PART_MAIN);
@@ -114,37 +133,43 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
     lv_label_set_text(rejectLabel, "Reject");
     lv_obj_center(rejectLabel);
 
-    struct CallbackData
-    {
-        InsuBoxHmiDevice *device;
-        struct bt_conn *conn;
-    };
-    static CallbackData callbackData; // Static to ensure it persists
-    callbackData.device = this;
-    callbackData.conn = conn;
-
     // Set the callback for the accept button
     lv_obj_add_event_cb(
         acceptBtn,
         [](lv_event_t *e) {
-            auto *data = static_cast<CallbackData *>(lv_event_get_user_data(e));
-            data->device->mHmiCallback.onUserBtPairingResponse(data->conn, true);
-            data->device->removePairingScreen(data->conn);
+            PairingScreenEntry *entry = static_cast<PairingScreenEntry *>(lv_event_get_user_data(e));
+            if (entry)
+            {
+                entry->device->mHmiCallback.onUserBtPairingResponse(entry->conn, true);
+                entry->device->removePairingScreen(entry->conn);
+            }
+            else
+            {
+                LOG_ERR("Failed to get pairing screen entry");
+            }
         },
-        LV_EVENT_CLICKED, &callbackData);
+        LV_EVENT_CLICKED, pairingScreenEntry);
 
     // Set the callback for the reject button
     lv_obj_add_event_cb(
         rejectBtn,
         [](lv_event_t *e) {
-            auto *data = static_cast<CallbackData *>(lv_event_get_user_data(e));
-            data->device->mHmiCallback.onUserBtPairingResponse(data->conn, false);
-            data->device->removePairingScreen(data->conn);
+            PairingScreenEntry *entry = static_cast<PairingScreenEntry *>(lv_event_get_user_data(e));
+            if (entry)
+            {
+                entry->device->mHmiCallback.onUserBtPairingResponse(entry->conn, false);
+                entry->device->removePairingScreen(entry->conn);
+            }
+            else
+            {
+                LOG_ERR("Failed to get pairing screen entry");
+            }
         },
-        LV_EVENT_CLICKED, &callbackData);
+        LV_EVENT_CLICKED, pairingScreenEntry);
 
     lv_group_add_obj(lv_group_get_default(), cont);
-    lv_group_focus_obj(cont);
+    lv_group_focus_obj(acceptBtn);
+    lv_disp_trig_activity(nullptr);
 }
 
 void InsuBoxHmiDevice::onBtBluetoothStateChanged(struct bt_conn *conn, BtState state)
@@ -199,6 +224,7 @@ void InsuBoxHmiDevice::onBolusProgressUpdate(BolusProgressUpdate &update)
                      static_cast<double>(update.requestedAmount));
             LOG_DBG("Bolus progress: %s", progressText);
             lv_label_set_text(lv_obj_get_child(mBolusUi.popup, 1), progressText);
+            lv_disp_trig_activity(nullptr);
         }
         if (mBolusUi.mainScreenLabel)
         {
@@ -402,21 +428,24 @@ void InsuBoxHmiDevice::createBolusProgressPopup()
             }
         },
         LV_EVENT_CLICKED, this);
+
+    lv_disp_trig_activity(nullptr);
 }
 
-bool InsuBoxHmiDevice::storePairingScreen(bt_conn *conn, lv_obj_t *screen)
+InsuBoxHmiDevice::PairingScreenEntry *InsuBoxHmiDevice::storePairingScreen(bt_conn *conn, lv_obj_t *screen)
 {
     for (auto &entry : mPairingScreens)
     {
         if (entry.conn == nullptr)
         {
+            entry.device = this;
             entry.conn = conn;
             entry.screen = screen;
-            return true;
+            return &entry;
         }
     }
     LOG_WRN("Max pairing screens reached, cannot store new screen");
-    return false;
+    return nullptr;
 }
 
 void InsuBoxHmiDevice::removePairingScreen(bt_conn *conn)
@@ -429,6 +458,7 @@ void InsuBoxHmiDevice::removePairingScreen(bt_conn *conn)
             {
                 lv_obj_del(entry.screen);
             }
+            entry.device = nullptr;
             entry.conn = nullptr;
             entry.screen = nullptr;
             return;

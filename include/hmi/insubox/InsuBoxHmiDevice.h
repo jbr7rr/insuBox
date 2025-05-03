@@ -31,11 +31,13 @@ private:
 
     struct PairingScreenEntry
     {
+        InsuBoxHmiDevice *device;
         bt_conn *conn = nullptr;
         lv_obj_t *screen = nullptr;
     };
     static constexpr int MAX_PAIRING_SCREENS = 1; // Only one suppoted for now
     PairingScreenEntry mPairingScreens[MAX_PAIRING_SCREENS];
+    bool mDisplayOn = true;
 
     struct BolusUiState
     {
@@ -55,7 +57,7 @@ private:
     void createBolusProgressPopup();
     void createBolusProgressWidget();
 
-    bool storePairingScreen(bt_conn *conn, lv_obj_t *screen);
+    PairingScreenEntry *storePairingScreen(bt_conn *conn, lv_obj_t *screen);
     void removePairingScreen(bt_conn *conn);
 };
 

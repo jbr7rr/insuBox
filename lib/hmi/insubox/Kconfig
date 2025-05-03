@@ -8,6 +8,7 @@ config IB_HMI_INSUBOX
 	imply INPUT
 	imply LV_USE_GRIDNAV
 	imply LV_USE_FLOAT
+	imply PM_DEVICE
 	help
 		This option enables support for the InsuBoxPump HMI.
 
@@ -21,5 +22,11 @@ config LV_Z_AUTO_INIT
 
 config IB_HMI_STACK_SIZE
     default 4096
+
+config IB_HMI_DISPLAY_TIMEOUT_SEC
+	int "InsuBox HMI display timeout"
+	default 10
+	help
+		The display timeout in seconds. If there is no interaction in this time, it will turn off.
 
 endif
