@@ -17,7 +17,7 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
     : mDispatcher(dispatcher), mHmiDevice(hmiDevice)
 {
     k_work_queue_init(&mWorkQueue);
-    static k_work_queue_config config = {.name = "hmi_work_queue", .no_yield = false, .essential = true};
+    static k_work_queue_config config = {.name = "hmi", .no_yield = false, .essential = true};
     k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 0, &config);
 
     LOG_DBG("HmiService constructor");

@@ -10,13 +10,16 @@
 #include <zephyr/kernel.h>
 #include <zephyr/pm/device.h>
 
+#include "buzzer/Buzzer.h"
+#include "buzzer/Tunes.h"
+
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 
 LOG_MODULE_REGISTER(ib_insubox_hmi_device);
 
 InsuBoxHmiDevice::InsuBoxHmiDevice(IHmiCallback &hmiCallback, k_work_q &workQueue)
-    : mHmiCallback(hmiCallback), mWorkQueue(workQueue)
+    : mHmiCallback(hmiCallback), mWorkQueue(workQueue), mBuzzer(createBuzzerInstance())
 {
     LOG_DBG("InsuBoxHmiDevice constructor");
 
@@ -71,12 +74,25 @@ void InsuBoxHmiDevice::init()
 
     lvgl_init();
 
+    mBuzzer.playTune(hmiTuneWelcome);
+
     lv_group_t *keypad = lv_group_create();
     lv_group_set_default(keypad);
     lv_indev_t *inputDevice = lvgl_input_get_indev(mKeypadDevice);
     // Set encoder type because we only have 3 buttons
     lv_indev_set_type(inputDevice, LV_INDEV_TYPE_ENCODER);
     lv_indev_set_group(inputDevice, keypad);
+
+    lv_indev_add_event_cb(
+        inputDevice,
+        [](lv_event_t *e) {
+            auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
+            if (device)
+            {
+                device->mBuzzer.playTune(hmiTuneKeyClick, 0.6f);
+            }
+        },
+        LV_EVENT_CLICKED, this);
 
     lv_theme_t *theme = lv_theme_default_init(lv_disp_get_default(), lv_palette_main(LV_PALETTE_PURPLE),
                                               lv_palette_main(LV_PALETTE_CYAN), true, LV_FONT_DEFAULT);
@@ -170,6 +186,7 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
     lv_group_add_obj(lv_group_get_default(), cont);
     lv_group_focus_obj(acceptBtn);
     lv_disp_trig_activity(nullptr);
+    mBuzzer.playTune(hmiTuneKeyRequest, 0.6f);
 }
 
 void InsuBoxHmiDevice::onBtBluetoothStateChanged(struct bt_conn *conn, BtState state)
@@ -201,6 +218,8 @@ void InsuBoxHmiDevice::onBolusProgressUpdate(BolusProgressUpdate &update)
     {
         if (mBolusUi.popup)
         {
+            // Only play tune when popup is active
+            mBuzzer.playTune(hmiTuneSuccess, 0.6f);
             lv_obj_del(mBolusUi.popup);
             mBolusUi.popup = nullptr;
         }
@@ -464,6 +483,12 @@ void InsuBoxHmiDevice::removePairingScreen(bt_conn *conn)
             return;
         }
     }
+}
+
+Buzzer &InsuBoxHmiDevice::createBuzzerInstance()
+{
+    static Buzzer buzzer;
+    return buzzer;
 }
 
 /**** Display Splash Screen Initialization ****/

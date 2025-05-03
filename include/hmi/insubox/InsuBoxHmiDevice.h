@@ -10,6 +10,8 @@
 #include <zephyr/device.h>
 #include <zephyr/drivers/display.h>
 
+class Buzzer;
+
 class InsuBoxHmiDevice : public IHmiDevice
 {
 public:
@@ -48,6 +50,7 @@ private:
 
     IHmiCallback &mHmiCallback;
     k_work_q &mWorkQueue;
+    Buzzer &mBuzzer;
 
     const struct device *mDisplayDevice;
     const struct device *mKeypadDevice;
@@ -59,6 +62,8 @@ private:
 
     PairingScreenEntry *storePairingScreen(bt_conn *conn, lv_obj_t *screen);
     void removePairingScreen(bt_conn *conn);
+
+    static Buzzer &createBuzzerInstance();
 };
 
 #endif // CONFIG_IB_HMI_INSUBOX
