@@ -22,14 +22,9 @@ static const struct device *stepper_dev = DEVICE_DT_GET(DT_ALIAS(stepper));
 static const struct device *sensor0 = DEVICE_DT_GET(DT_ALIAS(magn0));
 static const struct device *sensor1 = DEVICE_DT_GET(DT_ALIAS(magn1));
 
-// Buzzer device
-static const struct pwm_dt_spec pwm_buzzer = PWM_DT_SPEC_GET(DT_ALIAS(pwm_buzzer));
-
 static const struct gpio_dt_spec pg = GPIO_DT_SPEC_GET_OR(DT_ALIAS(chrg_pg), gpios, {0});
 static const struct gpio_dt_spec stat1 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(chrg_stat1), gpios, {0});
 static const struct gpio_dt_spec stat2 = GPIO_DT_SPEC_GET_OR(DT_ALIAS(chrg_stat2), gpios, {0});
-
-static const struct gpio_dt_spec en_vaux = GPIO_DT_SPEC_GET_OR(DT_ALIAS(en_vaux), gpios, {0});
 
 // Define note frequencies (in Hz)
 enum notes
@@ -64,10 +59,12 @@ const struct
 
 static void drv_callback(const struct device *dev, enum stepper_event event, void *dummy)
 {
+    LOG_DBG("drv_callback: %p, event: %d", dev, event);
     switch (event)
     {
     case STEPPER_EVENT_STEPS_COMPLETED:
         LOG_DBG("STEPPER_EVENT_STEPS_COMPLETED");
+        stepper_disable(dev);
         break;
     case STEPPER_EVENT_LEFT_END_STOP_DETECTED:
         LOG_DBG("STEPPER_EVENT_LEFT_END_STOP_DETECTED");
@@ -82,12 +79,6 @@ static void drv_callback(const struct device *dev, enum stepper_event event, voi
         break;
     }
 }
-
-// static void gpio_callback(const struct device *dev, struct gpio_callback *cb, uint32_t pins)
-// {
-//     // Print the state of the button, and name of the button
-//     LOG_DBG("Button %s pressed", dev->name);
-// }
 
 static void setup_gpio_demo()
 {
@@ -104,11 +95,6 @@ static void setup_gpio_demo()
     if (!gpio_is_ready_dt(&stat2))
     {
         LOG_ERR("Error: GPIO device %s is not ready", stat2.port->name);
-        return;
-    }
-    if (!gpio_is_ready_dt(&en_vaux))
-    {
-        LOG_ERR("Error: GPIO device is not ready");
         return;
     }
 
@@ -129,12 +115,6 @@ static void setup_gpio_demo()
     if (err)
     {
         LOG_ERR("Error %d: failed to configure pin %d", err, stat2.pin);
-        return;
-    }
-    err = gpio_pin_configure_dt(&en_vaux, GPIO_OUTPUT);
-    if (err)
-    {
-        LOG_ERR("Error %d: failed to configure pin %d", err, en_vaux.pin);
         return;
     }
 }
@@ -177,6 +157,7 @@ void movePlunger(double units, bool probe)
     stepper_set_microstep_interval(stepper_dev, interval);
 
     stepper_enable(stepper_dev);
+    stepper_set_event_callback(stepper_dev, drv_callback, NULL);
 
     // TODO: For now just to show it works
     int steps = static_cast<int>(round(units * 2 * 380));
@@ -197,55 +178,9 @@ void InsuBoxDevice::init()
         LOG_ERR("Error: PWM device %s is not ready", pwm_step_vref.dev->name);
         return;
     }
-
-    if (!pwm_is_ready_dt(&pwm_buzzer))
-    {
-        LOG_ERR("Error: PWM device %s is not ready", pwm_buzzer.dev->name);
-        return;
-    }
-
-    stepper_set_event_callback(stepper_dev, drv_callback, NULL);
-
-    // Enable vaux
     setup_gpio_demo();
-    int err = gpio_pin_set_dt(&en_vaux, 1);
-    if (err)
-    {
-        LOG_ERR("Error %d: failed to set pin %d", err, en_vaux.pin);
-        return;
-    }
-
-    // movePlunger(10, false);
-    // k_sleep(K_SECONDS(30));
-    // movePlunger(350, true);
-    // k_sleep(K_SECONDS(90));
-    // movePlunger(30, false);
-    // k_sleep(K_SECONDS(30));
-    // movePlunger(20, false);
 
     k_work_reschedule(&mSubContainer.sensorWork, K_NO_WAIT);
-
-    // TEST BUZZER
-    int ret = 0;
-    int period = 5000;
-    int pulse = 0;
-
-    for (size_t i = 0; i < ARRAY_SIZE(tune); i++)
-    {
-        period = 1000000000 / tune[i].frequency;
-        pulse = period / 2;
-        LOG_DBG("Playing note %d, period %d, pulse %d", tune[i].frequency, period, pulse);
-        ret = pwm_set_dt(&pwm_buzzer, period, pulse);
-        if (ret)
-        {
-            LOG_ERR("Error %d: failed to set pulse width", ret);
-            return;
-        }
-
-        k_sleep(K_MSEC(tune[i].duration));
-    }
-
-    pwm_set_dt(&pwm_buzzer, period, 0);
 }
 
 void InsuBoxDevice::onBolusRequest(float amount, time_t timestamp)

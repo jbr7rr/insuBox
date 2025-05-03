@@ -27,17 +27,18 @@
 		i2c-0 = &i2c0;
 		watchdog0 = &wdt0;
 		
+		sw0 = &button_enter;
+		
 		chrg-pg = &chrg_pg;
 		chrg-stat1 = &chrg_stat1;
 		chrg-stat2 = &chrg_stat2;
-		en-vaux = &en_vaux;
 		
 		pwm-step-vref = &pwm_step_vref;
 		pwm-buzzer = &pwm_buzzer;
 		magn0 = &tmag5273_d1;
 		magn1 = &tmag5273_c1;
 		
-		stepper = &drv8424;
+		stepper = &drv8428;
 	};
 	
 	keys: keys {
@@ -73,10 +74,13 @@
 			gpios = <&gpio1 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 42
 			label = "Stat 2";
 		};
-		en_vaux: en_vaux {
-			gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
-			label = "Enable Vaux";
-		};
+	};
+	
+	vaux_enable: vaux_enable {
+		compatible = "regulator-fixed";
+		regulator-name = "vaux_enable";
+		enable-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+		regulator-boot-on;
 	};
 	
 	lvgl_keypad_input {
@@ -86,7 +90,7 @@
 		lvgl-codes = <LV_KEY_RIGHT LV_KEY_LEFT LV_KEY_ENTER>;
 	};
 	
-	drv8424: drv8424 {
+	drv8428: drv8428 {
 		status = "okay";
 		compatible = "ti,drv84xx";
 		
@@ -145,7 +149,7 @@
 			colmod = <0x55>;
 			lcm = <0x2c>;
 			porch-param = [0c 0c 00 33 33];
-			cmd2en-param = [5a 69 02 00];
+			cmd2en-param = [5a 69 02 01];
 			pwctrl1-param = [52 a1];
 			pvgam-param = [D0 00 02 07 0B 1A 35 32 4A 29 12 12 12 17];
 			nvgam-param = [D0 00 02 07 05 15 3E 33 5C 1C 18 16 1C 1D];
