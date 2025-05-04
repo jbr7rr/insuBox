@@ -32,10 +32,7 @@ private:
     size_t mNoteIndex = 0;
 
     struct k_work_delayable mWork;
-    static k_work_q mWorkQueue;
-    K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, 512);
 
-    void scheduleNextNote();
     static void workHandler(struct k_work* work);
 };
 

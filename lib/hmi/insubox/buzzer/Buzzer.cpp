@@ -3,8 +3,6 @@
 
 LOG_MODULE_REGISTER(buzzer, LOG_LEVEL_DBG);
 
-k_work_q Buzzer::mWorkQueue;
-
 Buzzer::Buzzer() : mPwmBuzzer(PWM_DT_SPEC_GET_OR(DT_ALIAS(pwm_buzzer), {0}))
 {
     if (!device_is_ready(mPwmBuzzer.dev))
@@ -13,9 +11,6 @@ Buzzer::Buzzer() : mPwmBuzzer(PWM_DT_SPEC_GET_OR(DT_ALIAS(pwm_buzzer), {0}))
         return;
     }
 
-    static k_work_queue_config config = {.name = "hmi_buzzer", .no_yield = false, .essential = true};
-    k_work_queue_init(&mWorkQueue);
-    k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 5, &config);
     k_work_init_delayable(&mWork, workHandler);
 }
 
@@ -33,22 +28,17 @@ void Buzzer::playTune(const Tune *tune, float volume)
         return;
     }
 
-    stop(); // Stop previous tone
+    stop();
     mVolume = (volume < 0.0f) ? 0.0f : (volume > 1.0f) ? 1.0f : volume;
     mCurrentTune = tune;
     mNoteIndex = 0;
-    scheduleNextNote();
+    k_work_schedule(&mWork, K_NO_WAIT);
 }
 
 void Buzzer::stop()
 {
     k_work_cancel_delayable(&mWork);
     pwm_set_dt(&mPwmBuzzer, 1000000000UL, 0);
-}
-
-void Buzzer::scheduleNextNote()
-{
-    k_work_schedule_for_queue(&mWorkQueue, &mWork, K_NO_WAIT);
 }
 
 void Buzzer::workHandler(struct k_work *work)
@@ -63,7 +53,7 @@ void Buzzer::workHandler(struct k_work *work)
 
     const Tune &note = self->mCurrentTune[self->mNoteIndex];
 
-    if (note.frequency == 0 || note.duration_ms == 0)
+    if (note.frequency == 0 && note.duration_ms == 0)
     {
         self->stop(); // End of tune
         return;
@@ -75,5 +65,5 @@ void Buzzer::workHandler(struct k_work *work)
     pwm_set_dt(&self->mPwmBuzzer, period_ns, pulse_ns);
     self->mNoteIndex++;
 
-    k_work_schedule_for_queue(&self->mWorkQueue, &self->mWork, K_MSEC(note.duration_ms));
+    k_work_schedule(&self->mWork, K_MSEC(note.duration_ms));
 }
