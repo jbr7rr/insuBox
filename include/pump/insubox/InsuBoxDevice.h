@@ -4,18 +4,21 @@
 #ifdef CONFIG_IB_PUMP_INSUBOX
 
 #include <pump/IPumpDevice.h>
+#include <pump/PumpServiceMessages.h>
+#include <pump/insubox/motor/Motor.h>
 #include <zephyr/kernel.h>
 
-class Motor;
-
-class InsuBoxDevice : public IPumpDevice
+class InsuBoxDevice : public IPumpDevice, public IMotorCallback
 {
 public:
-    InsuBoxDevice();
+    InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback);
     ~InsuBoxDevice();
     void init() override;
+
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolus() override;
+
+    void onMotorCompleted(float delivered, float position, bool stopped, bool error) override;
 
 private:
     struct SubContainer
@@ -24,11 +27,25 @@ private:
         k_work_delayable sensorWork;
     } mSubContainer;
 
+    struct BolusTask
+    {
+        InsuBoxDevice *device;
+        k_work_delayable bolusWork;
+        float requestedBolus;
+        float deliveredBolus;
+        time_t requestedTimestamp;
+        bool completed;
+    } mBolusTask;
+
+    IPumpDeviceCallback &mPumpDeviceCallback;
     Motor &mMotor;
 
     void sensorWork();
+    void bolusWork();
 
-    static Motor &createMotorInstance();
+    void sendBolusProgressUpdate();
+
+    static Motor &createMotorInstance(IMotorCallback &callback);
 };
 
 #endif // CONFIG_IB_PUMP_INSUBOX

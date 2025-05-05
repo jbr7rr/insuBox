@@ -5,8 +5,8 @@
 
 LOG_MODULE_REGISTER(ib_virtual_pump_device);
 
-VirtualPumpDevice::VirtualPumpDevice(IPumpServiceCallback &pumpServiceCallback)
-    : mPumpServiceCallback(pumpServiceCallback)
+VirtualPumpDevice::VirtualPumpDevice(IPumpDeviceCallback &pumpDeviceCallback)
+    : mPumpDeviceCallback(pumpDeviceCallback)
 {
     LOG_DBG("VirtualPumpDevice constructor");
 
@@ -51,7 +51,7 @@ void VirtualPumpDevice::onStopBolus()
         .deliveredTimestamp = 0,
         .completed = true,
     };
-    mPumpServiceCallback.onBolusProgressUpdate(progress);
+    mPumpDeviceCallback.onBolusProgressUpdate(progress);
 
     mSubContainer.requestedBolus = 0.0f;
     k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
@@ -70,7 +70,7 @@ void VirtualPumpDevice::_updateStatus()
         .reservoirAttached = true,
     };
 
-    mPumpServiceCallback.pumpStatusUpdated(status);
+    mPumpDeviceCallback.pumpStatusUpdated(status);
 
     if (mSubContainer.deliveredBolus < mSubContainer.requestedBolus)
     {
@@ -85,7 +85,7 @@ void VirtualPumpDevice::_updateStatus()
             .deliveredTimestamp = currentTime.tv_sec,
             .completed = (mSubContainer.deliveredBolus >= mSubContainer.requestedBolus),
         };
-        mPumpServiceCallback.onBolusProgressUpdate(progress);
+        mPumpDeviceCallback.onBolusProgressUpdate(progress);
     }
 
     k_work_reschedule(&mSubContainer.statusWork, K_SECONDS(intervalSec));

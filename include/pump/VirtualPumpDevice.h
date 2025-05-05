@@ -10,7 +10,7 @@
 class VirtualPumpDevice : public IPumpDevice
 {
 public:
-    VirtualPumpDevice(IPumpServiceCallback &pumpServiceCallback);
+    VirtualPumpDevice(IPumpDeviceCallback &pumpDeviceCallback);
     ~VirtualPumpDevice();
     void init() override;
 
@@ -28,7 +28,7 @@ private:
     };
 
     SubContainer mSubContainer;
-    IPumpServiceCallback &mPumpServiceCallback;
+    IPumpDeviceCallback &mPumpDeviceCallback;
 
     void _updateStatus();
 };

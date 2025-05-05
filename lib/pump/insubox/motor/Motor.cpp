@@ -1,5 +1,5 @@
-#include "Motor.h"
 #include <cmath>
+#include <pump/insubox/motor/Motor.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -11,7 +11,7 @@ namespace
     constexpr int UNITS_PER_MICRO_STEP = (4 * 190); // 4 microsteps per step, 190 steps per revolution
 }
 
-Motor::Motor() : mCurrentPosition(std::nullopt)
+Motor::Motor(IMotorCallback &callback) : mCallback(callback)
 {
     if (!device_is_ready(mPwmStepVref.dev))
     {
@@ -183,8 +183,23 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
     Motor *motor = static_cast<Motor *>(userData);
     if (motor == nullptr)
     {
-        LOG_ERR("Callback is null");
+        LOG_ERR("Motor ptr is null");
         return;
+    }
+
+    bool stopped = false;
+    bool error = false;
+    float previousPosition = motor->mCurrentPosition.value();
+    int32_t stepperPos = 0;
+    int err = stepper_get_actual_position(dev, &stepperPos);
+    if (err)
+    {
+        LOG_ERR("Failed to get actual position: %d", err);
+        error = true;
+    }
+    else
+    {
+        motor->mCurrentPosition = static_cast<float>(stepperPos) / UNITS_PER_MICRO_STEP;
     }
 
     switch (event)
@@ -194,6 +209,7 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
         break;
     case STEPPER_EVENT_STALL_DETECTED:
         LOG_ERR("STEPPER_EVENT_STALL_DETECTED");
+        error = true;
         break;
     case STEPPER_EVENT_LEFT_END_STOP_DETECTED:
         LOG_DBG("STEPPER_EVENT_LEFT_END_STOP_DETECTED");
@@ -203,15 +219,16 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
         break;
     case STEPPER_EVENT_STOPPED:
         LOG_DBG("STEPPER_EVENT_STOPPED");
+        stopped = true;
         break;
     case STEPPER_EVENT_FAULT_DETECTED:
         LOG_ERR("STEPPER_EVENT_FAULT_DETECTED");
+        error = true;
         break;
     }
 
-    // TODO: Callback
-    // TODO: Update steps and position
-
     stepper_disable(dev);
     motor->disableVref();
+    motor->mCallback.onMotorCompleted(motor->mCurrentPosition.value() - previousPosition,
+                                      motor->mCurrentPosition.value(), stopped, error);
 }

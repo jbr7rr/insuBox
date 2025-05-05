@@ -5,12 +5,8 @@
 
 LOG_MODULE_REGISTER(ib_insubox_pump_device);
 
-#include "motor/Motor.h"
-
 // TODO: move low level stuff to its own files
-#include <cmath>
 #include <zephyr/device.h>
-#include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/kernel.h>
 
@@ -18,7 +14,8 @@ LOG_MODULE_REGISTER(ib_insubox_pump_device);
 static const struct device *sensor0 = DEVICE_DT_GET(DT_ALIAS(magn0));
 static const struct device *sensor1 = DEVICE_DT_GET(DT_ALIAS(magn1));
 
-InsuBoxDevice::InsuBoxDevice() : mMotor(createMotorInstance())
+InsuBoxDevice::InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback)
+    : mPumpDeviceCallback(pumpDeviceCallback), mMotor(createMotorInstance(*this))
 {
     LOG_DBG("InsuBoxDevice constructor");
 
@@ -26,6 +23,13 @@ InsuBoxDevice::InsuBoxDevice() : mMotor(createMotorInstance())
     k_work_init_delayable(&mSubContainer.sensorWork, [](struct k_work *work) {
         auto *container = CONTAINER_OF(work, SubContainer, sensorWork);
         container->mDevice->sensorWork();
+    });
+
+    mBolusTask.device = this;
+    mBolusTask.completed = true;
+    k_work_init_delayable(&mBolusTask.bolusWork, [](struct k_work *work) {
+        auto *task = CONTAINER_OF(work, BolusTask, bolusWork);
+        task->device->bolusWork();
     });
 }
 
@@ -47,13 +51,16 @@ void InsuBoxDevice::init()
 void InsuBoxDevice::onBolusRequest(float amount, time_t timestamp)
 {
     LOG_DBG("Bolus request: %.2f units at %lld", static_cast<double>(amount), timestamp);
-    int err = mMotor.deliver(amount, 10);
-    if (err)
+    if (mBolusTask.completed == false)
     {
-        LOG_ERR("Failed to deliver bolus: %d", err);
-        // TODO: event
+        LOG_ERR("Bolus already in progress");
         return;
     }
+    mBolusTask.requestedBolus = amount;
+    mBolusTask.requestedTimestamp = timestamp;
+    mBolusTask.deliveredBolus = 0.0f;
+    mBolusTask.completed = false;
+    k_work_reschedule(&mBolusTask.bolusWork, K_NO_WAIT);
 }
 
 void InsuBoxDevice::onStopBolus()
@@ -61,6 +68,21 @@ void InsuBoxDevice::onStopBolus()
     LOG_DBG("Stop bolus");
     LOG_WRN("Stop bolus not implemented yet");
     mMotor.stop();
+}
+
+void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopped, bool error)
+{
+    LOG_DBG("Deliver completed: units: %.2f, position: %.2f, stopped: %d, error: %d", static_cast<double>(delivered),
+            static_cast<double>(position), stopped, error);
+
+    mBolusTask.deliveredBolus += delivered;
+    if (stopped || error)
+    {
+        mBolusTask.completed = true;
+        // TODO: Report error somehow
+    }
+
+    k_work_reschedule(&mBolusTask.bolusWork, K_MSEC(500));
 }
 
 void read_sensor(const struct device *sensor)
@@ -94,8 +116,52 @@ void InsuBoxDevice::sensorWork()
     k_work_reschedule(&mSubContainer.sensorWork, K_MSEC(10000));
 }
 
-Motor &InsuBoxDevice::createMotorInstance()
+void InsuBoxDevice::bolusWork()
 {
-    static Motor motor;
+    LOG_DBG("Bolus work");
+    float remainingBolus = mBolusTask.requestedBolus - mBolusTask.deliveredBolus;
+
+    // TODO: Verify plunger pos here?
+
+    if (mBolusTask.completed || remainingBolus <= 0.01f)
+    {
+        LOG_DBG("Bolus completed");
+        mBolusTask.completed = true;
+        sendBolusProgressUpdate();
+        return;
+    }
+
+    float bolusToPump = 0.0f;
+    if (remainingBolus > 0.5f)
+    {
+        bolusToPump = 0.5f;
+    }
+    else
+    {
+        bolusToPump = remainingBolus;
+    }
+
+    sendBolusProgressUpdate();
+    mMotor.deliver(bolusToPump, 2);
+}
+
+void InsuBoxDevice::sendBolusProgressUpdate()
+{
+    LOG_DBG("Sending bolus progress update");
+    struct timespec currentTime;
+    clock_gettime(CLOCK_REALTIME, &currentTime);
+    BolusProgressUpdate progress = {
+        .requestedAmount = mBolusTask.requestedBolus,
+        .requestedTimestamp = mBolusTask.requestedTimestamp,
+        .deliveredAmount = mBolusTask.deliveredBolus,
+        .deliveredTimestamp = currentTime.tv_sec,
+        .completed = mBolusTask.completed,
+    };
+    mPumpDeviceCallback.onBolusProgressUpdate(progress);
+}
+
+Motor &InsuBoxDevice::createMotorInstance(IMotorCallback &callback)
+{
+    static Motor motor(callback);
     return motor;
 }

@@ -47,14 +47,14 @@ void PumpService::onBolusProgressUpdate(const BolusProgressUpdate &update)
     mDispatcher.dispatch<BolusProgressUpdate>(update);
 }
 
-IPumpDevice &PumpService::getPumpDevice(IPumpServiceCallback &pumpServiceCallback)
+IPumpDevice &PumpService::getPumpDevice(IPumpDeviceCallback &pumpDeviceCallback)
 {
 #ifdef CONFIG_IB_PUMP_INSUBOX
-    static InsuBoxDevice pumpDevice;
+    static InsuBoxDevice pumpDevice(pumpDeviceCallback);
 #elif defined(CONFIG_IB_PUMP_MEDTRUM_BT)
     static MedtrumBTDevice pumpDevice;
 #elif defined(CONFIG_IB_PUMP_VIRTUAL)
-    static VirtualPumpDevice pumpDevice(pumpServiceCallback);
+    static VirtualPumpDevice pumpDevice(pumpDeviceCallback);
 #else
 #error "No pump device selected, error in config"
 #endif

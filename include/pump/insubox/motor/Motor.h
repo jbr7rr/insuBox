@@ -11,14 +11,13 @@
 class IMotorCallback
 {
 public:
-    virtual void onDeliverCompleted(float delivered, bool stopped, bool error) = 0;
-    virtual void onMoveCompleted(float position, bool stopped, bool error) = 0;
+    virtual void onMotorCompleted(float delivered, float position, bool stopped, bool error) = 0;
 };
 
 class Motor
 {
 public:
-    Motor();
+    Motor(IMotorCallback &callback);
     ~Motor();
 
     /**
@@ -59,8 +58,8 @@ public:
 private:
     const struct pwm_dt_spec mPwmStepVref = PWM_DT_SPEC_GET(DT_ALIAS(pwm_step_vref));
     const struct device *mStepperDev = DEVICE_DT_GET(DT_ALIAS(stepper));
-
-    std::optional<float> mCurrentPosition;
+    std::optional<float> mCurrentPosition = std::nullopt;
+    IMotorCallback &mCallback;
 
     int enableVref(uint8_t powerPct = 80);
     int disableVref();

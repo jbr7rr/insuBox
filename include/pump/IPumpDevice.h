@@ -2,6 +2,14 @@
 #define IPUMP_DEVICE_H
 
 #include <ctime>
+#include <pump/PumpServiceMessages.h>
+
+class IPumpDeviceCallback
+{
+public:
+    virtual void pumpStatusUpdated(const PumpStatusUpdated &status) = 0;
+    virtual void onBolusProgressUpdate(const BolusProgressUpdate &update) = 0;
+};
 
 class IPumpDevice
 {
