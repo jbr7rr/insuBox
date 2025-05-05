@@ -1,0 +1,217 @@
+#include "Motor.h"
+#include <cmath>
+
+#define LOG_LEVEL LOG_LEVEL_DBG
+#include <zephyr/logging/log.h>
+
+LOG_MODULE_REGISTER(ib_motor);
+
+namespace
+{
+    constexpr int UNITS_PER_MICRO_STEP = (4 * 190); // 4 microsteps per step, 190 steps per revolution
+}
+
+Motor::Motor() : mCurrentPosition(std::nullopt)
+{
+    if (!device_is_ready(mPwmStepVref.dev))
+    {
+        LOG_ERR("PWM device not ready");
+    }
+
+    if (!device_is_ready(mStepperDev))
+    {
+        LOG_ERR("Stepper device not ready");
+    }
+
+    stepper_set_event_callback(mStepperDev, drvCallback, this);
+    stepper_set_micro_step_res(mStepperDev, STEPPER_MICRO_STEP_4);
+}
+
+Motor::~Motor() {}
+
+int Motor::deliver(float units, uint8_t speed)
+{
+    if (!mCurrentPosition.has_value())
+    {
+        LOG_ERR("Current position is not set");
+        return -ENOENT;
+    }
+
+    if (units < 0 || speed > 100 || speed == 0)
+    {
+        return -EINVAL;
+    }
+
+    LOG_INF("Delivering %.2f units at speed %d", static_cast<double>(units), speed);
+
+    int err = enableVref();
+    if (err)
+    {
+        LOG_ERR("Failed to enable Vref: %d", err);
+        return err;
+    }
+    // interval 100000 is the max speed, we take 10000000 as the convenient min
+    int interval = 10000000 / speed;
+    err = stepper_set_microstep_interval(mStepperDev, interval);
+    if (err)
+    {
+        LOG_ERR("Failed to set microstep interval: %d", err);
+        disableVref();
+        return err;
+    }
+
+    err = stepper_enable(mStepperDev);
+    if (err)
+    {
+        LOG_ERR("Failed to enable motor: %d", err);
+        disableVref();
+        return err;
+    }
+
+    int steps = static_cast<int>(round(units * UNITS_PER_MICRO_STEP));
+
+    LOG_DBG("Moving plunger by %d steps", steps);
+    err = stepper_move_by(mStepperDev, steps);
+    if (err)
+    {
+        LOG_ERR("Failed to move motor: %d", err);
+        stepper_disable(mStepperDev);
+        disableVref();
+        return err;
+    }
+
+    return 0;
+}
+
+int Motor::moveToPosition(float units, uint8_t speed)
+{
+    if (!mCurrentPosition.has_value())
+    {
+        LOG_ERR("Current position is not set");
+        return -ENOENT;
+    }
+
+    LOG_INF("Moving to position %.2f at speed %d", static_cast<double>(units), speed);
+
+    // TODO: Implement
+
+    return 0;
+}
+
+void Motor::stop()
+{
+    // Stop the motor immediately
+    LOG_INF("Stopping motor");
+    return;
+}
+
+int Motor::setPosition(float position)
+{
+    if (position < 0)
+    {
+        return -EINVAL;
+    }
+
+    LOG_INF("Setting position to %.2f", static_cast<double>(position));
+
+    int err = stepper_set_reference_position(mStepperDev, static_cast<int32_t>(round(position * UNITS_PER_MICRO_STEP)));
+    if (err)
+    {
+        LOG_ERR("Failed to set reference position: %d", err);
+        return err;
+    }
+
+    mCurrentPosition = position;
+    return 0;
+}
+
+std::optional<float> Motor::getPosition() const
+{
+    return mCurrentPosition;
+}
+
+int Motor::enableVref(uint8_t powerPct)
+{
+    // Allow some overdrive
+    if (powerPct > 150)
+    {
+        LOG_ERR("Power percentage out of range");
+        return -EINVAL;
+    }
+    /**
+     * From the DRV8428 datasheet:
+     * The chopping current (IFS) can be calculated as IFS (A) = VREF (V) / KV (V/A) = VREF (V) / 3 (V/A).
+     * We have a voltage divider which halves the vdd (which is 3v3) to 1.65.
+     * So 100% Duty cycle = 1.65 / 3 = 0.55A
+     *
+     * The motor is rated for 160mA per phase
+     * So we can set the current to 160mA / 0.55A = 29% of the max current.
+     *
+     * PWM Freq: 100kHz
+     */
+
+    float dutyCycleFactor = powerPct * 0.3f / 100.0f;
+
+    uint32_t period = 10000;
+    uint32_t pulse = static_cast<uint32_t>((period * dutyCycleFactor));
+    int ret = pwm_set_dt(&mPwmStepVref, period, pulse);
+    if (ret)
+    {
+        return ret;
+    }
+    return 0;
+}
+
+int Motor::disableVref()
+{
+    // Disable the Vref
+    uint32_t period = 10000;
+    uint32_t pulse = 0;
+    int ret = pwm_set_dt(&mPwmStepVref, period, pulse);
+    if (ret)
+    {
+        return ret;
+    }
+    return 0;
+}
+
+void Motor::drvCallback(const struct device *dev, enum stepper_event event, void *userData)
+{
+    // Handle motor driver events
+    LOG_INF("Driver callback triggered with event %d", event);
+
+    Motor *motor = static_cast<Motor *>(userData);
+    if (motor == nullptr)
+    {
+        LOG_ERR("Callback is null");
+        return;
+    }
+
+    switch (event)
+    {
+    case STEPPER_EVENT_STEPS_COMPLETED:
+        LOG_DBG("STEPPER_EVENT_STEPS_COMPLETED");
+        break;
+    case STEPPER_EVENT_STALL_DETECTED:
+        LOG_ERR("STEPPER_EVENT_STALL_DETECTED");
+        break;
+    case STEPPER_EVENT_LEFT_END_STOP_DETECTED:
+        LOG_DBG("STEPPER_EVENT_LEFT_END_STOP_DETECTED");
+        break;
+    case STEPPER_EVENT_RIGHT_END_STOP_DETECTED:
+        LOG_DBG("STEPPER_EVENT_RIGHT_END_STOP_DETECTED");
+        break;
+    case STEPPER_EVENT_STOPPED:
+        LOG_DBG("STEPPER_EVENT_STOPPED");
+        break;
+    case STEPPER_EVENT_FAULT_DETECTED:
+        LOG_ERR("STEPPER_EVENT_FAULT_DETECTED");
+        break;
+    }
+
+    // TODO: Callback
+    // TODO: Update steps and position
+
+    stepper_disable(dev);
+    motor->disableVref();
+}

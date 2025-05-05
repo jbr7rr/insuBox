@@ -6,6 +6,8 @@
 #include <pump/IPumpDevice.h>
 #include <zephyr/kernel.h>
 
+class Motor;
+
 class InsuBoxDevice : public IPumpDevice
 {
 public:
@@ -22,7 +24,11 @@ private:
         k_work_delayable sensorWork;
     } mSubContainer;
 
+    Motor &mMotor;
+
     void sensorWork();
+
+    static Motor &createMotorInstance();
 };
 
 #endif // CONFIG_IB_PUMP_INSUBOX
