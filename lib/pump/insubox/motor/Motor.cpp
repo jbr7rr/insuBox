@@ -102,6 +102,13 @@ void Motor::stop()
 {
     // Stop the motor immediately
     LOG_INF("Stopping motor");
+
+    int err = stepper_stop(mStepperDev);
+    if (err)
+    {
+        LOG_ERR("Failed to stop motor: %d", err);
+        return;
+    }
     return;
 }
 
