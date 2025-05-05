@@ -16,6 +16,7 @@ public:
 
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolus() override;
+    void onRetractRequest() override;
 
 private:
     struct SubContainer
@@ -29,6 +30,8 @@ private:
 
     SubContainer mSubContainer;
     IPumpDeviceCallback &mPumpDeviceCallback;
+
+    float mReservoirLevel = 300.0f;
 
     void _updateStatus();
 };

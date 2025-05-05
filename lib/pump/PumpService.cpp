@@ -24,6 +24,11 @@ PumpService::PumpService(EventDispatcher &dispatcher, IPumpDevice &pumpDevice)
         LOG_DBG("Stop bolus request received");
         mPumpDevice.onStopBolus();
     });
+
+    mDispatcher.subscribe<RetractRequest>([this](const RetractRequest &retract) {
+        LOG_DBG("Retract request received");
+        mPumpDevice.onRetractRequest();
+    });
 }
 
 PumpService::~PumpService() {}

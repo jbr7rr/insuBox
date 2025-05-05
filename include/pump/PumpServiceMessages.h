@@ -31,6 +31,10 @@ struct StopBolus
 {
 };
 
+struct RetractRequest
+{
+};
+
 struct BolusProgressUpdate
 {
     float requestedAmount;

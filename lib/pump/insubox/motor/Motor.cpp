@@ -91,9 +91,45 @@ int Motor::moveToPosition(float units, uint8_t speed)
         return -ENOENT;
     }
 
+    if (units < 0 || speed > 100 || speed == 0)
+    {
+        return -EINVAL;
+    }
+
     LOG_INF("Moving to position %.2f at speed %d", static_cast<double>(units), speed);
 
-    // TODO: Implement
+    int err = enableVref(100);
+    if (err)
+    {
+        LOG_ERR("Failed to enable Vref: %d", err);
+        return err;
+    }
+    // interval 100000 is the max speed, we take 10000000 as the convenient min
+    int interval = 10000000 / speed;
+    err = stepper_set_microstep_interval(mStepperDev, interval);
+    if (err)
+    {
+        LOG_ERR("Failed to set microstep interval: %d", err);
+        disableVref();
+        return err;
+    }
+
+    err = stepper_enable(mStepperDev);
+    if (err)
+    {
+        LOG_ERR("Failed to enable motor: %d", err);
+        disableVref();
+        return err;
+    }
+
+    err = stepper_move_to(mStepperDev, static_cast<int32_t>(round(units * UNITS_PER_MICRO_STEP)));
+    if (err)
+    {
+        LOG_ERR("Failed to move motor: %d", err);
+        stepper_disable(mStepperDev);
+        disableVref();
+        return err;
+    }
 
     return 0;
 }

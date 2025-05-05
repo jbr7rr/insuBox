@@ -210,6 +210,10 @@ void InsuBoxHmiDevice::onBolusProgressUpdate(BolusProgressUpdate &update)
 
     if (mBolusUi.popup == nullptr && mBolusUi.mainScreenLabel == nullptr)
     {
+        if (update.completed)
+        {
+            return;
+        }
         createBolusProgressPopup();
         return;
     }
@@ -288,16 +292,31 @@ void InsuBoxHmiDevice::showMainScreen()
 
     lv_obj_t *bolusBtn = lv_btn_create(lv_screen_active());
     lv_obj_set_size(bolusBtn, 55, 22);
-    lv_obj_align(bolusBtn, LV_ALIGN_TOP_RIGHT, -10, 10);
+    lv_obj_align(bolusBtn, LV_ALIGN_RIGHT_MID, -10, -15);
     lv_obj_t *btnLabel = lv_label_create(bolusBtn);
     lv_label_set_text(btnLabel, "Bolus");
     lv_obj_center(btnLabel);
+
+    lv_obj_t *retractBtn = lv_btn_create(lv_screen_active());
+    lv_obj_set_size(retractBtn, 55, 22);
+    lv_obj_align(retractBtn, LV_ALIGN_RIGHT_MID, -10, 15);
+    lv_obj_t *retractLabel = lv_label_create(retractBtn);
+    lv_label_set_text(retractLabel, "Retract");
+    lv_obj_center(retractLabel);
 
     lv_obj_add_event_cb(
         bolusBtn,
         [](lv_event_t *e) {
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
             device->showBolusScreen();
+        },
+        LV_EVENT_CLICKED, this);
+
+    lv_obj_add_event_cb(
+        retractBtn,
+        [](lv_event_t *e) {
+            auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
+            device->mHmiCallback.onRetractRequest();
         },
         LV_EVENT_CLICKED, this);
 }

@@ -103,6 +103,11 @@ void HmiService::onStopBolus()
     mDispatcher.dispatch<StopBolus>({});
 }
 
+void HmiService::onRetractRequest()
+{
+    mDispatcher.dispatch<RetractRequest>({});
+}
+
 IHmiDevice &HmiService::getHmiDevice(IHmiCallback &hmiCallback)
 {
 #ifdef CONFIG_IB_HMI_VIRTUAL

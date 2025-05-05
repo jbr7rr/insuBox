@@ -5,6 +5,8 @@
 
 LOG_MODULE_REGISTER(ib_insubox_pump_device);
 
+#include <string>
+
 // TODO: move low level stuff to its own files
 #include <zephyr/device.h>
 #include <zephyr/drivers/sensor.h>
@@ -13,6 +15,12 @@ LOG_MODULE_REGISTER(ib_insubox_pump_device);
 // Sensor devices
 static const struct device *sensor0 = DEVICE_DT_GET(DT_ALIAS(magn0));
 static const struct device *sensor1 = DEVICE_DT_GET(DT_ALIAS(magn1));
+
+namespace
+{
+    constexpr char settingsSubKey[] = "ib";
+    constexpr char settingsPlungerPosKey[] = "plPos";
+}
 
 InsuBoxDevice::InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback)
     : mPumpDeviceCallback(pumpDeviceCallback), mMotor(createMotorInstance(*this))
@@ -31,6 +39,14 @@ InsuBoxDevice::InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback)
         auto *task = CONTAINER_OF(work, BolusTask, bolusWork);
         task->device->bolusWork();
     });
+
+    settings_subsys_init();
+    settings_load_subtree_direct(
+        settingsSubKey,
+        [](const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param) {
+            return static_cast<InsuBoxDevice *>(param)->loadCb(key, len, read_cb, cb_arg, param);
+        },
+        this);
 }
 
 InsuBoxDevice::~InsuBoxDevice()
@@ -41,9 +57,6 @@ InsuBoxDevice::~InsuBoxDevice()
 void InsuBoxDevice::init()
 {
     LOG_DBG("InsuBoxDevice init");
-
-    // TODO: Store position in flash, and procedure to find the zero position
-    mMotor.setPosition(0.0f);
 
     k_work_reschedule(&mSubContainer.sensorWork, K_NO_WAIT);
 }
@@ -70,10 +83,44 @@ void InsuBoxDevice::onStopBolus()
     mMotor.stop();
 }
 
+void InsuBoxDevice::onRetractRequest()
+{
+    LOG_DBG("Retract request");
+    if (mBolusTask.completed == false)
+    {
+        LOG_ERR("Motor busy, you yatz");
+        return;
+    }
+
+    // TODO: Maybe want to add a priming/retracting flag to the bolus status?
+    std::optional<float> position = mMotor.getPosition();
+    if (position.has_value())
+    {
+        // TODO: Plunger position detection
+        // For now add 50 units to ensure we fully retract
+        position = position.value() + 50.0f;
+    }
+    else
+    {
+        // Position not initialized, assume first assembly/install
+        position = 350.0f;
+    }
+
+    mMotor.setPosition(position.value());
+    mBolusTask.requestedBolus = -position.value();
+    mBolusTask.requestedTimestamp = 0;
+    mBolusTask.deliveredBolus = 0.0f;
+    mBolusTask.completed = false;
+    mMotor.moveToPosition(0.0f, 80);
+}
+
 void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopped, bool error)
 {
     LOG_DBG("Deliver completed: units: %.2f, position: %.2f, stopped: %d, error: %d", static_cast<double>(delivered),
             static_cast<double>(position), stopped, error);
+
+    std::string key = std::string(settingsSubKey) + "/" + settingsPlungerPosKey;
+    settings_save_one(key.c_str(), &position, sizeof(position));
 
     mBolusTask.deliveredBolus += delivered;
     if (stopped || error)
@@ -119,10 +166,9 @@ void InsuBoxDevice::sensorWork()
 void InsuBoxDevice::bolusWork()
 {
     LOG_DBG("Bolus work");
-    float remainingBolus = mBolusTask.requestedBolus - mBolusTask.deliveredBolus;
 
     // TODO: Verify plunger pos here?
-
+    float remainingBolus = mBolusTask.requestedBolus - mBolusTask.deliveredBolus;
     if (mBolusTask.completed || remainingBolus <= 0.01f)
     {
         LOG_DBG("Bolus completed");
@@ -131,18 +177,16 @@ void InsuBoxDevice::bolusWork()
         return;
     }
 
-    float bolusToPump = 0.0f;
-    if (remainingBolus > 0.5f)
+    // Deliver 0.5 per time, and update the delivered amount
+    float bolusToDeliver = (remainingBolus > 0.5f) ? 0.5f : remainingBolus;
+    int err = mMotor.deliver(bolusToDeliver, 2);
+    if (err)
     {
-        bolusToPump = 0.5f;
-    }
-    else
-    {
-        bolusToPump = remainingBolus;
+        LOG_ERR("Failed to deliver bolus: %d", err);
+        mBolusTask.completed = true;
     }
 
     sendBolusProgressUpdate();
-    mMotor.deliver(bolusToPump, 2);
 }
 
 void InsuBoxDevice::sendBolusProgressUpdate()
@@ -158,6 +202,30 @@ void InsuBoxDevice::sendBolusProgressUpdate()
         .completed = mBolusTask.completed,
     };
     mPumpDeviceCallback.onBolusProgressUpdate(progress);
+}
+
+int InsuBoxDevice::loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param)
+{
+    // Load the settings from the settings subsystem
+    if (strcmp(key, settingsPlungerPosKey) == 0)
+    {
+        LOG_DBG("Loading plunger position");
+        float position;
+        int len = read_cb(cb_arg, &position, sizeof(position));
+        if (len != sizeof(position))
+        {
+            LOG_ERR("Failed to read plunger position from settings");
+            return -1;
+        }
+        mMotor.setPosition(position);
+    }
+    else
+    {
+        LOG_ERR("Unknown key: %s", key);
+        return -1;
+    }
+
+    return 0;
 }
 
 Motor &InsuBoxDevice::createMotorInstance(IMotorCallback &callback)

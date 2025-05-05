@@ -6,20 +6,6 @@
 #include <hmi/IHmiDevice.h>
 #include <pump/PumpService.h>
 
-class IHmiCallback
-{
-public:
-    /**
-     * @brief Handle the user response to the pairing request
-     *
-     * @param conn Connection object
-     * @param accepted True if the user accepted the pairing request, false otherwise
-     */
-    virtual void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) = 0;
-    virtual void onBolusRequest(float amount, time_t timestamp) = 0;
-    virtual void onStopBolus() = 0;
-};
-
 class HmiService : public IHmiCallback
 {
 public:
@@ -32,6 +18,7 @@ public:
     void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) override;
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolus() override;
+    void onRetractRequest() override;
 
 private:
     EventDispatcher &mDispatcher;

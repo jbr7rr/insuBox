@@ -6,6 +6,7 @@
 #include <pump/IPumpDevice.h>
 #include <pump/PumpServiceMessages.h>
 #include <pump/insubox/motor/Motor.h>
+#include <zephyr/settings/settings.h>
 #include <zephyr/kernel.h>
 
 class InsuBoxDevice : public IPumpDevice, public IMotorCallback
@@ -17,6 +18,7 @@ public:
 
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolus() override;
+    void onRetractRequest() override;
 
     void onMotorCompleted(float delivered, float position, bool stopped, bool error) override;
 
@@ -45,6 +47,7 @@ private:
 
     void sendBolusProgressUpdate();
 
+    int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
     static Motor &createMotorInstance(IMotorCallback &callback);
 };
 

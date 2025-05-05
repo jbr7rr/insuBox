@@ -57,6 +57,15 @@ void VirtualPumpDevice::onStopBolus()
     k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
 }
 
+void VirtualPumpDevice::onRetractRequest()
+{
+    LOG_DBG("Retract request");
+    mReservoirLevel = 300.0f;
+    mSubContainer.requestedBolus = 0.0f;
+    mSubContainer.deliveredBolus = 0.0f;
+    k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
+}
+
 void VirtualPumpDevice::_updateStatus()
 {
     LOG_DBG("VirtualPumpDevice update status");
@@ -66,7 +75,7 @@ void VirtualPumpDevice::_updateStatus()
     PumpStatusUpdated status = {
         .therapyControlState = TherapyControlState::RUN,
         .operationalState = OperationalState::READY,
-        .reservoirLevel = SFloat(101.0f),
+        .reservoirLevel = SFloat(mReservoirLevel),
         .reservoirAttached = true,
     };
 
@@ -76,6 +85,7 @@ void VirtualPumpDevice::_updateStatus()
     {
         intervalSec = 2;
         mSubContainer.deliveredBolus += 0.1f;
+        mReservoirLevel -= 0.1f;
         struct timespec currentTime;
         clock_gettime(CLOCK_REALTIME, &currentTime);
         BolusProgressUpdate progress = {
