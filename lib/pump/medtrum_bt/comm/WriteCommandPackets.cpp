@@ -1,6 +1,6 @@
 #include "../utils/CrcUtil.h"
-#include <cstring>
 #include <pump/medtrum_bt/comm/WriteCommandPackets.h>
+#include <cstring> // For memcpy
 
 namespace
 {

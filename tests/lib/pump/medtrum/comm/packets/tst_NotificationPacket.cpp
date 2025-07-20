@@ -1,7 +1,7 @@
 #include "gtest/gtest.h"
 
-#include <pump/medtrum_bt/comm/packets/NotificationPacket.h>
 #include <pump/medtrum_bt/MedtrumPumpSync.h>
+#include <pump/medtrum_bt/comm/packets/NotificationPacket.h>
 
 class NotificationPacketTest : public ::testing::Test
 {
@@ -10,14 +10,15 @@ protected:
     {
         mPumpSync = new MedtrumPumpSync();
         mPumpSync->init();
-        
+
         // Reset all pumpsync values before each test
         mPumpSync->setPumpState(PumpState::NONE);
         mPumpSync->setPatchId(0);
         mPumpSync->setCurrentSequenceNumber(0);
         mPumpSync->setReservoirLevel(0);
     }
-    virtual void TearDown() override {
+    virtual void TearDown() override
+    {
         delete mPumpSync;
     }
 
@@ -82,7 +83,7 @@ TEST_F(NotificationPacketTest, onNotification_Given_BolusOutOfRange_Expect_Nothi
 TEST_F(NotificationPacketTest, onNotification_Given_WrongPatchIdInBasal_Expect_NothingHandled)
 {
     // arange
-    uint8_t data[] = {32, 40, 64, 6, 25, 0, 14, 0, 84, 163, 173, 17, 17, 64, 0, 152, 15, 0, 16}; 
+    uint8_t data[] = {32, 40, 64, 6, 25, 0, 14, 0, 84, 163, 173, 17, 17, 64, 0, 152, 15, 0, 16};
     size_t dataSize = sizeof(data);
     NotificationPacket notificationPacket(*mPumpSync);
     // Set valid patchID (as in a started pump session)
@@ -96,14 +97,14 @@ TEST_F(NotificationPacketTest, onNotification_Given_WrongPatchIdInBasal_Expect_N
     EXPECT_NEAR(mPumpSync->getBasalRate(), 0, 0.001);
     EXPECT_EQ(mPumpSync->getBasalSequence(), 0);
     EXPECT_EQ(mPumpSync->getCurrentSequenceNumber(), 0);
-    EXPECT_EQ(mPumpSync->getBasalStartTime(), 1);
+    EXPECT_EQ(mPumpSync->getBasalStartTime(), 0);
     EXPECT_NEAR(mPumpSync->getReservoirLevel(), 0, 0.001);
 }
 
 TEST_F(NotificationPacketTest, onNotification_Given_BasalOutOfRange_Expect_NothingHandled)
 {
     // arange
-    uint8_t data[] = {32, 40, 64, 6, 25, 0, 14, 0, 84, 163, 173, 17, 127, 127, 128, 152, 14, 0, 16}; 
+    uint8_t data[] = {32, 40, 64, 6, 25, 0, 14, 0, 84, 163, 173, 17, 127, 127, 128, 152, 14, 0, 16};
     size_t dataSize = sizeof(data);
     NotificationPacket notificationPacket(*mPumpSync);
     // Set valid patchID (as in a started pump session)
@@ -117,7 +118,7 @@ TEST_F(NotificationPacketTest, onNotification_Given_BasalOutOfRange_Expect_Nothi
     EXPECT_NEAR(mPumpSync->getBasalRate(), 0, 0.001);
     EXPECT_EQ(mPumpSync->getBasalSequence(), 0);
     EXPECT_EQ(mPumpSync->getCurrentSequenceNumber(), 0);
-    EXPECT_EQ(mPumpSync->getBasalStartTime(), 1);
+    EXPECT_EQ(mPumpSync->getBasalStartTime(), 0);
     EXPECT_NEAR(mPumpSync->getReservoirLevel(), 0, 0.001);
 }
 
@@ -157,7 +158,7 @@ TEST_F(NotificationPacketTest, onNotification_Given_StatusAndData_Expect_PumpSta
 TEST_F(NotificationPacketTest, onNotification_Given_BasalData_Expect_BasalDataHandled)
 {
     // arange
-    uint8_t data[] = {32, 40, 64, 6, 25, 0, 14, 0, 84, 163, 173, 17, 17, 64, 0, 152, 14, 0, 16}; 
+    uint8_t data[] = {32, 40, 64, 6, 25, 0, 14, 0, 84, 163, 173, 17, 17, 64, 0, 152, 14, 0, 16};
     size_t dataSize = sizeof(data);
     NotificationPacket notificationPacket(*mPumpSync);
     mPumpSync->setCurrentSequenceNumber(0);
@@ -180,7 +181,7 @@ TEST_F(NotificationPacketTest, onNotification_Given_BasalData_Expect_BasalDataHa
 TEST_F(NotificationPacketTest, onNotification_Given_SequenceAndOtherData_Expect_DataHandled)
 {
     // arange
-    uint8_t data[] = {32, 0, 17, 167, 0, 14, 0, 0, 0, 0, 0, 0}; 
+    uint8_t data[] = {32, 0, 17, 167, 0, 14, 0, 0, 0, 0, 0, 0};
     size_t dataSize = sizeof(data);
     NotificationPacket notificationPacket(*mPumpSync);
     mPumpSync->setCurrentSequenceNumber(0);

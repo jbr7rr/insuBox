@@ -18,6 +18,7 @@ public:
     void init() override;
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolus() override;
+    void onRetractRequest() override;
 
     void onReadyForCommands() override;
     void onDisconnected() override;

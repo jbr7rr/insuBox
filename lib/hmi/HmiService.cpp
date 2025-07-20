@@ -80,7 +80,10 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
     });
 }
 
-HmiService::~HmiService() {}
+HmiService::~HmiService()
+{
+    k_work_queue_drain(&mWorkQueue, true);
+}
 
 void HmiService::init()
 {

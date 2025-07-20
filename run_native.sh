@@ -4,7 +4,7 @@
 # If a bluetooth device is present it will be powered off and used
 
 if [ ! -d "build_native" ]; then
-    west build -d build_native -b native_sim app -DOVERLAY_CONFIG="boards/native_sim.conf" 
+    west build -d build_native -b native_sim/native/64 app -DOVERLAY_CONFIG="boards/native_sim.conf" 
 else
     west build -d build_native
 fi

@@ -28,7 +28,7 @@ MedtrumBTDevice::MedtrumBTDevice() : mPumpBleComm(*this), mNotificationPacket(mP
 
 MedtrumBTDevice::~MedtrumBTDevice()
 {
-    // Destructor
+    k_work_queue_drain(&mWorkQueue, true);
 }
 
 void MedtrumBTDevice::init()
@@ -58,6 +58,12 @@ void MedtrumBTDevice::onStopBolus()
     // Handle a stop bolus request
     LOG_DBG("Stop bolus request");
     LOG_ERR("Stop bolus request not implemented (yet)");
+}
+
+void MedtrumBTDevice::onRetractRequest()
+{
+    // Handle a retract request
+    LOG_DBG("Retract request not needed for Medtrum devices");
 }
 
 void MedtrumBTDevice::onReadyForCommands()

@@ -42,7 +42,7 @@ PumpBleComm::PumpBleComm(PumpBleCallback &callback) : mCallback(callback)
 
 PumpBleComm::~PumpBleComm()
 {
-    // Destructor
+    k_work_queue_drain(&mWorkQueue, true);
 }
 
 void PumpBleComm::init()
