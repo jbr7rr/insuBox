@@ -35,8 +35,8 @@
 		
 		pwm-step-vref = &pwm_step_vref;
 		pwm-buzzer = &pwm_buzzer;
-		magn0 = &tmag5273_d1;
-		magn1 = &tmag5273_c1;
+		mag-bottom = &tmag5273_bottom;
+		mag-top = &tmag5273_top;
 		
 		stepper = &drv8428;
 	};
@@ -100,7 +100,8 @@
 		en-gpios  = <&gpio0 7 0>;
 		m0-gpios = <&gpio0 5 0>;
 		m1-gpios = <&gpio0 3 0>;
-		// counter = <&timer2>;
+		// TODO: Check in new zephyr version if support for countertop is added to esp32 driver
+		// counter = <&timer0>;
 		
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -191,18 +192,19 @@
 	pinctrl-0 = <&i2c0_default>;
 	pinctrl-names = "default";
 	
-	tmag5273_d1: tmag5273@44 {
+	// U3 - TMAG5273_D1
+	tmag5273_bottom: tmag5273@44 {
 		compatible = "ti,tmag5273";
 		reg = <0x44>;
-		label = "tmag5273_d1";
+		label = "tmag5273_bottom";
 		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
 		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
 	};
 	
-	tmag5273_c1: tmag5273@78 {
+	tmag5273_top: tmag5273@78 {
 		compatible = "ti,tmag5273";
 		reg = <0x78>;
-		label = "tmag5273_c1";
+		label = "tmag5273_top";
 		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
 		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
 	};

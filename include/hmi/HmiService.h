@@ -15,6 +15,7 @@ public:
     ~HmiService();
     void init();
 
+protected:
     void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) override;
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolus() override;

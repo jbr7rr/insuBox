@@ -14,6 +14,8 @@ class InsuBoxDevice : public IPumpDevice, public IMotorCallback
 public:
     InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback);
     ~InsuBoxDevice();
+
+protected:
     void init() override;
 
     void onBolusRequest(float amount, time_t timestamp) override;

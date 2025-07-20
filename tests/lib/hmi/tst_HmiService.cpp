@@ -64,7 +64,7 @@ TEST_F(HmiServiceTest, onUserBtPairingResponse_Should_Dispatch_BtPassKeyConfirmR
     
     // Act
     mHmiService.init();
-    mHmiService.onUserBtPairingResponse(conn, accepted);
+    static_cast<IHmiCallback &>(mHmiService).onUserBtPairingResponse(conn, accepted);
 
     // Assert
     EXPECT_EQ(count, 1);

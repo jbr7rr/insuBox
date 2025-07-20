@@ -146,49 +146,50 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     if (err)
     {
         LOG_ERR("Connection failed (err %u)", err);
+        return;
     }
-    else
-    {
-        char addr[BT_ADDR_LE_STR_LEN];
-        bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
-        LOG_INF("Connected to %s", addr);
-    }
+
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    LOG_INF("Connected to %s", addr);
 
     auto connection = findStoredConnection(conn);
-    if (connection != nullptr && connection->callback != nullptr)
+    if (connection)
     {
-        connection->callback->onConnected(conn, err);
-    }
-    else if (connection == nullptr)
-    {
-        LOG_INF("Connection object not found");
-        // Find unused client connection object in array
-        bool foundFreeConnection = false;
-        for (auto &clientConnection : mClientConnections)
+        if (connection->callback)
         {
-            if (clientConnection.conn == nullptr)
-            {
-                clientConnection.conn = conn;
-                storeConnectionRef(&clientConnection);
-                foundFreeConnection = true;
-                LOG_INF("Connection object stored");
-                break;
-            }
+            connection->callback->onConnected(conn, err);
         }
 
-        if (!foundFreeConnection)
+        if (mDispatcher)
         {
-            LOG_ERR("No free client connection object found");
-            // disconnect
-            bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
+            mDispatcher->dispatch<BtBluetoothStateChanged>({conn, BtState::BT_STATE_CONNECTED});
         }
+        return;
     }
 
-    // Emit event to dispatcher
-    if (mDispatcher)
+    LOG_INF("Connection object not found, registering as new client connection");
+
+    for (auto &clientConnection : mClientConnections)
     {
-        mDispatcher->dispatch<BtBluetoothStateChanged>({conn, BtState::BT_STATE_CONNECTED});
+        if (clientConnection.conn != nullptr)
+        {
+            continue;
+        }
+
+        clientConnection.conn = conn;
+        storeConnectionRef(&clientConnection);
+        LOG_INF("Connection object stored");
+
+        if (mDispatcher)
+        {
+            mDispatcher->dispatch<BtBluetoothStateChanged>({conn, BtState::BT_STATE_CONNECTED});
+        }
+        return;
     }
+
+    LOG_ERR("No free client connection object found, disconnecting");
+    bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
 }
 
 void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)

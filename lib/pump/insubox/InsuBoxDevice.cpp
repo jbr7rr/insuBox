@@ -13,8 +13,8 @@ LOG_MODULE_REGISTER(ib_insubox_pump_device);
 #include <zephyr/kernel.h>
 
 // Sensor devices
-static const struct device *sensor0 = DEVICE_DT_GET(DT_ALIAS(magn0));
-static const struct device *sensor1 = DEVICE_DT_GET(DT_ALIAS(magn1));
+static const struct device *sensor0 = DEVICE_DT_GET(DT_ALIAS(mag_bottom));
+static const struct device *sensor1 = DEVICE_DT_GET(DT_ALIAS(mag_top));
 
 namespace
 {

@@ -61,8 +61,7 @@ private:
     std::optional<float> mCurrentPosition = std::nullopt;
     IMotorCallback &mCallback;
 
-    int enableVref(uint8_t powerPct = 80);
-    int disableVref();
+    int setVref(uint8_t powerPct = 80);
 
     static void drvCallback(const struct device *dev, enum stepper_event event, void *userData);
 };

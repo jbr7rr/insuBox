@@ -40,12 +40,13 @@ class InsulinDeliveryDevice : public IInsulinDeliveryDevice, public IInsulinDeli
 public:
     InsulinDeliveryDevice();
     ~InsulinDeliveryDevice();
-    void init();
+
+protected:
+    void init() override;
 
     void iddStatusUpdated(const PumpStatusUpdated &status) override;
     void iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) override;
 
-protected:
     ssize_t onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf, uint16_t len,
                                    uint16_t offset) override;
     ssize_t onReadIddStatus(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf, uint16_t len,

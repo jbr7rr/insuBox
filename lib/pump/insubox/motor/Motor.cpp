@@ -44,7 +44,7 @@ int Motor::deliver(float units, uint8_t speed)
 
     LOG_INF("Delivering %.2f units at speed %d", static_cast<double>(units), speed);
 
-    int err = enableVref();
+    int err = setVref();
     if (err)
     {
         LOG_ERR("Failed to enable Vref: %d", err);
@@ -56,7 +56,7 @@ int Motor::deliver(float units, uint8_t speed)
     if (err)
     {
         LOG_ERR("Failed to set microstep interval: %d", err);
-        disableVref();
+        setVref(0);
         return err;
     }
 
@@ -64,7 +64,7 @@ int Motor::deliver(float units, uint8_t speed)
     if (err)
     {
         LOG_ERR("Failed to enable motor: %d", err);
-        disableVref();
+        setVref(0);
         return err;
     }
 
@@ -76,7 +76,7 @@ int Motor::deliver(float units, uint8_t speed)
     {
         LOG_ERR("Failed to move motor: %d", err);
         stepper_disable(mStepperDev);
-        disableVref();
+        setVref(0);
         return err;
     }
 
@@ -98,7 +98,7 @@ int Motor::moveToPosition(float units, uint8_t speed)
 
     LOG_INF("Moving to position %.2f at speed %d", static_cast<double>(units), speed);
 
-    int err = enableVref(100);
+    int err = setVref(100);
     if (err)
     {
         LOG_ERR("Failed to enable Vref: %d", err);
@@ -110,7 +110,7 @@ int Motor::moveToPosition(float units, uint8_t speed)
     if (err)
     {
         LOG_ERR("Failed to set microstep interval: %d", err);
-        disableVref();
+        setVref(0);
         return err;
     }
 
@@ -118,7 +118,7 @@ int Motor::moveToPosition(float units, uint8_t speed)
     if (err)
     {
         LOG_ERR("Failed to enable motor: %d", err);
-        disableVref();
+        setVref(0);
         return err;
     }
 
@@ -127,7 +127,7 @@ int Motor::moveToPosition(float units, uint8_t speed)
     {
         LOG_ERR("Failed to move motor: %d", err);
         stepper_disable(mStepperDev);
-        disableVref();
+        setVref(0);
         return err;
     }
 
@@ -173,7 +173,7 @@ std::optional<float> Motor::getPosition() const
     return mCurrentPosition;
 }
 
-int Motor::enableVref(uint8_t powerPct)
+int Motor::setVref(uint8_t powerPct)
 {
     // Allow some overdrive
     if (powerPct > 150)
@@ -197,19 +197,6 @@ int Motor::enableVref(uint8_t powerPct)
 
     uint32_t period = 10000;
     uint32_t pulse = static_cast<uint32_t>((period * dutyCycleFactor));
-    int ret = pwm_set_dt(&mPwmStepVref, period, pulse);
-    if (ret)
-    {
-        return ret;
-    }
-    return 0;
-}
-
-int Motor::disableVref()
-{
-    // Disable the Vref
-    uint32_t period = 10000;
-    uint32_t pulse = 0;
     int ret = pwm_set_dt(&mPwmStepVref, period, pulse);
     if (ret)
     {
@@ -271,7 +258,7 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
     }
 
     stepper_disable(dev);
-    motor->disableVref();
+    motor->setVref(0);
     motor->mCallback.onMotorCompleted(motor->mCurrentPosition.value() - previousPosition,
                                       motor->mCurrentPosition.value(), stopped, error);
 }
