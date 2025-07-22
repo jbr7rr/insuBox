@@ -23,12 +23,12 @@ void VirtualHmiDevice::init()
 void VirtualHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t passkey)
 {
     // Accept the pairing request, we are virtual :)
-    mHmiCallback.onUserBtPairingResponse(conn, true);
+    mHmiCallback.userBtPairingResponse(conn, true);
 }
 
 void VirtualHmiDevice::onBtBluetoothStateChanged(struct bt_conn *conn, BtState state)
 {
-    LOG_DBG("onBtBluetoothStateChanged: state=%d", static_cast<int>(state));
+    LOG_DBG("state=%d", static_cast<int>(state));
 }
 
 void VirtualHmiDevice::onBolusProgressUpdate(BolusProgressUpdate &update)

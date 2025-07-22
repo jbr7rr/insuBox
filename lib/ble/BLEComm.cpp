@@ -13,7 +13,7 @@ LOG_MODULE_REGISTER(ib_ble);
 
 EventDispatcher *BLEComm::mDispatcher = nullptr;
 std::array<BleConnection *, CONFIG_BT_MAX_CONN> BLEComm::mConnectionsArray = {};
-std::array<BleConnection, BLEComm::MAX_CLIENT_CONNECTIONS> BLEComm::mClientConnections = {};
+std::array<BleConnection, CONFIG_IB_BT_MAX_CLIENT_CONNECTIONS> BLEComm::mClientConnections = {};
 
 const struct bt_data BLEComm::advertizingData[] = {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),

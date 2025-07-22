@@ -25,26 +25,8 @@ InsuBoxHmiDevice::InsuBoxHmiDevice(IHmiCallback &hmiCallback, k_work_q &workQueu
 
     mDisplayUpdateTask.device = this;
     k_work_init_delayable(&mDisplayUpdateTask.work, [](struct k_work *work) {
-        // LOG_DBG("Display update task");
         auto *container = CONTAINER_OF(work, DisplayUpdateTask, work);
-        constexpr uint32_t DISPLAY_TIMEOUT = CONFIG_IB_HMI_DISPLAY_TIMEOUT_SEC * 1000;
-        if (lv_disp_get_inactive_time(nullptr) > DISPLAY_TIMEOUT && container->device->mDisplayOn)
-        {
-            LOG_DBG("Display off");
-            container->device->mDisplayOn = false;
-            display_blanking_on(container->device->mDisplayDevice);
-            pm_device_action_run(container->device->mDisplayDevice, PM_DEVICE_ACTION_SUSPEND);
-        }
-        else if (lv_disp_get_inactive_time(nullptr) < DISPLAY_TIMEOUT && !container->device->mDisplayOn)
-        {
-            LOG_DBG("Display on");
-            container->device->mDisplayOn = true;
-            display_blanking_off(container->device->mDisplayDevice);
-            pm_device_action_run(container->device->mDisplayDevice, PM_DEVICE_ACTION_RESUME);
-        }
-
-        uint32_t sleepMs = lv_timer_handler();
-        k_work_schedule_for_queue(&container->device->mWorkQueue, k_work_delayable_from_work(work), K_MSEC(sleepMs));
+        container->device->displayUpdateTask();
     });
 }
 
@@ -116,7 +98,7 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
     if (pairingScreenEntry == nullptr)
     {
         LOG_ERR("Failed to store pairing screen");
-        mHmiCallback.onUserBtPairingResponse(conn, false);
+        mHmiCallback.userBtPairingResponse(conn, false);
         return;
     }
 
@@ -156,7 +138,7 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
             PairingScreenEntry *entry = static_cast<PairingScreenEntry *>(lv_event_get_user_data(e));
             if (entry)
             {
-                entry->device->mHmiCallback.onUserBtPairingResponse(entry->conn, true);
+                entry->device->mHmiCallback.userBtPairingResponse(entry->conn, true);
                 entry->device->removePairingScreen(entry->conn);
             }
             else
@@ -173,7 +155,7 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
             PairingScreenEntry *entry = static_cast<PairingScreenEntry *>(lv_event_get_user_data(e));
             if (entry)
             {
-                entry->device->mHmiCallback.onUserBtPairingResponse(entry->conn, false);
+                entry->device->mHmiCallback.userBtPairingResponse(entry->conn, false);
                 entry->device->removePairingScreen(entry->conn);
             }
             else
@@ -191,7 +173,7 @@ void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t pas
 
 void InsuBoxHmiDevice::onBtBluetoothStateChanged(struct bt_conn *conn, BtState state)
 {
-    LOG_DBG("onBtBluetoothStateChanged: state=%d", static_cast<int>(state));
+    LOG_DBG("state=%d", static_cast<int>(state));
     if (state == BtState::BT_STATE_DISCONNECTED)
     {
         // Remove the pairing screen if it exists
@@ -316,7 +298,7 @@ void InsuBoxHmiDevice::showMainScreen()
         retractBtn,
         [](lv_event_t *e) {
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
-            device->mHmiCallback.onRetractRequest();
+            device->mHmiCallback.retractRequest();
         },
         LV_EVENT_CLICKED, this);
 }
@@ -378,7 +360,7 @@ void InsuBoxHmiDevice::showBolusScreen()
             struct timespec currentTime;
             clock_gettime(CLOCK_REALTIME, &currentTime);
             LOG_INF("Bolus requested: %.2f, time: %lld", static_cast<double>(bolus), currentTime.tv_sec);
-            data->device->mHmiCallback.onBolusRequest(bolus, currentTime.tv_sec);
+            data->device->mHmiCallback.bolusRequest(bolus, currentTime.tv_sec);
             data->device->showMainScreen();
         },
         LV_EVENT_CLICKED, &cbData);
@@ -438,7 +420,7 @@ void InsuBoxHmiDevice::createBolusProgressPopup()
         stopBtn,
         [](lv_event_t *e) {
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
-            device->mHmiCallback.onStopBolus();
+            device->mHmiCallback.stopBolusRequest();
             // Do not remove the widget yet, wait for the progress update
         },
         LV_EVENT_CLICKED, this);
@@ -502,6 +484,29 @@ void InsuBoxHmiDevice::removePairingScreen(bt_conn *conn)
             return;
         }
     }
+}
+
+void InsuBoxHmiDevice::displayUpdateTask()
+{
+    // LOG_DBG("Display update task");
+    constexpr uint32_t DISPLAY_TIMEOUT = CONFIG_IB_HMI_DISPLAY_TIMEOUT_SEC * 1000;
+    if (lv_disp_get_inactive_time(nullptr) >= DISPLAY_TIMEOUT && mDisplayOn)
+    {
+        LOG_DBG("Display off");
+        mDisplayOn = false;
+        display_blanking_on(mDisplayDevice);
+        pm_device_action_run(mDisplayDevice, PM_DEVICE_ACTION_SUSPEND);
+    }
+    else if (lv_disp_get_inactive_time(nullptr) < DISPLAY_TIMEOUT && !mDisplayOn)
+    {
+        LOG_DBG("Display on");
+        mDisplayOn = true;
+        display_blanking_off(mDisplayDevice);
+        pm_device_action_run(mDisplayDevice, PM_DEVICE_ACTION_RESUME);
+    }
+
+    uint32_t sleepMs = lv_timer_handler();
+    k_work_schedule_for_queue(&mWorkQueue, &mDisplayUpdateTask.work, K_MSEC(sleepMs));
 }
 
 Buzzer &InsuBoxHmiDevice::createBuzzerInstance()

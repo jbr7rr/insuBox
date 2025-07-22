@@ -17,8 +17,9 @@ class InsuBoxHmiDevice : public IHmiDevice
 public:
     InsuBoxHmiDevice(IHmiCallback &hmiCallback, k_work_q &workQueue);
     ~InsuBoxHmiDevice() override;
-    void init() override;
 
+protected:
+    void init() override;
     void onUserBtPairingRequest(struct bt_conn *conn, uint32_t passkey) override;
     void onBtBluetoothStateChanged(struct bt_conn *conn, BtState state) override;
     void onBolusProgressUpdate(BolusProgressUpdate &update) override;
@@ -37,8 +38,7 @@ private:
         bt_conn *conn = nullptr;
         lv_obj_t *screen = nullptr;
     };
-    static constexpr int MAX_PAIRING_SCREENS = 1; // Only one suppoted for now
-    PairingScreenEntry mPairingScreens[MAX_PAIRING_SCREENS];
+    PairingScreenEntry mPairingScreens[CONFIG_IB_BT_MAX_CLIENT_CONNECTIONS];
     bool mDisplayOn = true;
 
     struct BolusUiState
@@ -62,6 +62,7 @@ private:
 
     PairingScreenEntry *storePairingScreen(bt_conn *conn, lv_obj_t *screen);
     void removePairingScreen(bt_conn *conn);
+    void displayUpdateTask();
 
     static Buzzer &createBuzzerInstance();
 };

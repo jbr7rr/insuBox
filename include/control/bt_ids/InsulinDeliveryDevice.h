@@ -1,7 +1,7 @@
 #ifndef INSULIN_DELIVERY_DEVICE_H
 #define INSULIN_DELIVERY_DEVICE_H
 
-#include <pump/PumpService.h> // PumpStatusUpdated
+#include <pump/PumpServiceMessages.h> // PumpStatusUpdated
 #include <zephyr/bluetooth/gatt.h>
 
 class IInsulinDeliveryDevice
@@ -10,8 +10,20 @@ public:
     virtual ~IInsulinDeliveryDevice() = default;
     virtual void init() = 0;
 
-    virtual void iddStatusUpdated(const PumpStatusUpdated &status) = 0;
-    virtual void iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) = 0;
+    /**
+     * @brief Handle updates to the insulin delivery device status.
+     *
+     * @param status The updated status of the insulin delivery device.
+     */
+    virtual void onIddStatusUpdated(const PumpStatus &status) = 0;
+
+    /**
+     * @brief Handle updates to the insulin delivery device annunciation status.
+     *
+     * @param annunciation The type of annunciation that has been updated.
+     * @param cancel If true, the annunciation is being cancelled.
+     */
+    virtual void onIddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) = 0;
 };
 
 class IInsulinDeliveryDeviceCallback
@@ -44,8 +56,8 @@ public:
 protected:
     void init() override;
 
-    void iddStatusUpdated(const PumpStatusUpdated &status) override;
-    void iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) override;
+    void onIddStatusUpdated(const PumpStatus &status) override;
+    void onIddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) override;
 
     ssize_t onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf, uint16_t len,
                                    uint16_t offset) override;

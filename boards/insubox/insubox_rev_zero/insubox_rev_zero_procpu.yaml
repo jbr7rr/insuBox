@@ -1,5 +1,5 @@
-identifier: xiao_esp32s3/esp32s3/procpu
-name: XIAO ESP32S3 PROCPU
+identifier: insubox_rev_zero/esp32s3/procpu
+name: InsuBox Rev Zero PROCPU
 type: mcu
 arch: xtensa
 toolchain:
@@ -15,9 +15,4 @@ supported:
   - entropy
   - pwm
   - dma
-  - xiao_adc
-  - xiao_gpio
-  - xiao_i2c
-  - xiao_serial
-  - xiao_spi
 vendor: Arasakeru

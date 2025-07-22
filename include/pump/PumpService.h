@@ -13,8 +13,8 @@ public:
     void init();
 
 protected:
-    void pumpStatusUpdated(const PumpStatusUpdated &status) override;
-    void onBolusProgressUpdate(const BolusProgressUpdate &update) override;
+    void pumpStatusUpdate(const PumpStatus &status) override;
+    void bolusProgressUpdate(const BolusProgressUpdate &update) override;
 
 private:
     EventDispatcher &mDispatcher;

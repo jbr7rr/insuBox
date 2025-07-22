@@ -34,10 +34,11 @@ public:
     /**
      * @brief Move the motor to the specified position.
      *
-     * @details This will move the motor to the specified position. Counting from the retracted position, which means 0
-     * plunger completely retracted. Use findZero() to find the zero position.
+     * @details This will move the motor to the specified position. Counting from the retracted position,
+     * 0 meansplunger completely retracted.
      *
-     * @param units The position to move to, in units.
+     * @param units The position to move to, in units. Can be negative in order to correct the position if it is
+     * incorrect.
      * @param speed The speed of the motor. 0 - 100. (0 is slowest possible, 100 is fastest)
      *
      * @return int 0 on success, negative error code on failure.

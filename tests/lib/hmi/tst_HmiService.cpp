@@ -18,8 +18,7 @@ protected:
         k_sleep(K_NSEC(1));
     }
 
-    virtual ~HmiServiceTest() {
-    }
+    virtual ~HmiServiceTest() {}
 };
 
 TEST_F(HmiServiceTest, init_Should_CallHmiDeviceInit)
@@ -49,7 +48,7 @@ TEST_F(HmiServiceTest, onUserBtPairingRequest_Should_Call_HmiDevice_OnUserBtPair
     // Assert
 }
 
-TEST_F(HmiServiceTest, onUserBtPairingResponse_Should_Dispatch_BtPassKeyConfirmResponse)
+TEST_F(HmiServiceTest, userBtPairingResponse_Should_Dispatch_BtPassKeyConfirmResponse)
 {
     // Arrange
     struct bt_conn *conn = nullptr;
@@ -61,10 +60,10 @@ TEST_F(HmiServiceTest, onUserBtPairingResponse_Should_Dispatch_BtPassKeyConfirmR
         EXPECT_EQ(response.conn, conn);
         EXPECT_EQ(response.accept, accepted);
     });
-    
+
     // Act
     mHmiService.init();
-    static_cast<IHmiCallback &>(mHmiService).onUserBtPairingResponse(conn, accepted);
+    static_cast<IHmiCallback &>(mHmiService).userBtPairingResponse(conn, accepted);
 
     // Assert
     EXPECT_EQ(count, 1);

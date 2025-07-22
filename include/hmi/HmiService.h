@@ -16,10 +16,10 @@ public:
     void init();
 
 protected:
-    void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) override;
-    void onBolusRequest(float amount, time_t timestamp) override;
-    void onStopBolus() override;
-    void onRetractRequest() override;
+    void userBtPairingResponse(struct bt_conn *conn, bool accepted) override;
+    void bolusRequest(float amount, time_t timestamp) override;
+    void stopBolusRequest() override;
+    void retractRequest() override;
 
 private:
     EventDispatcher &mDispatcher;

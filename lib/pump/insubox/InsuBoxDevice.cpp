@@ -76,7 +76,7 @@ void InsuBoxDevice::onBolusRequest(float amount, time_t timestamp)
     k_work_reschedule(&mBolusTask.bolusWork, K_NO_WAIT);
 }
 
-void InsuBoxDevice::onStopBolus()
+void InsuBoxDevice::onStopBolusRequest()
 {
     LOG_DBG("Stop bolus");
     k_work_cancel_delayable(&mBolusTask.bolusWork);
@@ -88,7 +88,7 @@ void InsuBoxDevice::onRetractRequest()
     LOG_DBG("Retract request");
     if (mBolusTask.completed == false)
     {
-        LOG_ERR("Motor busy, you yatz");
+        LOG_ERR("Motor busy, what did you do :') ????");
         return;
     }
 
@@ -179,7 +179,8 @@ void InsuBoxDevice::bolusWork()
 
     // Deliver 0.5 per time, and update the delivered amount
     float bolusToDeliver = (remainingBolus > 0.5f) ? 0.5f : remainingBolus;
-    int err = mMotor.deliver(bolusToDeliver, 2);
+    constexpr int BOLUS_SPEED = 2;
+    int err = mMotor.deliver(bolusToDeliver, BOLUS_SPEED);
     if (err)
     {
         LOG_ERR("Failed to deliver bolus: %d", err);
@@ -201,7 +202,7 @@ void InsuBoxDevice::sendBolusProgressUpdate()
         .deliveredTimestamp = currentTime.tv_sec,
         .completed = mBolusTask.completed,
     };
-    mPumpDeviceCallback.onBolusProgressUpdate(progress);
+    mPumpDeviceCallback.bolusProgressUpdate(progress);
 }
 
 int InsuBoxDevice::loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param)

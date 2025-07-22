@@ -193,7 +193,8 @@ int Motor::setVref(uint8_t powerPct)
      * PWM Freq: 100kHz
      */
 
-    float dutyCycleFactor = powerPct * 0.3f / 100.0f;
+    constexpr float DUTY_CYCLE_MAX_RATED_CURRENT = 0.3f;
+    float dutyCycleFactor = powerPct * DUTY_CYCLE_MAX_RATED_CURRENT / 100.0f;
 
     uint32_t period = 10000;
     uint32_t pulse = static_cast<uint32_t>((period * dutyCycleFactor));

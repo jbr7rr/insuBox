@@ -4,3 +4,15 @@ config IB_BLE_COMM
 	depends on BT
 	help
 	  Enable BLE communication service, which controls the BLE communication. (connecting, disconnecting, etc.)
+
+
+if IB_BLE_COMM
+
+config IB_BT_MAX_CLIENT_CONNECTIONS
+	int "Maximum number of BLE client connections"
+	default 1
+	range 1 5
+	help
+	  Set the maximum number of BLE client connections. This is the maximum number of devices that can be connected to the device at the same time.
+
+endif # IB_BLE_COMM

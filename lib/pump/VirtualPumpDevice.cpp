@@ -5,8 +5,7 @@
 
 LOG_MODULE_REGISTER(ib_virtual_pump_device);
 
-VirtualPumpDevice::VirtualPumpDevice(IPumpDeviceCallback &pumpDeviceCallback)
-    : mPumpDeviceCallback(pumpDeviceCallback)
+VirtualPumpDevice::VirtualPumpDevice(IPumpDeviceCallback &pumpDeviceCallback) : mPumpDeviceCallback(pumpDeviceCallback)
 {
     LOG_DBG("VirtualPumpDevice constructor");
 
@@ -41,7 +40,7 @@ void VirtualPumpDevice::onBolusRequest(float amount, time_t timestamp)
     k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
 }
 
-void VirtualPumpDevice::onStopBolus()
+void VirtualPumpDevice::onStopBolusRequest()
 {
     LOG_DBG("Stop bolus request");
     BolusProgressUpdate progress = {
@@ -51,7 +50,7 @@ void VirtualPumpDevice::onStopBolus()
         .deliveredTimestamp = 0,
         .completed = true,
     };
-    mPumpDeviceCallback.onBolusProgressUpdate(progress);
+    mPumpDeviceCallback.bolusProgressUpdate(progress);
 
     mSubContainer.requestedBolus = 0.0f;
     k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
@@ -72,14 +71,14 @@ void VirtualPumpDevice::_updateStatus()
 
     uint8_t intervalSec = 15;
 
-    PumpStatusUpdated status = {
+    PumpStatus status = {
         .therapyControlState = TherapyControlState::RUN,
         .operationalState = OperationalState::READY,
         .reservoirLevel = SFloat(mReservoirLevel),
         .reservoirAttached = true,
     };
 
-    mPumpDeviceCallback.pumpStatusUpdated(status);
+    mPumpDeviceCallback.pumpStatusUpdate(status);
 
     if (mSubContainer.deliveredBolus < mSubContainer.requestedBolus)
     {
@@ -95,7 +94,7 @@ void VirtualPumpDevice::_updateStatus()
             .deliveredTimestamp = currentTime.tv_sec,
             .completed = (mSubContainer.deliveredBolus >= mSubContainer.requestedBolus),
         };
-        mPumpDeviceCallback.onBolusProgressUpdate(progress);
+        mPumpDeviceCallback.bolusProgressUpdate(progress);
     }
 
     k_work_reschedule(&mSubContainer.statusWork, K_SECONDS(intervalSec));

@@ -3,6 +3,7 @@ choice IB_HMI_TYPE
 
 config IB_HMI_INSUBOX
 	bool "InsuBox HMI"
+	depends on IB_BLE_COMM
 	imply LVGL
 	imply DISPLAY
 	imply INPUT

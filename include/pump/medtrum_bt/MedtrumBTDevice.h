@@ -17,7 +17,7 @@ public:
     ~MedtrumBTDevice();
     void init() override;
     void onBolusRequest(float amount, time_t timestamp) override;
-    void onStopBolus() override;
+    void onStopBolusRequest() override;
     void onRetractRequest() override;
 
     void onReadyForCommands() override;

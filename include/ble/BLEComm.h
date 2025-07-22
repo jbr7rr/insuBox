@@ -84,7 +84,6 @@ public:
 
 private:
     // For now we set it here, we might want to make this configurable and depend on the device
-    static constexpr int MAX_CLIENT_CONNECTIONS = 1;
     struct CompareBtAddr
     {
         bool operator()(const bt_addr_le_t &lhs, const bt_addr_le_t &rhs) const
@@ -95,7 +94,7 @@ private:
 
     static EventDispatcher *mDispatcher;
     static std::array<BleConnection *, CONFIG_BT_MAX_CONN> mConnectionsArray;
-    static std::array<BleConnection, MAX_CLIENT_CONNECTIONS> mClientConnections;
+    static std::array<BleConnection, CONFIG_IB_BT_MAX_CLIENT_CONNECTIONS> mClientConnections;
     static const struct bt_data advertizingData[];
     static const struct bt_le_adv_param advParam;
     static struct k_work advertisingWork;

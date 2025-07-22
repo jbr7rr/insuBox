@@ -3,11 +3,12 @@
 
 #ifdef CONFIG_IB_PUMP_INSUBOX
 
+#include <atomic>
 #include <pump/IPumpDevice.h>
 #include <pump/PumpServiceMessages.h>
 #include <pump/insubox/motor/Motor.h>
-#include <zephyr/settings/settings.h>
 #include <zephyr/kernel.h>
+#include <zephyr/settings/settings.h>
 
 class InsuBoxDevice : public IPumpDevice, public IMotorCallback
 {
@@ -19,7 +20,7 @@ protected:
     void init() override;
 
     void onBolusRequest(float amount, time_t timestamp) override;
-    void onStopBolus() override;
+    void onStopBolusRequest() override;
     void onRetractRequest() override;
 
     void onMotorCompleted(float delivered, float position, bool stopped, bool error) override;
@@ -38,7 +39,7 @@ private:
         float requestedBolus;
         float deliveredBolus;
         time_t requestedTimestamp;
-        bool completed;
+        std::atomic<bool> completed;
     } mBolusTask;
 
     IPumpDeviceCallback &mPumpDeviceCallback;

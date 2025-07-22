@@ -7,7 +7,7 @@
 #include <utils/sfloat.h>
 #include <zephyr/types.h>
 
-struct PumpStatusUpdated
+struct PumpStatus
 {
     std::optional<TherapyControlState> therapyControlState;
     std::optional<OperationalState> operationalState;
@@ -15,7 +15,7 @@ struct PumpStatusUpdated
     std::optional<bool> reservoirAttached;
 };
 
-struct PumpAnnunciationStatusUpdated
+struct PumpAnnunciationStatus
 {
     AnnunciationType annunciation;
     bool cancel;

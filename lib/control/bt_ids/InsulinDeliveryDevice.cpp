@@ -29,10 +29,10 @@ void InsulinDeliveryDevice::init()
     LOG_DBG("attr: %d", attr.handle);
 }
 
-void InsulinDeliveryDevice::iddStatusUpdated(const PumpStatusUpdated &status)
+void InsulinDeliveryDevice::onIddStatusUpdated(const PumpStatus &status)
 {
     uint16_t flagsStatusChanged = sys_get_le16(mStatusChangedCharData.flags);
-    
+
     if (status.therapyControlState.has_value())
     {
         LOG_DBG("Therapy control state: %d", static_cast<uint8_t>(status.therapyControlState.value()));
@@ -84,12 +84,11 @@ void InsulinDeliveryDevice::iddStatusUpdated(const PumpStatusUpdated &status)
     }
 }
 
-void InsulinDeliveryDevice::iddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel)
+void InsulinDeliveryDevice::onIddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel)
 {
     // TODO
     ;
 }
-
 
 ssize_t InsulinDeliveryDevice::onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf,
                                                       uint16_t len, uint16_t offset)

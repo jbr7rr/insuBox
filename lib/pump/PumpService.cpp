@@ -22,7 +22,7 @@ PumpService::PumpService(EventDispatcher &dispatcher, IPumpDevice &pumpDevice)
 
     mDispatcher.subscribe<StopBolus>([this](const StopBolus &stop) {
         LOG_DBG("Stop bolus request received");
-        mPumpDevice.onStopBolus();
+        mPumpDevice.onStopBolusRequest();
     });
 
     mDispatcher.subscribe<RetractRequest>([this](const RetractRequest &retract) {
@@ -39,12 +39,12 @@ void PumpService::init()
     mPumpDevice.init();
 }
 
-void PumpService::pumpStatusUpdated(const PumpStatusUpdated &status)
+void PumpService::pumpStatusUpdate(const PumpStatus &status)
 {
-    mDispatcher.dispatch<PumpStatusUpdated>(status);
+    mDispatcher.dispatch<PumpStatus>(status);
 }
 
-void PumpService::onBolusProgressUpdate(const BolusProgressUpdate &update)
+void PumpService::bolusProgressUpdate(const BolusProgressUpdate &update)
 {
     LOG_DBG("Bolus progress update: requested %.2f, delivered %.2f, timestamp %lld",
             static_cast<double>(update.requestedAmount), static_cast<double>(update.deliveredAmount),

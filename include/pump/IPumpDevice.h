@@ -7,8 +7,17 @@
 class IPumpDeviceCallback
 {
 public:
-    virtual void pumpStatusUpdated(const PumpStatusUpdated &status) = 0;
-    virtual void onBolusProgressUpdate(const BolusProgressUpdate &update) = 0;
+    /**
+     * @brief Callback for pump status updates.
+     * @param status The updated pump status.
+     */
+    virtual void pumpStatusUpdate(const PumpStatus &status) = 0;
+
+    /**
+     * @brief Callback for bolus progress updates.
+     * @param update The updated bolus progress.
+     */
+    virtual void bolusProgressUpdate(const BolusProgressUpdate &update) = 0;
 };
 
 class IPumpDevice
@@ -17,8 +26,21 @@ public:
     virtual ~IPumpDevice() = default;
     virtual void init() = 0;
 
+    /**
+     * @brief Handle a bolus request.
+     * @param amount The amount of insulin to deliver.
+     * @param timestamp The timestamp of the request.
+     */
     virtual void onBolusRequest(float amount, time_t timestamp) = 0;
-    virtual void onStopBolus() = 0;
+
+    /**
+     * @brief Handle a request to stop the bolus delivery.
+     */
+    virtual void onStopBolusRequest() = 0;
+
+    /**
+     * @brief Handle a request to retract the plunger.
+     */
     virtual void onRetractRequest() = 0;
 };
 

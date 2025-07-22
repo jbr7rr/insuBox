@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Script used to run zepher on local host
+# Script used to run on local host
 # If a bluetooth device is present it will be powered off and used
 
 if [ ! -d "build_native" ]; then

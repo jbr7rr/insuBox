@@ -59,8 +59,13 @@ void Buzzer::workHandler(struct k_work *work)
         return;
     }
 
-    uint32_t period_ns = 1000000000UL / note.frequency;
-    uint32_t pulse_ns = static_cast<uint32_t>(period_ns * 0.5f * self->mVolume);
+    uint32_t period_ns = 1000000000UL;
+    uint32_t pulse_ns = 0;
+    if (note.frequency > 20 && note.frequency < 20000)
+    {
+        period_ns = 1000000000UL / note.frequency;
+        pulse_ns = static_cast<uint32_t>(period_ns * 0.5f * self->mVolume);
+    }
 
     pwm_set_dt(&self->mPwmBuzzer, period_ns, pulse_ns);
     self->mNoteIndex++;

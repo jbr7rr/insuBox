@@ -16,11 +16,12 @@ HmiService::HmiService(EventDispatcher &dispatcher) : HmiService(dispatcher, get
 HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
     : mDispatcher(dispatcher), mHmiDevice(hmiDevice)
 {
+    LOG_DBG("HmiService constructor");
+
     k_work_queue_init(&mWorkQueue);
     static k_work_queue_config config = {.name = "hmi", .no_yield = false, .essential = true};
     k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 0, &config);
 
-    LOG_DBG("HmiService constructor");
 
     mInitTask.service = this;
     k_work_init(&mInitTask.work, [](struct k_work *work) {
@@ -91,22 +92,22 @@ void HmiService::init()
     k_work_submit_to_queue(&mWorkQueue, &mInitTask.work);
 }
 
-void HmiService::onUserBtPairingResponse(struct bt_conn *conn, bool accepted)
+void HmiService::userBtPairingResponse(struct bt_conn *conn, bool accepted)
 {
     mDispatcher.dispatch<BtPassKeyConfirmResponse>({conn, accepted});
 }
 
-void HmiService::onBolusRequest(float amount, time_t timestamp)
+void HmiService::bolusRequest(float amount, time_t timestamp)
 {
     mDispatcher.dispatch<BolusRequest>({amount, timestamp});
 }
 
-void HmiService::onStopBolus()
+void HmiService::stopBolusRequest()
 {
     mDispatcher.dispatch<StopBolus>({});
 }
 
-void HmiService::onRetractRequest()
+void HmiService::retractRequest()
 {
     mDispatcher.dispatch<RetractRequest>({});
 }
