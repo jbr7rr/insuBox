@@ -1,7 +1,29 @@
 <map id="include/pump/PumpService.h" name="include/pump/PumpService.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="60,5,271,31"/>
-<area shape="rect" id="Node000002" href="$app_2src_2main_8cpp.html" title=" " alt="" coords="5,79,139,104"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="141,41,89,81,86,76,138,37"/>
-<area shape="rect" id="Node000003" href="$PumpService_8cpp.html" title=" " alt="" coords="163,79,357,104"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="193,37,246,76,243,81,190,41"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="124,5,335,31"/>
+<area shape="rect" id="Node000002" href="$app_2src_2main_8cpp.html" title=" " alt="" coords="20,240,153,265"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="203,41,148,88,121,118,100,153,92,176,88,200,88,240,83,240,83,199,87,175,95,151,117,115,144,84,199,37"/>
+<area shape="rect" id="Node000003" href="$HmiService_8h.html" title=" " alt="" coords="109,159,299,185"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="212,43,200,60,191,79,188,101,190,122,201,158,196,160,185,123,182,101,185,78,195,57,207,40"/>
+<area shape="rect" id="Node000005" href="$HmiService_8cpp.html" title=" " alt="" coords="104,313,277,339"/>
+<area shape="poly" id="edge15_Node000001_Node000005" title=" " alt="" coords="192,39,159,57,127,81,85,119,54,152,31,189,11,241,8,256,11,269,19,281,31,290,65,305,105,315,103,320,63,310,29,295,15,284,7,272,3,257,5,239,26,186,50,148,81,115,124,77,156,53,189,34"/>
+<area shape="rect" id="Node000008" href="$IHmiDevice_8h.html" title=" " alt="" coords="201,79,391,104"/>
+<area shape="poly" id="edge9_Node000001_Node000008" title=" " alt="" coords="252,39,287,77,283,80,248,43"/>
+<area shape="rect" id="Node000010" href="$ControlService_8cpp.html" title=" " alt="" coords="416,79,629,104"/>
+<area shape="poly" id="edge14_Node000001_Node000010" title=" " alt="" coords="290,31,476,76,475,81,289,36"/>
+<area shape="rect" id="Node000011" href="$PumpService_8cpp.html" title=" " alt="" coords="653,79,848,104"/>
+<area shape="poly" id="edge16_Node000001_Node000011" title=" " alt="" coords="327,30,667,76,666,81,326,35"/>
+<area shape="poly" id="edge3_Node000003_Node000002" title=" " alt="" coords="177,195,106,242,103,238,174,190"/>
+<area shape="rect" id="Node000004" href="$VirtualHmiDevice_8h.html" title=" " alt="" coords="487,240,716,265"/>
+<area shape="poly" id="edge4_Node000003_Node000004" title=" " alt="" coords="276,185,544,237,543,243,275,190"/>
+<area shape="poly" id="edge7_Node000003_Node000005" title=" " alt="" coords="204,198,194,313,189,313,199,198"/>
+<area shape="rect" id="Node000007" href="$tst__HmiService_8cpp.html" title=" " alt="" coords="229,240,462,265"/>
+<area shape="poly" id="edge8_Node000003_Node000007" title=" " alt="" coords="238,189,326,237,323,242,236,194"/>
+<area shape="poly" id="edge5_Node000004_Node000005" title=" " alt="" coords="522,270,257,316,256,311,521,265"/>
+<area shape="rect" id="Node000006" href="$VirtualHmiDevice_8cpp.html" title=" " alt="" coords="495,313,708,339"/>
+<area shape="poly" id="edge6_Node000004_Node000006" title=" " alt="" coords="604,279,604,313,599,313,599,279"/>
+<area shape="poly" id="edge10_Node000008_Node000003" title=" " alt="" coords="274,115,219,161,216,157,270,111"/>
+<area shape="poly" id="edge11_Node000008_Node000004" title=" " alt="" coords="368,105,428,123,488,150,520,171,550,195,593,238,589,242,546,199,517,175,485,154,426,128,366,110"/>
+<area shape="rect" id="Node000009" href="$MockHmiDevice_8h.html" title=" " alt="" coords="323,152,474,192"/>
+<area shape="poly" id="edge12_Node000008_Node000009" title=" " alt="" coords="323,110,376,150,372,154,320,114"/>
+<area shape="poly" id="edge13_Node000009_Node000007" title=" " alt="" coords="380,205,356,241,351,238,376,202"/>
 </map>

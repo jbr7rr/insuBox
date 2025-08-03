@@ -132,6 +132,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:abb689ee11beb6e3c411fe004160d41bb" id="r_abb689ee11beb6e3c411fe004160d41bb"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVirtualHmiDevice.html#abb689ee11beb6e3c411fe004160d41bb">onUserBtPairingRequest</a> (struct bt_conn *conn, uint32_t passkey) override</td></tr>
 <tr class="memdesc:abb689ee11beb6e3c411fe004160d41bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle the pairing request from the BLE stack.  <br /></td></tr>
 <tr class="separator:abb689ee11beb6e3c411fe004160d41bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a82f844347474f3c3492eeb30f9e4a6c5" id="r_a82f844347474f3c3492eeb30f9e4a6c5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVirtualHmiDevice.html#a82f844347474f3c3492eeb30f9e4a6c5">onBtBluetoothStateChanged</a> (struct bt_conn *conn, <a class="el" href="BLEComm_8h.html#aa971fd9e627491cdc6e9026e0afbd2ec">BtState</a> state) override</td></tr>
+<tr class="memdesc:a82f844347474f3c3492eeb30f9e4a6c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle changes in Bluetooth state.  <br /></td></tr>
+<tr class="separator:a82f844347474f3c3492eeb30f9e4a6c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac61626179fd2baf0ab77874a0d5cfb91" id="r_ac61626179fd2baf0ab77874a0d5cfb91"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classVirtualHmiDevice.html#ac61626179fd2baf0ab77874a0d5cfb91">onBolusProgressUpdate</a> (<a class="el" href="structBolusProgressUpdate.html">BolusProgressUpdate</a> &amp;update) override</td></tr>
+<tr class="memdesc:ac61626179fd2baf0ab77874a0d5cfb91"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle updates to the bolus progress.  <br /></td></tr>
+<tr class="separator:ac61626179fd2baf0ab77874a0d5cfb91"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="inherit_header pub_methods_classIHmiDevice"><td colspan="2" onclick="javascript:toggleInherit('pub_methods_classIHmiDevice')"><img src="closed.png" alt="-"/>&#160;Public Member Functions inherited from <a class="el" href="classIHmiDevice.html">IHmiDevice</a></td></tr>
 <tr class="memitem:aba5447a1fa26a32c38eb88af6e9d93b2 inherit pub_methods_classIHmiDevice" id="r_aba5447a1fa26a32c38eb88af6e9d93b2"><td class="memItemLeft" align="right" valign="top">virtual&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiDevice.html#aba5447a1fa26a32c38eb88af6e9d93b2">~IHmiDevice</a> ()=default</td></tr>
 <tr class="separator:aba5447a1fa26a32c38eb88af6e9d93b2 inherit pub_methods_classIHmiDevice"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -210,6 +216,89 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classIHmiDevice.html#ae48db2570c06903e96e7570903a9b09e">IHmiDevice</a>.</p>
+
+</div>
+</div>
+<a id="ac61626179fd2baf0ab77874a0d5cfb91" name="ac61626179fd2baf0ab77874a0d5cfb91"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac61626179fd2baf0ab77874a0d5cfb91">&#9670;&#160;</a></span>onBolusProgressUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VirtualHmiDevice::onBolusProgressUpdate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structBolusProgressUpdate.html">BolusProgressUpdate</a> &amp;&#160;</td>
+          <td class="paramname"><em>update</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle updates to the bolus progress. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">update</td><td>Bolus progress update containing requested and delivered amounts and timestamps </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classIHmiDevice.html#af1da6385c51b0a74b0601585c89df59a">IHmiDevice</a>.</p>
+
+</div>
+</div>
+<a id="a82f844347474f3c3492eeb30f9e4a6c5" name="a82f844347474f3c3492eeb30f9e4a6c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a82f844347474f3c3492eeb30f9e4a6c5">&#9670;&#160;</a></span>onBtBluetoothStateChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void VirtualHmiDevice::onBtBluetoothStateChanged </td>
+          <td>(</td>
+          <td class="paramtype">struct bt_conn *&#160;</td>
+          <td class="paramname"><em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="BLEComm_8h.html#aa971fd9e627491cdc6e9026e0afbd2ec">BtState</a>&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle changes in Bluetooth state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>Connection object </td></tr>
+    <tr><td class="paramname">state</td><td>New Bluetooth state </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classIHmiDevice.html#a35418f609b548ab859024be1043b79cd">IHmiDevice</a>.</p>
 
 </div>
 </div>

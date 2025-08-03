@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['discoverystate_0',['DiscoveryState',['../classPumpBleComm.html#a958d483883b6b8f1da0d8afc9103a9e0',1,'PumpBleComm']]]
+  ['annunciationstatus_0',['AnnunciationStatus',['../IdsEnums_8h.html#ae8f470184a265f34212f951ed7108bec',1,'IdsEnums.h']]],
+  ['annunciationtype_1',['AnnunciationType',['../IdsEnums_8h.html#a087c597e7803bb4bec3d80631c2a3bd6',1,'IdsEnums.h']]]
 ];

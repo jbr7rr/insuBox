@@ -1,7 +1,26 @@
 var searchData=
 [
-  ['init_0',['init',['../classBLEComm.html#a61c5b252f1f8a5a33ba7eba5a33b9cd2',1,'BLEComm::init()'],['../classControlService.html#a593e7ff80aa5327ebbeb25a39e1aad35',1,'ControlService::init()'],['../classHmiService.html#acc90662f0488640db07e58793533eddc',1,'HmiService::init()'],['../classIHmiDevice.html#ae48db2570c06903e96e7570903a9b09e',1,'IHmiDevice::init()'],['../classVirtualHmiDevice.html#a18a2485a3dc3e60f1651baec77a9e7bc',1,'VirtualHmiDevice::init()'],['../classIPumpDevice.html#aa04d76a0528b91dd4a6ab3a006563010',1,'IPumpDevice::init()'],['../classPumpBleComm.html#ac4b727300e0b63d509257ca090a1d47b',1,'PumpBleComm::init()'],['../classMedtrumBTDevice.html#a1b8798bd86a2c4cc62086fbf393ff3fc',1,'MedtrumBTDevice::init()'],['../classMedtrumPumpSync.html#aff5f0a7a33ce8f31cdcd9538407c5816',1,'MedtrumPumpSync::init()'],['../classPumpService.html#acf416da6faabd3b3a9166beb6a16bd60',1,'PumpService::init()'],['../namespacebt__cts.html#a86888135e009e54483ef6652b25cbdbf',1,'bt_cts::init()']]],
-  ['instantiate_5ftest_5fsuite_5fp_1',['INSTANTIATE_TEST_SUITE_P',['../tst__EventDispatcher_8cpp.html#ae58231261fa757c6d21b9935bf76833a',1,'tst_EventDispatcher.cpp']]],
-  ['isfailed_2',['isFailed',['../classMedtrumBasePacket.html#a41760f0b4415a8c728cd9c0760ec7d68',1,'MedtrumBasePacket']]],
-  ['isready_3',['isReady',['../classMedtrumBasePacket.html#aa6306cac2ad767aa56fd92138a944fa0',1,'MedtrumBasePacket']]]
+  ['handleage_0',['handleAge',['../classNotificationPacket.html#a36b35b4fdad868cda2fe060acd3ba9ee',1,'NotificationPacket']]],
+  ['handlealarm_1',['handleAlarm',['../classNotificationPacket.html#ac1cfc04adaba9cb93459cb91401184ed',1,'NotificationPacket']]],
+  ['handlebasal_2',['handleBasal',['../classNotificationPacket.html#ad6ef78e4a36bc467f9d8dfaa18bf4f11',1,'NotificationPacket']]],
+  ['handlebasalstatusupdate_3',['handleBasalStatusUpdate',['../classMedtrumPumpSync.html#aa439c052e36aede9c1f20b2e529cad1b',1,'MedtrumPumpSync']]],
+  ['handlebattery_4',['handleBattery',['../classNotificationPacket.html#af6501df3042913938dde0547c7e002fc',1,'NotificationPacket']]],
+  ['handlebolusstatusupdate_5',['handleBolusStatusUpdate',['../classMedtrumPumpSync.html#a7c96229618821bb1a727c4f0041cb1a8',1,'MedtrumPumpSync']]],
+  ['handleextendedbolus_6',['handleExtendedBolus',['../classNotificationPacket.html#a621fd1ef4e2765d976401c230ac1d816',1,'NotificationPacket']]],
+  ['handlemagnetoplacement_7',['handleMagnetoPlacement',['../classNotificationPacket.html#a42fd584ff4e6634f1a8f0f3401a15ff8',1,'NotificationPacket']]],
+  ['handlemaskedmessage_8',['handleMaskedMessage',['../classNotificationPacket.html#ae6d025f0bd1f6c1b7c7fe6494eeb45bd',1,'NotificationPacket']]],
+  ['handlenewpatch_9',['handleNewPatch',['../classMedtrumPumpSync.html#a5190d73106c07fee8fcc35ab2dbc8480',1,'MedtrumPumpSync']]],
+  ['handlenormalbolus_10',['handleNormalBolus',['../classNotificationPacket.html#a2e81399a7775518c8b2597b2aab9798d',1,'NotificationPacket']]],
+  ['handlereservoir_11',['handleReservoir',['../classNotificationPacket.html#a5e8ec34e9c68a071ad18a71fb81c92e6',1,'NotificationPacket']]],
+  ['handleresponse_12',['handleresponse',['../classMedtrumBasePacket.html#ac35525dc895f9c076586c3c2d59e8c2a',1,'MedtrumBasePacket::handleResponse()'],['../classSynchronizePacket.html#aac66b737f96a40a76e49388ba74d3cbb',1,'SynchronizePacket::handleResponse()'],['../classSetTempBasalPacket.html#a6be654913e28c36d5bf0ed70fa4071c6',1,'SetTempBasalPacket::handleResponse()'],['../classAuthPacket.html#a6b891ac48e89e93355c61c4e9883a9da',1,'AuthPacket::handleResponse()']]],
+  ['handlesetup_13',['handleSetup',['../classNotificationPacket.html#a6c245256f67dd16aa8cf6de717a6915c',1,'NotificationPacket']]],
+  ['handlestarttime_14',['handleStartTime',['../classNotificationPacket.html#a4a66a23e0dafe91563306ecf88cf6653',1,'NotificationPacket']]],
+  ['handlestorage_15',['handleStorage',['../classNotificationPacket.html#ae29efd8b8393714e940a49be353b39dd',1,'NotificationPacket']]],
+  ['handlesuspend_16',['handleSuspend',['../classNotificationPacket.html#a32566d69362eb222219100faa0b96c4f',1,'NotificationPacket']]],
+  ['handleunusedautostatus_17',['handleUnusedAutoStatus',['../classNotificationPacket.html#aaab2a875f50dfe945b8a1d16a7c673c3',1,'NotificationPacket']]],
+  ['handleunusedcgm_18',['handleUnusedCGM',['../classNotificationPacket.html#a2ff5afa825326867bf6e83bd4285849f',1,'NotificationPacket']]],
+  ['handleunusedcommandconfirm_19',['handleUnusedCommandConfirm',['../classNotificationPacket.html#abf2caa24b1ce900b6049f9553db64bec',1,'NotificationPacket']]],
+  ['handleunusedlegacy_20',['handleUnusedLegacy',['../classNotificationPacket.html#a2e61803374176b0c13411d0022c6f9fc',1,'NotificationPacket']]],
+  ['hmiservice_21',['hmiservice',['../classHmiService.html#a41b09bd49184bcf39ee65e95c7641d11',1,'HmiService::HmiService(EventDispatcher &amp;dispatcher)'],['../classHmiService.html#a1778b16fa43871cf3cabb0abc79d018d',1,'HmiService::HmiService(EventDispatcher &amp;dispatcher, IHmiDevice &amp;hmiDevice)']]],
+  ['hmiservicetest_22',['HmiServiceTest',['../classHmiServiceTest.html#ac00f2657039a609983f1f7d8bec2b2f4',1,'HmiServiceTest']]]
 ];

@@ -1,0 +1,27 @@
+var bt__ids_8cpp =
+[
+    [ "BT_UUID_IDS_COMMAND_CONTROL_POINT", "bt__ids_8cpp.html#a495dd40d9d089a48331574b49eb40d3d", null ],
+    [ "BT_UUID_IDS_COMMAND_CONTROL_POINT_VAL", "bt__ids_8cpp.html#ab68f8ea9718fe6c8e85f980e43728163", null ],
+    [ "BT_UUID_IDS_COMMAND_DATA", "bt__ids_8cpp.html#a1f0654a166526dd60e22a9b3ba8ed65c", null ],
+    [ "BT_UUID_IDS_COMMAND_DATA_VAL", "bt__ids_8cpp.html#a7a9947d24b154cf58d204324edd888ec", null ],
+    [ "BT_UUID_IDS_IDD_ANNUNCIATION_STATUS", "bt__ids_8cpp.html#a374ffa1b526295f1ef2001406655389e", null ],
+    [ "BT_UUID_IDS_IDD_ANNUNCIATION_STATUS_VAL", "bt__ids_8cpp.html#a4920088a0f518e8a5bd713a793ec001e", null ],
+    [ "BT_UUID_IDS_IDD_FEATURES", "bt__ids_8cpp.html#aee334187928dfebadb71e749257b8369", null ],
+    [ "BT_UUID_IDS_IDD_FEATURES_VAL", "bt__ids_8cpp.html#a22eaeabe7da87333c70f96e404c17c7c", null ],
+    [ "BT_UUID_IDS_IDD_HISTORY_DATA", "bt__ids_8cpp.html#a788bb4ff4a46134d5600402548faedf0", null ],
+    [ "BT_UUID_IDS_IDD_HISTORY_DATA_VAL", "bt__ids_8cpp.html#a3736535b1b8dac391b90f9dd05116156", null ],
+    [ "BT_UUID_IDS_IDD_RECORD_ACCESS_CONTROL_POINT", "bt__ids_8cpp.html#a9a7c4ac13d1ed02b8e4851218f337520", null ],
+    [ "BT_UUID_IDS_IDD_RECORD_ACCESS_CONTROL_POINT_VAL", "bt__ids_8cpp.html#a5fac81c2153686e839452108d563f40d", null ],
+    [ "BT_UUID_IDS_IDD_STATUS", "bt__ids_8cpp.html#a68c28d78fde0d873ca1729bc416abbba", null ],
+    [ "BT_UUID_IDS_IDD_STATUS_CHANGED", "bt__ids_8cpp.html#ac0f6616d350e1b7428b7fd1f73623938", null ],
+    [ "BT_UUID_IDS_IDD_STATUS_CHANGED_VAL", "bt__ids_8cpp.html#af325b306383e4c817b336e6514b5f65e", null ],
+    [ "BT_UUID_IDS_IDD_STATUS_READER_CONTROL_POINT", "bt__ids_8cpp.html#ace85284092e16179c392e697b3139e3b", null ],
+    [ "BT_UUID_IDS_IDD_STATUS_READER_CONTROL_POINT_VAL", "bt__ids_8cpp.html#ae0ea25860fa7f416e3ed76e282d56545", null ],
+    [ "BT_UUID_IDS_IDD_STATUS_VAL", "bt__ids_8cpp.html#a380a983406e810305babd3d875cadfdf", null ],
+    [ "LOG_LEVEL", "bt__ids_8cpp.html#a0b87e0d3bf5853bcbb0b66a7c48fdc05", null ],
+    [ "BT_GATT_SERVICE_DEFINE", "bt__ids_8cpp.html#a20f5f7a91b0c8af3b6982544b5d47371", null ],
+    [ "getService", "bt__ids_8cpp.html#a4e4d2264be16fc11c5bc0ab2c7f7c95d", null ],
+    [ "init", "bt__ids_8cpp.html#af75c395ef2cf030d3e1226b5cb26b690", null ],
+    [ "LOG_MODULE_REGISTER", "bt__ids_8cpp.html#a06b0b1ab5f2c935eba5ffec0b380869f", null ],
+    [ "mInsulinDeliveryDevice", "bt__ids_8cpp.html#a8a103a2b8d763c1b40c81f0ab73d16ea", null ]
+];

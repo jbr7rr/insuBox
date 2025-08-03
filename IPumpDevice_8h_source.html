@@ -100,19 +100,47 @@ $(document).ready(function(){initNavTree('IPumpDevice_8h_source.html',''); initR
 <a href="IPumpDevice_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef IPUMP_DEVICE_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define IPUMP_DEVICE_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="foldopen" id="foldopen00004" data-start="{" data-end="};">
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno"><a class="line" href="classIPumpDevice.html">    4</a></span><span class="keyword">class </span><a class="code hl_class" href="classIPumpDevice.html">IPumpDevice</a></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>{</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classIPumpDevice.html#a5d151401ce60fefe112e4de750300d4d">    7</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classIPumpDevice.html#a5d151401ce60fefe112e4de750300d4d">~IPumpDevice</a>() = <span class="keywordflow">default</span>;</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno"><a class="line" href="classIPumpDevice.html#aa04d76a0528b91dd4a6ab3a006563010">    8</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#aa04d76a0528b91dd4a6ab3a006563010">init</a>() = 0;</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>};</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;ctime&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;<a class="code" href="PumpServiceMessages_8h.html">pump/PumpServiceMessages.h</a>&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="foldopen" id="foldopen00007" data-start="{" data-end="};">
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classIPumpDeviceCallback.html">    7</a></span><span class="keyword">class </span><a class="code hl_class" href="classIPumpDeviceCallback.html">IPumpDeviceCallback</a></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>{</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno"><a class="line" href="classIPumpDeviceCallback.html#a9bdfba94004f873b72ddef38bb653cbf">   14</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDeviceCallback.html#a9bdfba94004f873b72ddef38bb653cbf">pumpStatusUpdate</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structPumpStatus.html">PumpStatus</a> &amp;status) = 0;</div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span> </div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno"><a class="line" href="classIPumpDeviceCallback.html#a4e0522d8971ec5f8a22c32c865029e23">   20</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDeviceCallback.html#a4e0522d8971ec5f8a22c32c865029e23">bolusProgressUpdate</a>(<span class="keyword">const</span> <a class="code hl_struct" href="structBolusProgressUpdate.html">BolusProgressUpdate</a> &amp;update) = 0;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span>};</div>
 </div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span> </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span><span class="preprocessor">#endif </span><span class="comment">// IPUMP_DEVICE_H</span></div>
-<div class="ttc" id="aclassIPumpDevice_html"><div class="ttname"><a href="classIPumpDevice.html">IPumpDevice</a></div><div class="ttdef"><b>Definition</b> IPumpDevice.h:5</div></div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span> </div>
+<div class="foldopen" id="foldopen00023" data-start="{" data-end="};">
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno"><a class="line" href="classIPumpDevice.html">   23</a></span><span class="keyword">class </span><a class="code hl_class" href="classIPumpDevice.html">IPumpDevice</a></div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>{</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno"><a class="line" href="classIPumpDevice.html#a5d151401ce60fefe112e4de750300d4d">   26</a></span>    <span class="keyword">virtual</span> <a class="code hl_function" href="classIPumpDevice.html#a5d151401ce60fefe112e4de750300d4d">~IPumpDevice</a>() = <span class="keywordflow">default</span>;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno"><a class="line" href="classIPumpDevice.html#aa04d76a0528b91dd4a6ab3a006563010">   27</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#aa04d76a0528b91dd4a6ab3a006563010">init</a>() = 0;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span> </div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno"><a class="line" href="classIPumpDevice.html#ab79b3dfb27a0a800ee6113c9c12887fc">   34</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#ab79b3dfb27a0a800ee6113c9c12887fc">onBolusRequest</a>(<span class="keywordtype">float</span> amount, time_t timestamp) = 0;</div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno"><a class="line" href="classIPumpDevice.html#a515355ac9fb35c96fe77f6ee959de82d">   39</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#a515355ac9fb35c96fe77f6ee959de82d">onStopBolusRequest</a>() = 0;</div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span> </div>
+<div class="line"><a id="l00044" name="l00044"></a><span class="lineno"><a class="line" href="classIPumpDevice.html#a096e963de9956c1d1beb1288219cdb02">   44</a></span>    <span class="keyword">virtual</span> <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#a096e963de9956c1d1beb1288219cdb02">onRetractRequest</a>() = 0;</div>
+<div class="line"><a id="l00045" name="l00045"></a><span class="lineno">   45</span>};</div>
+</div>
+<div class="line"><a id="l00046" name="l00046"></a><span class="lineno">   46</span> </div>
+<div class="line"><a id="l00047" name="l00047"></a><span class="lineno">   47</span><span class="preprocessor">#endif </span><span class="comment">// IPUMP_DEVICE_H</span></div>
+<div class="ttc" id="aPumpServiceMessages_8h_html"><div class="ttname"><a href="PumpServiceMessages_8h.html">PumpServiceMessages.h</a></div></div>
+<div class="ttc" id="aclassIPumpDeviceCallback_html"><div class="ttname"><a href="classIPumpDeviceCallback.html">IPumpDeviceCallback</a></div><div class="ttdef"><b>Definition</b> IPumpDevice.h:8</div></div>
+<div class="ttc" id="aclassIPumpDeviceCallback_html_a4e0522d8971ec5f8a22c32c865029e23"><div class="ttname"><a href="classIPumpDeviceCallback.html#a4e0522d8971ec5f8a22c32c865029e23">IPumpDeviceCallback::bolusProgressUpdate</a></div><div class="ttdeci">virtual void bolusProgressUpdate(const BolusProgressUpdate &amp;update)=0</div><div class="ttdoc">Callback for bolus progress updates.</div></div>
+<div class="ttc" id="aclassIPumpDeviceCallback_html_a9bdfba94004f873b72ddef38bb653cbf"><div class="ttname"><a href="classIPumpDeviceCallback.html#a9bdfba94004f873b72ddef38bb653cbf">IPumpDeviceCallback::pumpStatusUpdate</a></div><div class="ttdeci">virtual void pumpStatusUpdate(const PumpStatus &amp;status)=0</div><div class="ttdoc">Callback for pump status updates.</div></div>
+<div class="ttc" id="aclassIPumpDevice_html"><div class="ttname"><a href="classIPumpDevice.html">IPumpDevice</a></div><div class="ttdef"><b>Definition</b> IPumpDevice.h:24</div></div>
+<div class="ttc" id="aclassIPumpDevice_html_a096e963de9956c1d1beb1288219cdb02"><div class="ttname"><a href="classIPumpDevice.html#a096e963de9956c1d1beb1288219cdb02">IPumpDevice::onRetractRequest</a></div><div class="ttdeci">virtual void onRetractRequest()=0</div><div class="ttdoc">Handle a request to retract the plunger.</div></div>
+<div class="ttc" id="aclassIPumpDevice_html_a515355ac9fb35c96fe77f6ee959de82d"><div class="ttname"><a href="classIPumpDevice.html#a515355ac9fb35c96fe77f6ee959de82d">IPumpDevice::onStopBolusRequest</a></div><div class="ttdeci">virtual void onStopBolusRequest()=0</div><div class="ttdoc">Handle a request to stop the bolus delivery.</div></div>
 <div class="ttc" id="aclassIPumpDevice_html_a5d151401ce60fefe112e4de750300d4d"><div class="ttname"><a href="classIPumpDevice.html#a5d151401ce60fefe112e4de750300d4d">IPumpDevice::~IPumpDevice</a></div><div class="ttdeci">virtual ~IPumpDevice()=default</div></div>
 <div class="ttc" id="aclassIPumpDevice_html_aa04d76a0528b91dd4a6ab3a006563010"><div class="ttname"><a href="classIPumpDevice.html#aa04d76a0528b91dd4a6ab3a006563010">IPumpDevice::init</a></div><div class="ttdeci">virtual void init()=0</div></div>
+<div class="ttc" id="aclassIPumpDevice_html_ab79b3dfb27a0a800ee6113c9c12887fc"><div class="ttname"><a href="classIPumpDevice.html#ab79b3dfb27a0a800ee6113c9c12887fc">IPumpDevice::onBolusRequest</a></div><div class="ttdeci">virtual void onBolusRequest(float amount, time_t timestamp)=0</div><div class="ttdoc">Handle a bolus request.</div></div>
+<div class="ttc" id="astructBolusProgressUpdate_html"><div class="ttname"><a href="structBolusProgressUpdate.html">BolusProgressUpdate</a></div><div class="ttdef"><b>Definition</b> PumpServiceMessages.h:39</div></div>
+<div class="ttc" id="astructPumpStatus_html"><div class="ttname"><a href="structPumpStatus.html">PumpStatus</a></div><div class="ttdef"><b>Definition</b> PumpServiceMessages.h:11</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,21 +1,7 @@
 var searchData=
 [
-  ['_7eauthpacket_0',['~AuthPacket',['../classAuthPacket.html#a297acf317e486897d8f5981ca0e2bf80',1,'AuthPacket']]],
-  ['_7econtrolservice_1',['~ControlService',['../classControlService.html#a4645d8edc57201258c034f84252f985a',1,'ControlService']]],
-  ['_7ehmiservice_2',['~HmiService',['../classHmiService.html#a3b30e47f4eaba0a64471853175338df8',1,'HmiService']]],
-  ['_7ehmiservicetest_3',['~HmiServiceTest',['../classHmiServiceTest.html#acd1b0802683018399a0b30898d09504c',1,'HmiServiceTest']]],
-  ['_7eicallbackholder_4',['~ICallbackHolder',['../classICallbackHolder.html#a9ffd3352f48fe433c45b3d94b4c33471',1,'ICallbackHolder']]],
-  ['_7eihmidevice_5',['~IHmiDevice',['../classIHmiDevice.html#aba5447a1fa26a32c38eb88af6e9d93b2',1,'IHmiDevice']]],
-  ['_7eipumpdevice_6',['~IPumpDevice',['../classIPumpDevice.html#a5d151401ce60fefe112e4de750300d4d',1,'IPumpDevice']]],
-  ['_7emedtrumbasepacket_7',['~MedtrumBasePacket',['../classMedtrumBasePacket.html#aea39f8f4ac9d6700c7a49d7eab905c3e',1,'MedtrumBasePacket']]],
-  ['_7emedtrumbtdevice_8',['~MedtrumBTDevice',['../classMedtrumBTDevice.html#ae5a766f1d1d210f58acf4a882cf09fce',1,'MedtrumBTDevice']]],
-  ['_7emedtrumpumpsync_9',['~MedtrumPumpSync',['../classMedtrumPumpSync.html#a48cae0c776c6a58d6610a495b36b63b2',1,'MedtrumPumpSync']]],
-  ['_7epumpblecomm_10',['~PumpBleComm',['../classPumpBleComm.html#afd6598182f45af5dbccf490d9c712afe',1,'PumpBleComm']]],
-  ['_7epumpscanner_11',['~PumpScanner',['../classPumpScanner.html#a018a1abd2089c5a0fc50857c055f2d6f',1,'PumpScanner']]],
-  ['_7epumpservice_12',['~PumpService',['../classPumpService.html#acc849f4c44f4691cc4749c3f22fce054',1,'PumpService']]],
-  ['_7esetboluspacket_13',['~SetBolusPacket',['../classSetBolusPacket.html#a8ed3f6da1e01fbdccab71db989470510',1,'SetBolusPacket']]],
-  ['_7esettempbasalpacket_14',['~SetTempBasalPacket',['../classSetTempBasalPacket.html#acbfce00a36ff6f4ceadbdaf5b9a05509',1,'SetTempBasalPacket']]],
-  ['_7esubscribepacket_15',['~SubscribePacket',['../classSubscribePacket.html#aee02ce8b0dfa6e12e13d295455d1ccda',1,'SubscribePacket']]],
-  ['_7esynchronizepacket_16',['~SynchronizePacket',['../classSynchronizePacket.html#a29c9a56750ef358b048624dd0c9a0c85',1,'SynchronizePacket']]],
-  ['_7evirtualhmidevice_17',['~VirtualHmiDevice',['../classVirtualHmiDevice.html#a64de91b27deebb2b32b09bd623a18ce2',1,'VirtualHmiDevice']]]
+  ['value_0',['value',['../classSFloat.html#a56d055145a6366962b233edac4c175b9',1,'SFloat']]],
+  ['vector_5fadd_5fle16_1',['vector_add_le16',['../Vector_8h.html#ae88a68b1500f2e30216b214770d24b09',1,'vector_add_le16(std::vector&lt; uint8_t &gt; &amp;vec, uint16_t value):&#160;Vector.cpp'],['../Vector_8cpp.html#ae88a68b1500f2e30216b214770d24b09',1,'vector_add_le16(std::vector&lt; uint8_t &gt; &amp;vec, uint16_t value):&#160;Vector.cpp']]],
+  ['vector_5fadd_5fle32_2',['vector_add_le32',['../Vector_8h.html#a7168b383da5d10ba91aebca49a5d48f2',1,'vector_add_le32(std::vector&lt; uint8_t &gt; &amp;vec, uint32_t value):&#160;Vector.cpp'],['../Vector_8cpp.html#a7168b383da5d10ba91aebca49a5d48f2',1,'vector_add_le32(std::vector&lt; uint8_t &gt; &amp;vec, uint32_t value):&#160;Vector.cpp']]],
+  ['virtualhmidevice_3',['VirtualHmiDevice',['../classVirtualHmiDevice.html#a44b41826276d67b0a068c43502c4f0e7',1,'VirtualHmiDevice']]]
 ];

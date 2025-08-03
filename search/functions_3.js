@@ -8,7 +8,7 @@ var searchData=
   ['commandtype_5',['CommandType',['../classCommandType.html#a69bb2fc0e2e10f6b7828bb8c53be0d16',1,'CommandType']]],
   ['connect_6',['connect',['../classBLEComm.html#af50847fe35fba732aed2bfe79c9bc3a3',1,'BLEComm::connect()'],['../classPumpBleComm.html#a01e1640e4b18e2db8154be859f737e6d',1,'PumpBleComm::connect()']]],
   ['connected_7',['connected',['../classBLEComm.html#ab0940b5d805d94daeb2d6652a292790c',1,'BLEComm']]],
-  ['controlservice_8',['ControlService',['../classControlService.html#a47b7c7b6a595cf392a2bdffb6655efab',1,'ControlService']]],
+  ['controlservice_8',['controlservice',['../classControlService.html#a08bd99656b8fab27af492571eb7c61d8',1,'ControlService::ControlService(EventDispatcher &amp;dispatcher)'],['../classControlService.html#a4a5035536e502cba983921741bf60aff',1,'ControlService::ControlService(EventDispatcher &amp;dispatcher, IInsulinDeliveryDevice &amp;insulinDeliveryDevice)']]],
   ['convertpumptimetosystemtime_9',['convertPumpTimeToSystemTime',['../classMedtrumTimeUtil.html#a246100883b3c88feea1fff0c5c12c308',1,'MedtrumTimeUtil']]],
   ['crc8_10',['crc8',['../classCrcUtil.html#a032c14a04b71fe56713f0595aaae24c4',1,'CrcUtil']]]
 ];

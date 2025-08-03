@@ -100,21 +100,37 @@ $(document).ready(function(){initNavTree('ControlService_8h_source.html',''); in
 <a href="ControlService_8h.html">Go to the documentation of this file.</a><div class="fragment"><div class="line"><a id="l00001" name="l00001"></a><span class="lineno">    1</span><span class="preprocessor">#ifndef CONTROL_SERVICE_H</span></div>
 <div class="line"><a id="l00002" name="l00002"></a><span class="lineno">    2</span><span class="preprocessor">#define CONTROL_SERVICE_H</span></div>
 <div class="line"><a id="l00003" name="l00003"></a><span class="lineno">    3</span> </div>
-<div class="foldopen" id="foldopen00004" data-start="{" data-end="};">
-<div class="line"><a id="l00004" name="l00004"></a><span class="lineno"><a class="line" href="classControlService.html">    4</a></span><span class="keyword">class </span><a class="code hl_class" href="classControlService.html">ControlService</a></div>
-<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>{</div>
-<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span><span class="keyword">public</span>:</div>
-<div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>    <a class="code hl_function" href="classControlService.html#a47b7c7b6a595cf392a2bdffb6655efab">ControlService</a>();</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    <a class="code hl_function" href="classControlService.html#a4645d8edc57201258c034f84252f985a">~ControlService</a>();</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classControlService.html#a593e7ff80aa5327ebbeb25a39e1aad35">init</a>();</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>};</div>
+<div class="line"><a id="l00004" name="l00004"></a><span class="lineno">    4</span><span class="preprocessor">#include &lt;<a class="code" href="InsulinDeliveryDevice_8h.html">control/bt_ids/InsulinDeliveryDevice.h</a>&gt;</span></div>
+<div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span><span class="preprocessor">#include &lt;<a class="code" href="EventDispatcher_8h.html">events/EventDispatcher.h</a>&gt;</span></div>
+<div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span> </div>
+<div class="foldopen" id="foldopen00007" data-start="{" data-end="};">
+<div class="line"><a id="l00007" name="l00007"></a><span class="lineno"><a class="line" href="classControlService.html">    7</a></span><span class="keyword">class </span><a class="code hl_class" href="classControlService.html">ControlService</a></div>
+<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>{</div>
+<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span><span class="keyword">public</span>:</div>
+<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    <a class="code hl_class" href="classControlService.html">ControlService</a>(<a class="code hl_class" href="classEventDispatcher.html">EventDispatcher</a> &amp;dispatcher);</div>
+<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <a class="code hl_class" href="classControlService.html">ControlService</a>(<a class="code hl_class" href="classEventDispatcher.html">EventDispatcher</a> &amp;dispatcher, <a class="code hl_class" href="classIInsulinDeliveryDevice.html">IInsulinDeliveryDevice</a> &amp;insulinDeliveryDevice);</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>    <a class="code hl_function" href="classControlService.html#a4645d8edc57201258c034f84252f985a">~ControlService</a>();</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classControlService.html#a593e7ff80aa5327ebbeb25a39e1aad35">init</a>();</div>
+<div class="line"><a id="l00014" name="l00014"></a><span class="lineno">   14</span> </div>
+<div class="line"><a id="l00015" name="l00015"></a><span class="lineno">   15</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00016" name="l00016"></a><span class="lineno"><a class="line" href="classControlService.html#aa66c89b0fb0d8abda6201e6811d7dbad">   16</a></span>    <a class="code hl_class" href="classEventDispatcher.html">EventDispatcher</a> &amp;<a class="code hl_variable" href="classControlService.html#aa66c89b0fb0d8abda6201e6811d7dbad">mDispatcher</a>;</div>
+<div class="line"><a id="l00017" name="l00017"></a><span class="lineno"><a class="line" href="classControlService.html#a15a9cea13a5ea2276e9f1b3ad87446f3">   17</a></span>    <a class="code hl_class" href="classIInsulinDeliveryDevice.html">IInsulinDeliveryDevice</a> &amp;<a class="code hl_variable" href="classControlService.html#a15a9cea13a5ea2276e9f1b3ad87446f3">mInsulinDeliveryDevice</a>;</div>
+<div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span> </div>
+<div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keyword">static</span> <a class="code hl_class" href="classIInsulinDeliveryDevice.html">IInsulinDeliveryDevice</a> &amp;<a class="code hl_function" href="classControlService.html#a9ca67f3fc5bf7a5ed8851019281e77c2">getInsulinDeliveryDevice</a>();</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>};</div>
 </div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span> </div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span><span class="preprocessor">#endif </span><span class="comment">// CONTROL_SERVICE_H</span></div>
-<div class="ttc" id="aclassControlService_html"><div class="ttname"><a href="classControlService.html">ControlService</a></div><div class="ttdef"><b>Definition</b> ControlService.h:5</div></div>
-<div class="ttc" id="aclassControlService_html_a4645d8edc57201258c034f84252f985a"><div class="ttname"><a href="classControlService.html#a4645d8edc57201258c034f84252f985a">ControlService::~ControlService</a></div><div class="ttdeci">~ControlService()</div><div class="ttdef"><b>Definition</b> ControlService.cpp:15</div></div>
-<div class="ttc" id="aclassControlService_html_a47b7c7b6a595cf392a2bdffb6655efab"><div class="ttname"><a href="classControlService.html#a47b7c7b6a595cf392a2bdffb6655efab">ControlService::ControlService</a></div><div class="ttdeci">ControlService()</div><div class="ttdef"><b>Definition</b> ControlService.cpp:10</div></div>
-<div class="ttc" id="aclassControlService_html_a593e7ff80aa5327ebbeb25a39e1aad35"><div class="ttname"><a href="classControlService.html#a593e7ff80aa5327ebbeb25a39e1aad35">ControlService::init</a></div><div class="ttdeci">void init()</div><div class="ttdef"><b>Definition</b> ControlService.cpp:17</div></div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="preprocessor">#endif </span><span class="comment">// CONTROL_SERVICE_H</span></div>
+<div class="ttc" id="aEventDispatcher_8h_html"><div class="ttname"><a href="EventDispatcher_8h.html">EventDispatcher.h</a></div></div>
+<div class="ttc" id="aInsulinDeliveryDevice_8h_html"><div class="ttname"><a href="InsulinDeliveryDevice_8h.html">InsulinDeliveryDevice.h</a></div></div>
+<div class="ttc" id="aclassControlService_html"><div class="ttname"><a href="classControlService.html">ControlService</a></div><div class="ttdef"><b>Definition</b> ControlService.h:8</div></div>
+<div class="ttc" id="aclassControlService_html_a15a9cea13a5ea2276e9f1b3ad87446f3"><div class="ttname"><a href="classControlService.html#a15a9cea13a5ea2276e9f1b3ad87446f3">ControlService::mInsulinDeliveryDevice</a></div><div class="ttdeci">IInsulinDeliveryDevice &amp; mInsulinDeliveryDevice</div><div class="ttdef"><b>Definition</b> ControlService.h:17</div></div>
+<div class="ttc" id="aclassControlService_html_a4645d8edc57201258c034f84252f985a"><div class="ttname"><a href="classControlService.html#a4645d8edc57201258c034f84252f985a">ControlService::~ControlService</a></div><div class="ttdeci">~ControlService()</div><div class="ttdef"><b>Definition</b> ControlService.cpp:23</div></div>
+<div class="ttc" id="aclassControlService_html_a593e7ff80aa5327ebbeb25a39e1aad35"><div class="ttname"><a href="classControlService.html#a593e7ff80aa5327ebbeb25a39e1aad35">ControlService::init</a></div><div class="ttdeci">void init()</div><div class="ttdef"><b>Definition</b> ControlService.cpp:25</div></div>
+<div class="ttc" id="aclassControlService_html_a9ca67f3fc5bf7a5ed8851019281e77c2"><div class="ttname"><a href="classControlService.html#a9ca67f3fc5bf7a5ed8851019281e77c2">ControlService::getInsulinDeliveryDevice</a></div><div class="ttdeci">static IInsulinDeliveryDevice &amp; getInsulinDeliveryDevice()</div><div class="ttdef"><b>Definition</b> ControlService.cpp:32</div></div>
+<div class="ttc" id="aclassControlService_html_aa66c89b0fb0d8abda6201e6811d7dbad"><div class="ttname"><a href="classControlService.html#aa66c89b0fb0d8abda6201e6811d7dbad">ControlService::mDispatcher</a></div><div class="ttdeci">EventDispatcher &amp; mDispatcher</div><div class="ttdef"><b>Definition</b> ControlService.h:16</div></div>
+<div class="ttc" id="aclassEventDispatcher_html"><div class="ttname"><a href="classEventDispatcher.html">EventDispatcher</a></div><div class="ttdoc">Class responsible for dispatching events to registered listeners.</div><div class="ttdef"><b>Definition</b> EventDispatcher.h:41</div></div>
+<div class="ttc" id="aclassIInsulinDeliveryDevice_html"><div class="ttname"><a href="classIInsulinDeliveryDevice.html">IInsulinDeliveryDevice</a></div><div class="ttdef"><b>Definition</b> InsulinDeliveryDevice.h:8</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

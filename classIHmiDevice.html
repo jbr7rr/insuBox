@@ -119,6 +119,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a105efc905a90fb3f8e25966ad036fef8" id="r_a105efc905a90fb3f8e25966ad036fef8"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiDevice.html#a105efc905a90fb3f8e25966ad036fef8">onUserBtPairingRequest</a> (struct bt_conn *conn, uint32_t passkey)=0</td></tr>
 <tr class="memdesc:a105efc905a90fb3f8e25966ad036fef8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle the pairing request from the BLE stack.  <br /></td></tr>
 <tr class="separator:a105efc905a90fb3f8e25966ad036fef8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a35418f609b548ab859024be1043b79cd" id="r_a35418f609b548ab859024be1043b79cd"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiDevice.html#a35418f609b548ab859024be1043b79cd">onBtBluetoothStateChanged</a> (struct bt_conn *conn, <a class="el" href="BLEComm_8h.html#aa971fd9e627491cdc6e9026e0afbd2ec">BtState</a> state)=0</td></tr>
+<tr class="memdesc:a35418f609b548ab859024be1043b79cd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle changes in Bluetooth state.  <br /></td></tr>
+<tr class="separator:a35418f609b548ab859024be1043b79cd"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af1da6385c51b0a74b0601585c89df59a" id="r_af1da6385c51b0a74b0601585c89df59a"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiDevice.html#af1da6385c51b0a74b0601585c89df59a">onBolusProgressUpdate</a> (<a class="el" href="structBolusProgressUpdate.html">BolusProgressUpdate</a> &amp;update)=0</td></tr>
+<tr class="memdesc:af1da6385c51b0a74b0601585c89df59a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle updates to the bolus progress.  <br /></td></tr>
+<tr class="separator:af1da6385c51b0a74b0601585c89df59a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="aba5447a1fa26a32c38eb88af6e9d93b2" name="aba5447a1fa26a32c38eb88af6e9d93b2"></a>
@@ -171,16 +177,89 @@ Public Member Functions</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implemented in <a class="el" href="classVirtualHmiDevice.html#a18a2485a3dc3e60f1651baec77a9e7bc">VirtualHmiDevice</a>.</p>
-<div class="dynheader">
-Here is the caller graph for this function:</div>
-<div class="dyncontent">
-<div class="center"><img src="classIHmiDevice_ae48db2570c06903e96e7570903a9b09e_icgraph.png" border="0" usemap="#aclassIHmiDevice_ae48db2570c06903e96e7570903a9b09e_icgraph" alt=""/></div>
-<map name="aclassIHmiDevice_ae48db2570c06903e96e7570903a9b09e_icgraph" id="aclassIHmiDevice_ae48db2570c06903e96e7570903a9b09e_icgraph">
-<area shape="rect" title=" " alt="" coords="180,5,307,31"/>
-<area shape="rect" href="classHmiService.html#acc90662f0488640db07e58793533eddc" title=" " alt="" coords="5,5,132,31"/>
-<area shape="poly" title=" " alt="" coords="167,21,132,21,132,15,167,15"/>
-</map>
+
 </div>
+</div>
+<a id="af1da6385c51b0a74b0601585c89df59a" name="af1da6385c51b0a74b0601585c89df59a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af1da6385c51b0a74b0601585c89df59a">&#9670;&#160;</a></span>onBolusProgressUpdate()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IHmiDevice::onBolusProgressUpdate </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structBolusProgressUpdate.html">BolusProgressUpdate</a> &amp;&#160;</td>
+          <td class="paramname"><em>update</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle updates to the bolus progress. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">update</td><td>Bolus progress update containing requested and delivered amounts and timestamps </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classVirtualHmiDevice.html#ac61626179fd2baf0ab77874a0d5cfb91">VirtualHmiDevice</a>.</p>
+
+</div>
+</div>
+<a id="a35418f609b548ab859024be1043b79cd" name="a35418f609b548ab859024be1043b79cd"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a35418f609b548ab859024be1043b79cd">&#9670;&#160;</a></span>onBtBluetoothStateChanged()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IHmiDevice::onBtBluetoothStateChanged </td>
+          <td>(</td>
+          <td class="paramtype">struct bt_conn *&#160;</td>
+          <td class="paramname"><em>conn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="BLEComm_8h.html#aa971fd9e627491cdc6e9026e0afbd2ec">BtState</a>&#160;</td>
+          <td class="paramname"><em>state</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle changes in Bluetooth state. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">conn</td><td>Connection object </td></tr>
+    <tr><td class="paramname">state</td><td>New Bluetooth state </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classVirtualHmiDevice.html#a82f844347474f3c3492eeb30f9e4a6c5">VirtualHmiDevice</a>.</p>
 
 </div>
 </div>

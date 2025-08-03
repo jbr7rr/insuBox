@@ -96,7 +96,7 @@ $(document).ready(function(){initNavTree('classIHmiCallback.html',''); initResiz
 </div><!--header-->
 <div class="contents">
 
-<p><code>#include &lt;<a class="el" href="HmiService_8h_source.html">HmiService.h</a>&gt;</code></p>
+<p><code>#include &lt;<a class="el" href="IHmiDevice_8h_source.html">IHmiDevice.h</a>&gt;</code></p>
 <div class="dynheader">
 Inheritance diagram for IHmiCallback:</div>
 <div class="dyncontent">
@@ -110,13 +110,22 @@ Inheritance diagram for IHmiCallback:</div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a51c1745a3710c652c160720913c1197b" id="r_a51c1745a3710c652c160720913c1197b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiCallback.html#a51c1745a3710c652c160720913c1197b">onUserBtPairingResponse</a> (struct bt_conn *conn, bool accepted)=0</td></tr>
-<tr class="memdesc:a51c1745a3710c652c160720913c1197b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle the user response to the pairing request.  <br /></td></tr>
-<tr class="separator:a51c1745a3710c652c160720913c1197b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa13b957d3a58d46d70ddc664cd8c722b" id="r_aa13b957d3a58d46d70ddc664cd8c722b"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiCallback.html#aa13b957d3a58d46d70ddc664cd8c722b">userBtPairingResponse</a> (struct bt_conn *conn, bool accepted)=0</td></tr>
+<tr class="memdesc:aa13b957d3a58d46d70ddc664cd8c722b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Send a response to a user Bluetooth pairing request.  <br /></td></tr>
+<tr class="separator:aa13b957d3a58d46d70ddc664cd8c722b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a14f3f9c9228ae3b24d88f4fb1671f9af" id="r_a14f3f9c9228ae3b24d88f4fb1671f9af"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiCallback.html#a14f3f9c9228ae3b24d88f4fb1671f9af">bolusRequest</a> (float amount, time_t timestamp)=0</td></tr>
+<tr class="memdesc:a14f3f9c9228ae3b24d88f4fb1671f9af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request a bolus from the pump.  <br /></td></tr>
+<tr class="separator:a14f3f9c9228ae3b24d88f4fb1671f9af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a478888ff3bddf7f88b2bba75389e4fdb" id="r_a478888ff3bddf7f88b2bba75389e4fdb"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiCallback.html#a478888ff3bddf7f88b2bba75389e4fdb">stopBolusRequest</a> ()=0</td></tr>
+<tr class="memdesc:a478888ff3bddf7f88b2bba75389e4fdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request to stop the current bolus delivery.  <br /></td></tr>
+<tr class="separator:a478888ff3bddf7f88b2bba75389e4fdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaccd7b411926d3fa7570baa04d413d54" id="r_aaccd7b411926d3fa7570baa04d413d54"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIHmiCallback.html#aaccd7b411926d3fa7570baa04d413d54">retractRequest</a> ()=0</td></tr>
+<tr class="memdesc:aaccd7b411926d3fa7570baa04d413d54"><td class="mdescLeft">&#160;</td><td class="mdescRight">Request to retract the last bolus delivery.  <br /></td></tr>
+<tr class="separator:aaccd7b411926d3fa7570baa04d413d54"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a51c1745a3710c652c160720913c1197b" name="a51c1745a3710c652c160720913c1197b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a51c1745a3710c652c160720913c1197b">&#9670;&#160;</a></span>onUserBtPairingResponse()</h2>
+<a id="a14f3f9c9228ae3b24d88f4fb1671f9af" name="a14f3f9c9228ae3b24d88f4fb1671f9af"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a14f3f9c9228ae3b24d88f4fb1671f9af">&#9670;&#160;</a></span>bolusRequest()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,7 +134,112 @@ Public Member Functions</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">virtual void IHmiCallback::onUserBtPairingResponse </td>
+          <td class="memname">virtual void IHmiCallback::bolusRequest </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>amount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">time_t&#160;</td>
+          <td class="paramname"><em>timestamp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Request a bolus from the pump. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">amount</td><td>Amount of insulin to be delivered </td></tr>
+    <tr><td class="paramname">timestamp</td><td>Timestamp of the request </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classHmiService.html#a196e227f462d57db883259e9e8de5b41">HmiService</a>.</p>
+
+</div>
+</div>
+<a id="aaccd7b411926d3fa7570baa04d413d54" name="aaccd7b411926d3fa7570baa04d413d54"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaccd7b411926d3fa7570baa04d413d54">&#9670;&#160;</a></span>retractRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IHmiCallback::retractRequest </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Request to retract the last bolus delivery. </p>
+
+<p>Implemented in <a class="el" href="classHmiService.html#a2808211713b9fef64c20b38cc85a4b15">HmiService</a>.</p>
+
+</div>
+</div>
+<a id="a478888ff3bddf7f88b2bba75389e4fdb" name="a478888ff3bddf7f88b2bba75389e4fdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a478888ff3bddf7f88b2bba75389e4fdb">&#9670;&#160;</a></span>stopBolusRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IHmiCallback::stopBolusRequest </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Request to stop the current bolus delivery. </p>
+
+<p>Implemented in <a class="el" href="classHmiService.html#a54956d3eabd768c952cbe5e614a391ec">HmiService</a>.</p>
+
+</div>
+</div>
+<a id="aa13b957d3a58d46d70ddc664cd8c722b" name="aa13b957d3a58d46d70ddc664cd8c722b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa13b957d3a58d46d70ddc664cd8c722b">&#9670;&#160;</a></span>userBtPairingResponse()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IHmiCallback::userBtPairingResponse </td>
           <td>(</td>
           <td class="paramtype">struct bt_conn *&#160;</td>
           <td class="paramname"><em>conn</em>, </td>
@@ -149,7 +263,7 @@ Public Member Functions</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Handle the user response to the pairing request. </p>
+<p>Send a response to a user Bluetooth pairing request. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">conn</td><td>Connection object </td></tr>
@@ -158,13 +272,13 @@ Public Member Functions</h2></td></tr>
   </dd>
 </dl>
 
-<p>Implemented in <a class="el" href="classHmiService.html#aaca5bac47c21c2f8edf5d0cf60ff0756">HmiService</a>.</p>
+<p>Implemented in <a class="el" href="classHmiService.html#a1be5bc0c3202dd6be5b0660cce13bc99">HmiService</a>.</p>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classIHmiCallback_a51c1745a3710c652c160720913c1197b_icgraph.png" border="0" usemap="#aclassIHmiCallback_a51c1745a3710c652c160720913c1197b_icgraph" alt=""/></div>
-<map name="aclassIHmiCallback_a51c1745a3710c652c160720913c1197b_icgraph" id="aclassIHmiCallback_a51c1745a3710c652c160720913c1197b_icgraph">
-<area shape="rect" title="Handle the user response to the pairing request." alt="" coords="244,5,465,45"/>
+<div class="center"><img src="classIHmiCallback_aa13b957d3a58d46d70ddc664cd8c722b_icgraph.png" border="0" usemap="#aclassIHmiCallback_aa13b957d3a58d46d70ddc664cd8c722b_icgraph" alt=""/></div>
+<map name="aclassIHmiCallback_aa13b957d3a58d46d70ddc664cd8c722b_icgraph" id="aclassIHmiCallback_aa13b957d3a58d46d70ddc664cd8c722b_icgraph">
+<area shape="rect" title="Send a response to a user Bluetooth pairing request." alt="" coords="244,5,447,45"/>
 <area shape="rect" href="classVirtualHmiDevice.html#abb689ee11beb6e3c411fe004160d41bb" title="Handle the pairing request from the BLE stack." alt="" coords="5,5,196,45"/>
 <area shape="poly" title=" " alt="" coords="230,28,196,28,196,23,230,23"/>
 </map>
@@ -173,7 +287,7 @@ Here is the caller graph for this function:</div>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>include/hmi/<a class="el" href="HmiService_8h_source.html">HmiService.h</a></li>
+<li>include/hmi/<a class="el" href="IHmiDevice_8h_source.html">IHmiDevice.h</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->

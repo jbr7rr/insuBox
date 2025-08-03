@@ -1,0 +1,24 @@
+<map id="lib/control/bt_ids/bt_ids.h" name="lib/control/bt_ids/bt_ids.h">
+<area shape="rect" id="Node000001" title=" " alt="" coords="343,5,473,45"/>
+<area shape="rect" id="Node000002" href="$InsulinDeliveryDevice_8h.html" title=" " alt="" coords="302,93,514,133"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="411,46,411,79,405,79,405,46"/>
+<area shape="rect" id="Node000003" href="$PumpServiceMessages_8h.html" title=" " alt="" coords="183,181,409,207"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="382,136,325,175,322,171,379,131"/>
+<area shape="rect" id="Node000011" title=" " alt="" coords="433,181,607,207"/>
+<area shape="poly" id="edge11_Node000002_Node000011" title=" " alt="" coords="437,131,494,171,491,175,434,136"/>
+<area shape="rect" id="Node000004" href="$IdsEnums_8h.html" title=" " alt="" coords="5,255,152,280"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="262,209,128,253,126,248,260,204"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="176,255,235,280"/>
+<area shape="poly" id="edge6_Node000003_Node000007" title=" " alt="" coords="283,209,233,248,229,244,280,205"/>
+<area shape="rect" id="Node000008" title=" " alt="" coords="259,255,333,280"/>
+<area shape="poly" id="edge7_Node000003_Node000008" title=" " alt="" coords="299,207,299,241,293,241,293,207"/>
+<area shape="rect" id="Node000009" href="$sfloat_8h.html" title=" " alt="" coords="358,255,461,280"/>
+<area shape="poly" id="edge8_Node000003_Node000009" title=" " alt="" coords="316,204,381,245,378,250,313,209"/>
+<area shape="rect" id="Node000010" title=" " alt="" coords="485,255,603,280"/>
+<area shape="poly" id="edge10_Node000003_Node000010" title=" " alt="" coords="337,204,491,248,490,253,335,209"/>
+<area shape="rect" id="Node000005" title=" " alt="" coords="272,328,339,353"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="116,277,260,322,258,327,114,283"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="14,328,143,353"/>
+<area shape="poly" id="edge5_Node000004_Node000006" title=" " alt="" coords="81,280,81,314,76,314,76,280"/>
+<area shape="poly" id="edge9_Node000009_Node000005" title=" " alt="" coords="394,282,335,322,332,318,391,278"/>
+</map>

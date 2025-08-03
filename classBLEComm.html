@@ -213,17 +213,21 @@ Static Private Member Functions</h2></td></tr>
 <tr class="separator:add799d55432005bfb4bec54423bb2860"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2dd90c6af74f5f3c5483fa89df446f79" id="r_a2dd90c6af74f5f3c5483fa89df446f79"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#a2dd90c6af74f5f3c5483fa89df446f79">advertisingWorkHandler</a> (struct k_work *work)</td></tr>
 <tr class="separator:a2dd90c6af74f5f3c5483fa89df446f79"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a93b57befd3174393349015f676f7c5d2" id="r_a93b57befd3174393349015f676f7c5d2"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#a93b57befd3174393349015f676f7c5d2">storeConnectionRef</a> (<a class="el" href="structBleConnection.html">BleConnection</a> *connection)</td></tr>
+<tr class="separator:a93b57befd3174393349015f676f7c5d2"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8f87047e95ccdba0c8dc1b2d2af08196" id="r_a8f87047e95ccdba0c8dc1b2d2af08196"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#a8f87047e95ccdba0c8dc1b2d2af08196">removeConnectionRef</a> (<a class="el" href="structBleConnection.html">BleConnection</a> *connection)</td></tr>
+<tr class="separator:a8f87047e95ccdba0c8dc1b2d2af08196"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a388ecdc0646a6235f07d7fbc4fdcb5c0" id="r_a388ecdc0646a6235f07d7fbc4fdcb5c0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structBleConnection.html">BleConnection</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#a388ecdc0646a6235f07d7fbc4fdcb5c0">findStoredConnection</a> (struct bt_conn *conn)</td></tr>
+<tr class="separator:a388ecdc0646a6235f07d7fbc4fdcb5c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:ae7d79f8367befd7b1013df8640758fd0" id="r_ae7d79f8367befd7b1013df8640758fd0"><td class="memItemLeft" align="right" valign="top">static constexpr int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#ae7d79f8367befd7b1013df8640758fd0">MAX_CLIENT_CONNECTIONS</a> = 1</td></tr>
-<tr class="separator:ae7d79f8367befd7b1013df8640758fd0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa5a42f0a444dda9be0b57552f5d25257" id="r_aa5a42f0a444dda9be0b57552f5d25257"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classEventDispatcher.html">EventDispatcher</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#aa5a42f0a444dda9be0b57552f5d25257">mDispatcher</a> = nullptr</td></tr>
 <tr class="separator:aa5a42f0a444dda9be0b57552f5d25257"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad0aa66aae5ca82d9c23af63878366459" id="r_ad0aa66aae5ca82d9c23af63878366459"><td class="memItemLeft" align="right" valign="top">static std::map&lt; bt_addr_le_t, <a class="el" href="structBleConnection.html">BleConnection</a> *, <a class="el" href="structBLEComm_1_1CompareBtAddr.html">CompareBtAddr</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#ad0aa66aae5ca82d9c23af63878366459">mConnections</a></td></tr>
-<tr class="separator:ad0aa66aae5ca82d9c23af63878366459"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5bfebb772188972d3fe68666fc886091" id="r_a5bfebb772188972d3fe68666fc886091"><td class="memItemLeft" align="right" valign="top">static std::array&lt; <a class="el" href="structBleConnection.html">BleConnection</a>, <a class="el" href="classBLEComm.html#ae7d79f8367befd7b1013df8640758fd0">MAX_CLIENT_CONNECTIONS</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#a5bfebb772188972d3fe68666fc886091">mClientConnections</a> = {}</td></tr>
-<tr class="separator:a5bfebb772188972d3fe68666fc886091"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2db266458446ee603c18c96ae285da61" id="r_a2db266458446ee603c18c96ae285da61"><td class="memItemLeft" align="right" valign="top">static std::array&lt; <a class="el" href="structBleConnection.html">BleConnection</a> *, CONFIG_BT_MAX_CONN &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#a2db266458446ee603c18c96ae285da61">mConnectionsArray</a> = {}</td></tr>
+<tr class="separator:a2db266458446ee603c18c96ae285da61"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7324791c26c006def1042b4027c45239" id="r_a7324791c26c006def1042b4027c45239"><td class="memItemLeft" align="right" valign="top">static std::array&lt; <a class="el" href="structBleConnection.html">BleConnection</a>, CONFIG_IB_BT_MAX_CLIENT_CONNECTIONS &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#a7324791c26c006def1042b4027c45239">mClientConnections</a> = {}</td></tr>
+<tr class="separator:a7324791c26c006def1042b4027c45239"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad926092562e790f9730ccef5c83e55ec" id="r_ad926092562e790f9730ccef5c83e55ec"><td class="memItemLeft" align="right" valign="top">static const struct bt_data&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#ad926092562e790f9730ccef5c83e55ec">advertizingData</a> []</td></tr>
 <tr class="separator:ad926092562e790f9730ccef5c83e55ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2814f2ffa27da7a3963eb38ea8c8214f" id="r_a2814f2ffa27da7a3963eb38ea8c8214f"><td class="memItemLeft" align="right" valign="top">static const struct bt_le_adv_param&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classBLEComm.html#a2814f2ffa27da7a3963eb38ea8c8214f">advParam</a></td></tr>
@@ -590,6 +594,55 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a388ecdc0646a6235f07d7fbc4fdcb5c0" name="a388ecdc0646a6235f07d7fbc4fdcb5c0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a388ecdc0646a6235f07d7fbc4fdcb5c0">&#9670;&#160;</a></span>findStoredConnection()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structBleConnection.html">BleConnection</a> * BLEComm::findStoredConnection </td>
+          <td>(</td>
+          <td class="paramtype">struct bt_conn *&#160;</td>
+          <td class="paramname"><em>conn</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBLEComm_a388ecdc0646a6235f07d7fbc4fdcb5c0_icgraph.png" border="0" usemap="#aclassBLEComm_a388ecdc0646a6235f07d7fbc4fdcb5c0_icgraph" alt=""/></div>
+<map name="aclassBLEComm_a388ecdc0646a6235f07d7fbc4fdcb5c0_icgraph" id="aclassBLEComm_a388ecdc0646a6235f07d7fbc4fdcb5c0_icgraph">
+<area shape="rect" title=" " alt="" coords="731,55,967,80"/>
+<area shape="rect" href="classBLEComm.html#a3a9e10f7847de5d0d66ccb52d94e22eb" title=" " alt="" coords="494,5,665,31"/>
+<area shape="poly" title=" " alt="" coords="765,55,649,33,650,28,766,50"/>
+<area shape="rect" href="classBLEComm.html#a13c540bfd57b8c2d357ba7fcf985e902" title=" " alt="" coords="480,55,679,80"/>
+<area shape="poly" title=" " alt="" coords="717,70,679,70,679,65,717,65"/>
+<area shape="rect" href="classBLEComm.html#a538ead40d87b3978fd509895a1b37383" title=" " alt="" coords="476,104,683,129"/>
+<area shape="poly" title=" " alt="" coords="766,85,650,107,649,101,765,80"/>
+<area shape="rect" href="classBLEComm.html#a591a026d61b1c3d9fb83e4d9e4da5de2" title=" " alt="" coords="273,5,425,31"/>
+<area shape="poly" title=" " alt="" coords="480,21,425,21,425,15,480,15"/>
+<area shape="rect" href="classPumpBleComm.html#a41fa6a93b18b24c704a5ff64a259bf77" title=" " alt="" coords="5,5,221,31"/>
+<area shape="poly" title=" " alt="" coords="259,21,222,21,222,15,259,15"/>
+<area shape="rect" href="classPumpBleComm.html#a5adf3f0bb5ef18bdfbd167b64bc33d95" title=" " alt="" coords="11,55,215,80"/>
+<area shape="poly" title=" " alt="" coords="275,36,175,57,174,52,274,31"/>
+<area shape="rect" href="classBLEComm.html#a081b8aa552974b5892c079f31d5c67a2" title=" " alt="" coords="269,55,428,80"/>
+<area shape="poly" title=" " alt="" coords="467,70,428,70,428,65,467,65"/>
+<area shape="poly" title=" " alt="" coords="256,70,216,70,216,65,256,65"/>
+</map>
+</div>
+
+</div>
+</div>
 <a id="a61c5b252f1f8a5a33ba7eba5a33b9cd2" name="a61c5b252f1f8a5a33ba7eba5a33b9cd2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a61c5b252f1f8a5a33ba7eba5a33b9cd2">&#9670;&#160;</a></span>init()</h2>
 
@@ -950,6 +1003,32 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
+<a id="a8f87047e95ccdba0c8dc1b2d2af08196" name="a8f87047e95ccdba0c8dc1b2d2af08196"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8f87047e95ccdba0c8dc1b2d2af08196">&#9670;&#160;</a></span>removeConnectionRef()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BLEComm::removeConnectionRef </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structBleConnection.html">BleConnection</a> *&#160;</td>
+          <td class="paramname"><em>connection</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+</div>
+</div>
 <a id="a538ead40d87b3978fd509895a1b37383" name="a538ead40d87b3978fd509895a1b37383"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a538ead40d87b3978fd509895a1b37383">&#9670;&#160;</a></span>securityChanged()</h2>
 
@@ -989,6 +1068,44 @@ Here is the caller graph for this function:</div>
   </tr>
 </table>
 </div><div class="memdoc">
+
+</div>
+</div>
+<a id="a93b57befd3174393349015f676f7c5d2" name="a93b57befd3174393349015f676f7c5d2"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a93b57befd3174393349015f676f7c5d2">&#9670;&#160;</a></span>storeConnectionRef()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void BLEComm::storeConnectionRef </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structBleConnection.html">BleConnection</a> *&#160;</td>
+          <td class="paramname"><em>connection</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classBLEComm_a93b57befd3174393349015f676f7c5d2_icgraph.png" border="0" usemap="#aclassBLEComm_a93b57befd3174393349015f676f7c5d2_icgraph" alt=""/></div>
+<map name="aclassBLEComm_a93b57befd3174393349015f676f7c5d2_icgraph" id="aclassBLEComm_a93b57befd3174393349015f676f7c5d2_icgraph">
+<area shape="rect" title=" " alt="" coords="439,5,664,31"/>
+<area shape="rect" href="classBLEComm.html#af50847fe35fba732aed2bfe79c9bc3a3" title=" " alt="" coords="243,5,391,31"/>
+<area shape="poly" title=" " alt="" coords="425,21,391,21,391,15,425,15"/>
+<area shape="rect" href="classPumpBleComm.html#a4bce6af223470907c5140711dc028a66" title=" " alt="" coords="5,5,195,31"/>
+<area shape="poly" title=" " alt="" coords="229,21,195,21,195,15,229,15"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -1213,8 +1330,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ae7d79f8367befd7b1013df8640758fd0" name="ae7d79f8367befd7b1013df8640758fd0"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae7d79f8367befd7b1013df8640758fd0">&#9670;&#160;</a></span>MAX_CLIENT_CONNECTIONS</h2>
+<a id="a7324791c26c006def1042b4027c45239" name="a7324791c26c006def1042b4027c45239"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7324791c26c006def1042b4027c45239">&#9670;&#160;</a></span>mClientConnections</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1223,29 +1340,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">constexpr int BLEComm::MAX_CLIENT_CONNECTIONS = 1</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">constexpr</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="a5bfebb772188972d3fe68666fc886091" name="a5bfebb772188972d3fe68666fc886091"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5bfebb772188972d3fe68666fc886091">&#9670;&#160;</a></span>mClientConnections</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">std::array&lt; <a class="el" href="structBleConnection.html">BleConnection</a>, <a class="el" href="classBLEComm.html#ae7d79f8367befd7b1013df8640758fd0">BLEComm::MAX_CLIENT_CONNECTIONS</a> &gt; BLEComm::mClientConnections = {}</td>
+          <td class="memname">std::array&lt; <a class="el" href="structBleConnection.html">BleConnection</a>, CONFIG_IB_BT_MAX_CLIENT_CONNECTIONS &gt; BLEComm::mClientConnections = {}</td>
         </tr>
       </table>
   </td>
@@ -1257,8 +1352,8 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="ad0aa66aae5ca82d9c23af63878366459" name="ad0aa66aae5ca82d9c23af63878366459"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad0aa66aae5ca82d9c23af63878366459">&#9670;&#160;</a></span>mConnections</h2>
+<a id="a2db266458446ee603c18c96ae285da61" name="a2db266458446ee603c18c96ae285da61"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2db266458446ee603c18c96ae285da61">&#9670;&#160;</a></span>mConnectionsArray</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1267,7 +1362,7 @@ Here is the caller graph for this function:</div>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">std::map&lt; bt_addr_le_t, <a class="el" href="structBleConnection.html">BleConnection</a> *, <a class="el" href="structBLEComm_1_1CompareBtAddr.html">BLEComm::CompareBtAddr</a> &gt; BLEComm::mConnections</td>
+          <td class="memname">std::array&lt; <a class="el" href="structBleConnection.html">BleConnection</a> *, CONFIG_BT_MAX_CONN &gt; BLEComm::mConnectionsArray = {}</td>
         </tr>
       </table>
   </td>

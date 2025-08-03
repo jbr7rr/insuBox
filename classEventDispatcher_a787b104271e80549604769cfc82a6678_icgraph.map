@@ -1,9 +1,13 @@
 <map id="EventDispatcher::subscribe" name="EventDispatcher::subscribe">
-<area shape="rect" id="Node000001" title="Subscribe a listener to a specific event type." alt="" coords="336,31,535,56"/>
-<area shape="rect" id="Node000002" href="$classHmiService.html#a1778b16fa43871cf3cabb0abc79d018d" title=" " alt="" coords="108,5,288,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="322,34,288,30,288,25,323,29"/>
-<area shape="rect" id="Node000003" href="$classBLEComm.html#a61c5b252f1f8a5a33ba7eba5a33b9cd2" title=" " alt="" coords="139,55,257,80"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="322,57,258,64,257,59,322,52"/>
-<area shape="rect" id="Node000004" href="$app_2src_2main_8cpp.html#a840291bc02cba5474a4cb46a9b9566fe" title=" " alt="" coords="5,55,60,80"/>
-<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="125,70,60,70,60,65,125,65"/>
+<area shape="rect" id="Node000001" title="Subscribe a listener to a specific event type." alt="" coords="376,80,575,105"/>
+<area shape="rect" id="Node000002" href="$classControlService.html#a4a5035536e502cba983921741bf60aff" title=" " alt="" coords="108,5,328,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="427,78,327,45,282,33,283,28,329,39,429,73"/>
+<area shape="rect" id="Node000003" href="$classHmiService.html#a1778b16fa43871cf3cabb0abc79d018d" title=" " alt="" coords="128,55,308,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="362,84,308,79,308,74,362,79"/>
+<area shape="rect" id="Node000004" href="$classBLEComm.html#a61c5b252f1f8a5a33ba7eba5a33b9cd2" title=" " alt="" coords="159,104,277,129"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="363,106,278,114,277,109,362,101"/>
+<area shape="rect" id="Node000006" href="$classPumpService.html#a2f91a1cc86d94bcb2dde2e41742832cf" title=" " alt="" coords="118,153,318,179"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="426,112,329,143,279,156,278,151,327,138,425,107"/>
+<area shape="rect" id="Node000005" href="$app_2src_2main_8cpp.html#a840291bc02cba5474a4cb46a9b9566fe" title=" " alt="" coords="5,104,60,129"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="145,119,60,119,60,114,145,114"/>
 </map>

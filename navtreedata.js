@@ -92,7 +92,8 @@ var NAVTREE =
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
-        [ "Functions", "namespacemembers_func.html", null ]
+        [ "Functions", "namespacemembers_func.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ]
       ] ]
     ] ],
     [ "Classes", "annotated.html", [
@@ -111,8 +112,11 @@ var NAVTREE =
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
-        [ "All", "globals.html", null ],
+        [ "All", "globals.html", "globals_dup" ],
         [ "Functions", "globals_func.html", null ],
+        [ "Variables", "globals_vars.html", null ],
+        [ "Enumerations", "globals_enum.html", null ],
+        [ "Enumerator", "globals_eval.html", null ],
         [ "Macros", "globals_defs.html", null ]
       ] ]
     ] ]
@@ -122,9 +126,10 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "AuthPacket_8cpp.html",
-"classBasalType.html#a6899be7659ea5677d7f6ec478007eb83a558661cff122e91ad97a6408bc920fea",
-"classPumpBleComm.html#a124528cc0266f5da2225c35a2546aec8",
-"structHmiService_1_1PassKeyDisplayTask.html#abe3d00ac7b52b8c0d7b2086389b803b6"
+"Tunes_8h.html#adfbdbc36baee852981842d731e0ccf6da2ab7ae8994788289893e5579ece3e92a",
+"classBuzzer.html#ac9380686a8aa8ed9ec7ab32ff658d4b6",
+"classNotificationPacket.html#a0469452f10ddc13cbadb2fb6cfbe5c6b",
+"functions_func_d.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

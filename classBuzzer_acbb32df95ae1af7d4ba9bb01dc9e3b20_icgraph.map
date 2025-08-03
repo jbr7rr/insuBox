@@ -1,0 +1,7 @@
+<map id="Buzzer::stop" name="Buzzer::stop">
+<area shape="rect" id="Node000001" title="Stop playing the current tune." alt="" coords="211,31,313,56"/>
+<area shape="rect" id="Node000002" href="$classBuzzer.html#ac9380686a8aa8ed9ec7ab32ff658d4b6" title="Play a tune on the buzzer. (async)" alt="" coords="18,5,150,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="196,37,150,30,150,25,197,31"/>
+<area shape="rect" id="Node000003" href="$classBuzzer.html#abafa714910d32d642c76be15dd2060ea" title=" " alt="" coords="5,55,163,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="197,55,163,59,163,54,196,49"/>
+</map>

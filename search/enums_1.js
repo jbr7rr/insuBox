@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['reason_0',['Reason',['../classBasalEndReason.html#a64cf9dd0307725ce5b5e3855a58aa0db',1,'BasalEndReason']]]
+  ['btstate_0',['BtState',['../BLEComm_8h.html#aa971fd9e627491cdc6e9026e0afbd2ec',1,'BLEComm.h']]]
 ];

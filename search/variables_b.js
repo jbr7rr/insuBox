@@ -1,5 +1,8 @@
 var searchData=
 [
-  ['value_0',['value',['../classBasalEndReason.html#ac7f37ab56a8d009c25dbe5197437e473',1,'BasalEndReason::value'],['../classBasalType.html#a8da6263e27163772901bbc0c8cc1f8ea',1,'BasalType::value'],['../classCommandType.html#a80e7d5b0a036bde63bb5610aea92220c',1,'CommandType::value'],['../classPumpState.html#ae00c570699abba81e0ecc532db9f7c80',1,'PumpState::value']]],
-  ['version_1',['version',['../structIScanCallback_1_1ManufacturerData.html#a074fb23c49674d512fda06dd3d8af197',1,'IScanCallback::ManufacturerData']]]
+  ['recycled_0',['recycled',['../classBLEComm.html#a3c5bfe218f246ccacbbe5d3fd7e0a5e3',1,'BLEComm']]],
+  ['requestedamount_1',['requestedAmount',['../structBolusProgressUpdate.html#a17e5d436c80a822a4854cab3d6fac452',1,'BolusProgressUpdate']]],
+  ['requestedtimestamp_2',['requestedTimestamp',['../structBolusProgressUpdate.html#a631499b482293a3ab6ad6398c812d2d7',1,'BolusProgressUpdate']]],
+  ['reservoirattached_3',['reservoirAttached',['../structPumpStatus.html#ad4f63bd838cc3b8127b6f7803fc76906',1,'PumpStatus']]],
+  ['reservoirlevel_4',['reservoirlevel',['../structInsulinDeliveryDevice_1_1IddStatusChar.html#a5c4fc4cf8b09b68c4fe0871ba9da290d',1,'InsulinDeliveryDevice::IddStatusChar::reservoirLevel'],['../structPumpStatus.html#a5c4f572e4532425ea09c5e856ddff4c2',1,'PumpStatus::reservoirLevel']]]
 ];

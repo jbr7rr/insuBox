@@ -1,0 +1,7 @@
+<map id="ControlService" name="ControlService">
+<area shape="rect" id="Node000001" title=" " alt="" coords="98,93,215,119"/>
+<area shape="rect" id="Node000002" href="$classEventDispatcher.html" title="Class responsible for dispatching events to registered listeners." alt="" coords="5,5,135,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,38,146,91,143,95,89,42"/>
+<area shape="rect" id="Node000003" href="$classIInsulinDeliveryDevice.html" title=" " alt="" coords="159,5,328,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="234,44,215,71,182,95,179,91,211,67,230,41"/>
+</map>

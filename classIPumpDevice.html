@@ -114,6 +114,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:a5d151401ce60fefe112e4de750300d4d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aa04d76a0528b91dd4a6ab3a006563010" id="r_aa04d76a0528b91dd4a6ab3a006563010"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIPumpDevice.html#aa04d76a0528b91dd4a6ab3a006563010">init</a> ()=0</td></tr>
 <tr class="separator:aa04d76a0528b91dd4a6ab3a006563010"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab79b3dfb27a0a800ee6113c9c12887fc" id="r_ab79b3dfb27a0a800ee6113c9c12887fc"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIPumpDevice.html#ab79b3dfb27a0a800ee6113c9c12887fc">onBolusRequest</a> (float amount, time_t timestamp)=0</td></tr>
+<tr class="memdesc:ab79b3dfb27a0a800ee6113c9c12887fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a bolus request.  <br /></td></tr>
+<tr class="separator:ab79b3dfb27a0a800ee6113c9c12887fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a515355ac9fb35c96fe77f6ee959de82d" id="r_a515355ac9fb35c96fe77f6ee959de82d"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIPumpDevice.html#a515355ac9fb35c96fe77f6ee959de82d">onStopBolusRequest</a> ()=0</td></tr>
+<tr class="memdesc:a515355ac9fb35c96fe77f6ee959de82d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a request to stop the bolus delivery.  <br /></td></tr>
+<tr class="separator:a515355ac9fb35c96fe77f6ee959de82d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a096e963de9956c1d1beb1288219cdb02" id="r_a096e963de9956c1d1beb1288219cdb02"><td class="memItemLeft" align="right" valign="top">virtual void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classIPumpDevice.html#a096e963de9956c1d1beb1288219cdb02">onRetractRequest</a> ()=0</td></tr>
+<tr class="memdesc:a096e963de9956c1d1beb1288219cdb02"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a request to retract the plunger.  <br /></td></tr>
+<tr class="separator:a096e963de9956c1d1beb1288219cdb02"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
 <a id="a5d151401ce60fefe112e4de750300d4d" name="a5d151401ce60fefe112e4de750300d4d"></a>
@@ -174,6 +183,141 @@ Here is the caller graph for this function:</div>
 <area shape="rect" title=" " alt="" coords="189,5,327,31"/>
 <area shape="rect" href="classPumpService.html#acf416da6faabd3b3a9166beb6a16bd60" title=" " alt="" coords="5,5,141,31"/>
 <area shape="poly" title=" " alt="" coords="175,21,142,21,142,15,175,15"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="ab79b3dfb27a0a800ee6113c9c12887fc" name="ab79b3dfb27a0a800ee6113c9c12887fc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab79b3dfb27a0a800ee6113c9c12887fc">&#9670;&#160;</a></span>onBolusRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IPumpDevice::onBolusRequest </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>amount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">time_t&#160;</td>
+          <td class="paramname"><em>timestamp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle a bolus request. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">amount</td><td>The amount of insulin to deliver. </td></tr>
+    <tr><td class="paramname">timestamp</td><td>The timestamp of the request. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implemented in <a class="el" href="classMedtrumBTDevice.html#a6b0c3834e5aac56d5d66685386e0189f">MedtrumBTDevice</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classIPumpDevice_ab79b3dfb27a0a800ee6113c9c12887fc_icgraph.png" border="0" usemap="#aclassIPumpDevice_ab79b3dfb27a0a800ee6113c9c12887fc_icgraph" alt=""/></div>
+<map name="aclassIPumpDevice_ab79b3dfb27a0a800ee6113c9c12887fc_icgraph" id="aclassIPumpDevice_ab79b3dfb27a0a800ee6113c9c12887fc_icgraph">
+<area shape="rect" title="Handle a bolus request." alt="" coords="253,5,475,31"/>
+<area shape="rect" href="classPumpService.html#a2f91a1cc86d94bcb2dde2e41742832cf" title=" " alt="" coords="5,5,205,31"/>
+<area shape="poly" title=" " alt="" coords="240,21,206,21,206,15,240,15"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a096e963de9956c1d1beb1288219cdb02" name="a096e963de9956c1d1beb1288219cdb02"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a096e963de9956c1d1beb1288219cdb02">&#9670;&#160;</a></span>onRetractRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IPumpDevice::onRetractRequest </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle a request to retract the plunger. </p>
+
+<p>Implemented in <a class="el" href="classMedtrumBTDevice.html#a38528291ab85e8a94169008f9070589d">MedtrumBTDevice</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classIPumpDevice_a096e963de9956c1d1beb1288219cdb02_icgraph.png" border="0" usemap="#aclassIPumpDevice_a096e963de9956c1d1beb1288219cdb02_icgraph" alt=""/></div>
+<map name="aclassIPumpDevice_a096e963de9956c1d1beb1288219cdb02_icgraph" id="aclassIPumpDevice_a096e963de9956c1d1beb1288219cdb02_icgraph">
+<area shape="rect" title="Handle a request to retract the plunger." alt="" coords="253,5,485,31"/>
+<area shape="rect" href="classPumpService.html#a2f91a1cc86d94bcb2dde2e41742832cf" title=" " alt="" coords="5,5,205,31"/>
+<area shape="poly" title=" " alt="" coords="240,21,205,21,205,15,240,15"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a515355ac9fb35c96fe77f6ee959de82d" name="a515355ac9fb35c96fe77f6ee959de82d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a515355ac9fb35c96fe77f6ee959de82d">&#9670;&#160;</a></span>onStopBolusRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">virtual void IPumpDevice::onStopBolusRequest </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">pure virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle a request to stop the bolus delivery. </p>
+
+<p>Implemented in <a class="el" href="classMedtrumBTDevice.html#aac87e4226928ba1f5373a579d52d75d7">MedtrumBTDevice</a>.</p>
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classIPumpDevice_a515355ac9fb35c96fe77f6ee959de82d_icgraph.png" border="0" usemap="#aclassIPumpDevice_a515355ac9fb35c96fe77f6ee959de82d_icgraph" alt=""/></div>
+<map name="aclassIPumpDevice_a515355ac9fb35c96fe77f6ee959de82d_icgraph" id="aclassIPumpDevice_a515355ac9fb35c96fe77f6ee959de82d_icgraph">
+<area shape="rect" title="Handle a request to stop the bolus delivery." alt="" coords="253,5,451,45"/>
+<area shape="rect" href="classPumpService.html#a2f91a1cc86d94bcb2dde2e41742832cf" title=" " alt="" coords="5,13,205,38"/>
+<area shape="poly" title=" " alt="" coords="239,28,206,28,206,23,239,23"/>
 </map>
 </div>
 

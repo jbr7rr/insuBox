@@ -159,6 +159,15 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:ae5a766f1d1d210f58acf4a882cf09fce"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1b8798bd86a2c4cc62086fbf393ff3fc" id="r_a1b8798bd86a2c4cc62086fbf393ff3fc"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMedtrumBTDevice.html#a1b8798bd86a2c4cc62086fbf393ff3fc">init</a> () override</td></tr>
 <tr class="separator:a1b8798bd86a2c4cc62086fbf393ff3fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b0c3834e5aac56d5d66685386e0189f" id="r_a6b0c3834e5aac56d5d66685386e0189f"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMedtrumBTDevice.html#a6b0c3834e5aac56d5d66685386e0189f">onBolusRequest</a> (float amount, time_t timestamp) override</td></tr>
+<tr class="memdesc:a6b0c3834e5aac56d5d66685386e0189f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a bolus request.  <br /></td></tr>
+<tr class="separator:a6b0c3834e5aac56d5d66685386e0189f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aac87e4226928ba1f5373a579d52d75d7" id="r_aac87e4226928ba1f5373a579d52d75d7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMedtrumBTDevice.html#aac87e4226928ba1f5373a579d52d75d7">onStopBolusRequest</a> () override</td></tr>
+<tr class="memdesc:aac87e4226928ba1f5373a579d52d75d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a request to stop the bolus delivery.  <br /></td></tr>
+<tr class="separator:aac87e4226928ba1f5373a579d52d75d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a38528291ab85e8a94169008f9070589d" id="r_a38528291ab85e8a94169008f9070589d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMedtrumBTDevice.html#a38528291ab85e8a94169008f9070589d">onRetractRequest</a> () override</td></tr>
+<tr class="memdesc:a38528291ab85e8a94169008f9070589d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Handle a request to retract the plunger.  <br /></td></tr>
+<tr class="separator:a38528291ab85e8a94169008f9070589d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8d6d11181ece0c8a826886d44e23daf6" id="r_a8d6d11181ece0c8a826886d44e23daf6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMedtrumBTDevice.html#a8d6d11181ece0c8a826886d44e23daf6">onReadyForCommands</a> () override</td></tr>
 <tr class="separator:a8d6d11181ece0c8a826886d44e23daf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a05cd95e70a0810b44fd94f8058741b77" id="r_a05cd95e70a0810b44fd94f8058741b77"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMedtrumBTDevice.html#a05cd95e70a0810b44fd94f8058741b77">onDisconnected</a> () override</td></tr>
@@ -327,6 +336,53 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a6b0c3834e5aac56d5d66685386e0189f" name="a6b0c3834e5aac56d5d66685386e0189f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b0c3834e5aac56d5d66685386e0189f">&#9670;&#160;</a></span>onBolusRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MedtrumBTDevice::onBolusRequest </td>
+          <td>(</td>
+          <td class="paramtype">float&#160;</td>
+          <td class="paramname"><em>amount</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">time_t&#160;</td>
+          <td class="paramname"><em>timestamp</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle a bolus request. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">amount</td><td>The amount of insulin to deliver. </td></tr>
+    <tr><td class="paramname">timestamp</td><td>The timestamp of the request. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+<p>Implements <a class="el" href="classIPumpDevice.html#ab79b3dfb27a0a800ee6113c9c12887fc">IPumpDevice</a>.</p>
+
+</div>
+</div>
 <a id="a4de71d2aea3d49ce7382b0955ec2c310" name="a4de71d2aea3d49ce7382b0955ec2c310"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a4de71d2aea3d49ce7382b0955ec2c310">&#9670;&#160;</a></span>onCommandResponse()</h2>
 
@@ -454,6 +510,64 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Implements <a class="el" href="classPumpBleCallback.html#a3b6d6dffb2360bef247bba660607355d">PumpBleCallback</a>.</p>
+
+</div>
+</div>
+<a id="a38528291ab85e8a94169008f9070589d" name="a38528291ab85e8a94169008f9070589d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a38528291ab85e8a94169008f9070589d">&#9670;&#160;</a></span>onRetractRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MedtrumBTDevice::onRetractRequest </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle a request to retract the plunger. </p>
+
+<p>Implements <a class="el" href="classIPumpDevice.html#a096e963de9956c1d1beb1288219cdb02">IPumpDevice</a>.</p>
+
+</div>
+</div>
+<a id="aac87e4226928ba1f5373a579d52d75d7" name="aac87e4226928ba1f5373a579d52d75d7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aac87e4226928ba1f5373a579d52d75d7">&#9670;&#160;</a></span>onStopBolusRequest()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void MedtrumBTDevice::onStopBolusRequest </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">override</span><span class="mlabel">virtual</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Handle a request to stop the bolus delivery. </p>
+
+<p>Implements <a class="el" href="classIPumpDevice.html#a515355ac9fb35c96fe77f6ee959de82d">IPumpDevice</a>.</p>
 
 </div>
 </div>

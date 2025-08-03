@@ -1,0 +1,5 @@
+<map id="IPumpDevice::onStopBolusRequest" name="IPumpDevice::onStopBolusRequest">
+<area shape="rect" id="Node000001" title="Handle a request to stop the bolus delivery." alt="" coords="253,5,451,45"/>
+<area shape="rect" id="Node000002" href="$classPumpService.html#a2f91a1cc86d94bcb2dde2e41742832cf" title=" " alt="" coords="5,13,205,38"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="239,28,206,28,206,23,239,23"/>
+</map>

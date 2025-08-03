@@ -1,20 +1,28 @@
 <map id="HmiServiceTest" name="HmiServiceTest">
-<area shape="rect" id="Node000001" title=" " alt="" coords="123,181,245,207"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,93,107,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="86,124,168,179,165,183,83,129"/>
-<area shape="rect" id="Node000003" href="$classEventDispatcher.html" title="Class responsible for dispatching events to registered listeners." alt="" coords="141,5,270,31"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="192,43,179,67,169,94,167,118,170,141,181,180,176,182,164,142,162,118,164,93,174,65,187,41"/>
-<area shape="rect" id="Node000006" href="$classHmiService.html" title=" " alt="" coords="458,93,555,119"/>
-<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="239,35,274,52,313,67,378,82,446,91,458,93,457,98,445,96,377,87,311,72,272,57,236,39"/>
-<area shape="rect" id="Node000004" href="$classMockHmiDevice.html" title=" " alt="" coords="305,93,434,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="292,123,250,133,221,145,203,163,191,183,187,180,199,160,219,140,248,128,291,118"/>
-<area shape="rect" id="Node000005" href="$classIHmiDevice.html" title=" " alt="" coords="332,5,431,31"/>
-<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="380,44,374,93,368,92,375,44"/>
-<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="397,41,422,67,444,81,467,91,465,96,441,85,418,71,393,44"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="461,126,346,160,242,184,241,179,345,155,459,120"/>
-<area shape="rect" id="Node000008" href="$structHmiService_1_1PassKeyDisplayTask.html" title=" " alt="" coords="474,181,710,207"/>
-<area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="570,112,621,123,642,131,656,141,659,154,653,166,625,184,623,179,649,163,654,154,651,144,639,136,620,128,568,117"/>
-<area shape="rect" id="Node000007" href="$classIHmiCallback.html" title=" " alt="" coords="468,5,577,31"/>
-<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="521,45,512,93,506,92,515,44"/>
-<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="521,177,502,159,496,138,500,118,505,119,502,138,506,156,525,173"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="723,419,846,444"/>
+<area shape="rect" id="Node000002" title=" " alt="" coords="302,443,403,468"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="417,449,723,432,723,437,417,454"/>
+<area shape="rect" id="Node000003" href="$classEventDispatcher.html" title="Class responsible for dispatching events to registered listeners." alt="" coords="5,371,135,396"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="149,386,723,425,723,430,148,391"/>
+<area shape="rect" id="Node000006" href="$classHmiService.html" title=" " alt="" coords="304,261,401,287"/>
+<area shape="poly" id="edge7_Node000006_Node000003" title=" " alt="" coords="116,363,318,284,320,289,117,368"/>
+<area shape="rect" id="Node000004" href="$classMockHmiDevice.html" title=" " alt="" coords="288,492,417,517"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="431,495,532,484,642,466,741,442,742,447,643,471,532,489,431,501"/>
+<area shape="rect" id="Node000005" href="$classIHmiDevice.html" title=" " alt="" coords="21,435,119,460"/>
+<area shape="poly" id="edge4_Node000004_Node000005" title=" " alt="" coords="133,458,159,463,288,490,287,495,158,469,132,463"/>
+<area shape="poly" id="edge8_Node000006_Node000005" title=" " alt="" coords="120,427,182,401,247,365,299,323,338,285,342,289,303,327,249,370,184,406,122,432"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="385,292,420,313,458,333,587,375,736,416,734,421,585,380,456,338,417,318,382,297"/>
+<area shape="rect" id="Node000008" href="$structHmiService_1_1SimpleTask.html" title=" " alt="" coords="695,179,874,204"/>
+<area shape="poly" id="edge10_Node000008_Node000006" title=" " alt="" coords="370,249,406,212,430,194,456,181,492,170,530,163,605,160,675,166,733,176,732,181,674,171,604,165,530,169,493,175,458,186,433,199,410,216,374,253"/>
+<area shape="rect" id="Node000009" href="$structHmiService_1_1PassKeyDisplayTask.html" title=" " alt="" coords="667,284,903,309"/>
+<area shape="poly" id="edge12_Node000009_Node000006" title=" " alt="" coords="397,289,458,306,519,313,581,314,694,307,695,312,581,319,519,318,457,311,396,294"/>
+<area shape="rect" id="Node000010" href="$structHmiService_1_1BolusProgressUpdateTask.html" title=" " alt="" coords="686,43,883,83"/>
+<area shape="poly" id="edge14_Node000010_Node000006" title=" " alt="" coords="358,247,370,210,390,167,418,125,436,106,456,90,488,82,545,75,686,65,686,70,546,80,489,87,459,95,439,110,422,128,395,170,375,212,363,249"/>
+<area shape="rect" id="Node000007" href="$classIHmiCallback.html" title=" " alt="" coords="15,261,125,287"/>
+<area shape="poly" id="edge6_Node000006_Node000007" title=" " alt="" coords="139,271,304,271,304,277,139,277"/>
+<area shape="poly" id="edge9_Node000006_Node000008" title=" " alt="" coords="726,210,643,230,402,269,401,264,642,225,724,205"/>
+<area shape="poly" id="edge11_Node000006_Node000009" title=" " alt="" coords="653,292,401,279,402,274,653,287"/>
+<area shape="poly" id="edge13_Node000006_Node000010" title=" " alt="" coords="712,90,643,110,590,118,547,119,506,125,484,133,459,146,425,172,398,205,362,262,358,260,393,202,422,169,456,141,481,128,504,120,546,114,589,113,642,105,710,85"/>
+<area shape="rect" id="Node000011" href="$structBolusProgressUpdate.html" title=" " alt="" coords="272,5,433,31"/>
+<area shape="poly" id="edge15_Node000010_Node000011" title=" " alt="" coords="448,25,643,45,686,49,685,55,642,50,447,30"/>
 </map>

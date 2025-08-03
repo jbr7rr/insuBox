@@ -1,5 +1,9 @@
 <map id="PumpService" name="PumpService">
-<area shape="rect" id="Node000001" title=" " alt="" coords="6,93,113,119"/>
-<area shape="rect" id="Node000002" href="$classIPumpDevice.html" title=" " alt="" coords="5,5,113,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="62,45,62,93,57,93,57,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="205,93,311,119"/>
+<area shape="rect" id="Node000002" href="$classIPumpDeviceCallback.html" title=" " alt="" coords="5,5,169,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="124,34,236,91,234,95,121,39"/>
+<area shape="rect" id="Node000003" href="$classEventDispatcher.html" title="Class responsible for dispatching events to registered listeners." alt="" coords="193,5,323,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="261,45,261,93,255,93,255,45"/>
+<area shape="rect" id="Node000004" href="$classIPumpDevice.html" title=" " alt="" coords="347,5,455,31"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="384,44,353,72,327,85,300,96,298,91,325,81,350,67,381,40"/>
 </map>
