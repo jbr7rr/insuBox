@@ -12,3 +12,15 @@ config IB_PUMP_INSUBOX
 	  This option adds support for InsuBox DIY pump.
 
 endchoice
+
+if IB_PUMP_INSUBOX
+
+config IB_PUMP_RESERVOIR_VOLUME
+	int "InsuBox reservoir volume (units)"
+	default 300
+	range 0 600
+	help
+	  This option sets the reservoir volume for the InsuBox pump in units.
+	  The default value is 300 units, which is equivalent to 3.00 ml.
+
+endif

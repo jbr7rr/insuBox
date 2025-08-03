@@ -193,9 +193,9 @@
 	pinctrl-names = "default";
 	
 	// U3 - TMAG5273_D1
-	tmag5273_bottom: tmag5273@44 {
+	tmag5273_bottom: tmag5273@22 {
 		compatible = "ti,tmag5273";
-		reg = <0x44>;
+		reg = <0x22>;
 		label = "tmag5273_bottom";
 		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
 		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;

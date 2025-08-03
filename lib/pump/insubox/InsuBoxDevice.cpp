@@ -5,6 +5,7 @@
 
 LOG_MODULE_REGISTER(ib_insubox_pump_device);
 
+#include <cmath>
 #include <string>
 
 // TODO: move low level stuff to its own files
@@ -27,17 +28,23 @@ InsuBoxDevice::InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback)
 {
     LOG_DBG("InsuBoxDevice constructor");
 
-    mSubContainer.mDevice = this;
-    k_work_init_delayable(&mSubContainer.sensorWork, [](struct k_work *work) {
-        auto *container = CONTAINER_OF(work, SubContainer, sensorWork);
-        container->mDevice->sensorWork();
+    mSensorTask.mDevice = this;
+    k_work_init_delayable(&mSensorTask.work, [](struct k_work *work) {
+        auto *container = CONTAINER_OF(work, SimpleTask, work);
+        container->mDevice->sensorTask();
     });
 
     mBolusTask.device = this;
     mBolusTask.completed = true;
-    k_work_init_delayable(&mBolusTask.bolusWork, [](struct k_work *work) {
-        auto *task = CONTAINER_OF(work, BolusTask, bolusWork);
-        task->device->bolusWork();
+    k_work_init_delayable(&mBolusTask.work, [](struct k_work *work) {
+        auto *task = CONTAINER_OF(work, BolusTask, work);
+        task->device->bolusTask();
+    });
+
+    mRetractTask.mDevice = this;
+    k_work_init_delayable(&mRetractTask.work, [](struct k_work *work) {
+        auto *container = CONTAINER_OF(work, SimpleTask, work);
+        container->mDevice->retractTask();
     });
 
     settings_subsys_init();
@@ -58,60 +65,50 @@ void InsuBoxDevice::init()
 {
     LOG_DBG("InsuBoxDevice init");
 
-    k_work_reschedule(&mSubContainer.sensorWork, K_NO_WAIT);
+    k_work_reschedule(&mSensorTask.work, K_NO_WAIT);
 }
 
 void InsuBoxDevice::onBolusRequest(float amount, time_t timestamp)
 {
     LOG_DBG("Bolus request: %.2f units at %lld", static_cast<double>(amount), timestamp);
-    if (mBolusTask.completed == false)
+    if (mState != State::IDLE)
     {
-        LOG_ERR("Bolus already in progress");
+        LOG_ERR("Cannot handle bolus request, device is busy");
         return;
     }
+    auto totalDelivered = mMotor.getPosition();
+    if (totalDelivered.has_value() && totalDelivered.value() + amount > CONFIG_IB_PUMP_RESERVOIR_VOLUME)
+    {
+        amount = CONFIG_IB_PUMP_RESERVOIR_VOLUME - totalDelivered.value();
+        LOG_WRN("Requested bolus exceeds reservoir volume, adjusting to %.2f units", static_cast<double>(amount));
+    }
+
+    mState = State::DELIVERING_BOLUS;
     mBolusTask.requestedBolus = amount;
     mBolusTask.requestedTimestamp = timestamp;
     mBolusTask.deliveredBolus = 0.0f;
     mBolusTask.completed = false;
-    k_work_reschedule(&mBolusTask.bolusWork, K_NO_WAIT);
+    k_work_reschedule(&mBolusTask.work, K_NO_WAIT);
 }
 
 void InsuBoxDevice::onStopBolusRequest()
 {
+    // TODO: Check if this syncs properly
     LOG_DBG("Stop bolus");
-    k_work_cancel_delayable(&mBolusTask.bolusWork);
+    k_work_cancel_delayable(&mBolusTask.work);
     mMotor.stop();
 }
 
 void InsuBoxDevice::onRetractRequest()
 {
     LOG_DBG("Retract request");
-    if (mBolusTask.completed == false)
+    if (mState != State::IDLE)
     {
-        LOG_ERR("Motor busy, what did you do :') ????");
+        LOG_ERR("Cannot handle retract request, device is busy");
         return;
     }
-
-    // TODO: Maybe want to add a priming/retracting flag to the bolus status?
-    std::optional<float> position = mMotor.getPosition();
-    if (position.has_value())
-    {
-        // TODO: Plunger position detection
-        // For now add 50 units to ensure we fully retract
-        position = position.value() + 50.0f;
-    }
-    else
-    {
-        // Position not initialized, assume first assembly/install
-        position = 350.0f;
-    }
-
-    mMotor.setPosition(position.value());
-    mBolusTask.requestedBolus = -position.value();
-    mBolusTask.requestedTimestamp = 0;
-    mBolusTask.deliveredBolus = 0.0f;
-    mBolusTask.completed = false;
-    mMotor.moveToPosition(0.0f, 80);
+    mState = State::RETRACTING;
+    k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
 }
 
 void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopped, bool error)
@@ -122,14 +119,18 @@ void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopp
     std::string key = std::string(settingsSubKey) + "/" + settingsPlungerPosKey;
     settings_save_one(key.c_str(), &position, sizeof(position));
 
-    mBolusTask.deliveredBolus += delivered;
-    if (stopped || error)
+    if (mState == State::RETRACTING)
     {
-        mBolusTask.completed = true;
-        // TODO: Report error somehow
+        k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
+        return;
     }
 
-    k_work_reschedule(&mBolusTask.bolusWork, K_MSEC(500));
+    if (mState == State::DELIVERING_BOLUS)
+    {
+        mBolusTask.deliveredBolus += delivered;
+        mBolusTask.completed = (stopped || error);
+        k_work_reschedule(&mBolusTask.work, K_MSEC(500));
+    }
 }
 
 void read_sensor(const struct device *sensor)
@@ -155,15 +156,15 @@ void read_sensor(const struct device *sensor)
     LOG_DBG("%s Magnetic field (uT): X=%d, Y=%d, Z=%d", sensor->name, mag_x.val1, mag_y.val1, mag_z.val1);
 }
 
-void InsuBoxDevice::sensorWork()
+void InsuBoxDevice::sensorTask()
 {
     read_sensor(sensor0);
     read_sensor(sensor1);
 
-    k_work_reschedule(&mSubContainer.sensorWork, K_MSEC(10000));
+    k_work_reschedule(&mSensorTask.work, K_MSEC(10000));
 }
 
-void InsuBoxDevice::bolusWork()
+void InsuBoxDevice::bolusTask()
 {
     LOG_DBG("Bolus work");
 
@@ -172,6 +173,7 @@ void InsuBoxDevice::bolusWork()
     if (mBolusTask.completed || remainingBolus <= 0.01f)
     {
         LOG_DBG("Bolus completed");
+        mState = State::IDLE;
         mBolusTask.completed = true;
         sendBolusProgressUpdate();
         return;
@@ -184,10 +186,69 @@ void InsuBoxDevice::bolusWork()
     if (err)
     {
         LOG_ERR("Failed to deliver bolus: %d", err);
+        mState = State::IDLE;
         mBolusTask.completed = true;
     }
 
     sendBolusProgressUpdate();
+}
+
+void InsuBoxDevice::retractTask()
+{
+    LOG_DBG("Retract work");
+
+    if (mState != State::RETRACTING)
+    {
+        LOG_ERR("Invalid state for retract task: %d", static_cast<int>(mState.load()));
+        return;
+    }
+
+    std::optional<float> currentPosition = mMotor.getPosition();
+    if (!currentPosition.has_value())
+    {
+        // Assemble with retracted plunger
+        // Maybe error here, and seperate assembly procedure?
+        LOG_ERR("Current position is not set, assuming retracted position");
+        mMotor.setPosition(5.0f);
+        currentPosition = 5.0f;
+    }
+
+    constexpr float TOLERANCE = 0.0001f;
+    constexpr float SLOW_RETRACT_POSITION = 15.0f;
+    constexpr float FULL_RETRACT_POSITION = 0.0f;
+    constexpr float EXTRA_UNITS = 5.0f;
+
+    if (currentPosition.value() > SLOW_RETRACT_POSITION)
+    {
+        // Start retract at full speed
+        constexpr int RETRACT_SPEED = 100;     // Set speed to 100% for retract
+        constexpr uint8_t RETRACT_POWER = 100; // Set power to 80% for retract, to not block the motor
+        int err = mMotor.moveToPosition(SLOW_RETRACT_POSITION, RETRACT_SPEED, RETRACT_POWER);
+        if (err)
+        {
+            LOG_ERR("Failed to retract: %d", err);
+            return;
+        }
+    }
+    else if (currentPosition.value() > TOLERANCE)
+    {
+        // Add some unit to ensure we fully retract
+        mMotor.setPosition(currentPosition.value() + EXTRA_UNITS);
+
+        constexpr int RETRACT_SPEED = 20;
+        constexpr uint8_t RETRACT_POWER = 50;
+        int err = mMotor.moveToPosition(FULL_RETRACT_POSITION, RETRACT_SPEED, RETRACT_POWER);
+        if (err)
+        {
+            LOG_ERR("Failed to bump forward: %d", err);
+            return;
+        }
+    }
+    else
+    {
+        // Update here?
+        mState = State::IDLE;
+    }
 }
 
 void InsuBoxDevice::sendBolusProgressUpdate()

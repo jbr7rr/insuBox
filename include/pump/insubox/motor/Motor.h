@@ -40,10 +40,11 @@ public:
      * @param units The position to move to, in units. Can be negative in order to correct the position if it is
      * incorrect.
      * @param speed The speed of the motor. 0 - 100. (0 is slowest possible, 100 is fastest)
+     * @param powerPct The power percentage to use for the motor. 0 - 150. (0 is off, 100 is nominal, 150 is overdrive)
      *
      * @return int 0 on success, negative error code on failure.
      */
-    int moveToPosition(float units, uint8_t speed = 100);
+    int moveToPosition(float units, uint8_t speed = 100, uint8_t powerPct = 100);
 
     /**
      * @brief Stop the motor.

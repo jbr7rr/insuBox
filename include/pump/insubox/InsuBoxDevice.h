@@ -26,16 +26,24 @@ protected:
     void onMotorCompleted(float delivered, float position, bool stopped, bool error) override;
 
 private:
-    struct SubContainer
+    enum State : uint8_t
+    {
+        IDLE,
+        DELIVERING_BOLUS,
+        RETRACTING,
+    };
+    std::atomic<State> mState = State::IDLE;
+    struct SimpleTask
     {
         InsuBoxDevice *mDevice;
-        k_work_delayable sensorWork;
-    } mSubContainer;
-
+        k_work_delayable work;
+    };
+    SimpleTask mSensorTask;
+    SimpleTask mRetractTask;
     struct BolusTask
     {
         InsuBoxDevice *device;
-        k_work_delayable bolusWork;
+        k_work_delayable work;
         float requestedBolus;
         float deliveredBolus;
         time_t requestedTimestamp;
@@ -45,8 +53,9 @@ private:
     IPumpDeviceCallback &mPumpDeviceCallback;
     Motor &mMotor;
 
-    void sensorWork();
-    void bolusWork();
+    void sensorTask();
+    void bolusTask();
+    void retractTask();
 
     void sendBolusProgressUpdate();
 
