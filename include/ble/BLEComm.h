@@ -8,9 +8,20 @@
 
 #include <cstdint>
 #include <map>
-#include <string>
 
 #include <optional>
+
+enum BtState
+{
+    BT_STATE_DISCONNECTED,
+    BT_STATE_CONNECTED,
+};
+
+struct BtBluetoothStateChanged
+{
+    struct bt_conn *conn;
+    BtState state;
+};
 
 struct BtPassKeyConfirmRequest
 {
@@ -72,7 +83,6 @@ public:
 
 private:
     // For now we set it here, we might want to make this configurable and depend on the device
-    static constexpr int MAX_CLIENT_CONNECTIONS = 1;
     struct CompareBtAddr
     {
         bool operator()(const bt_addr_le_t &lhs, const bt_addr_le_t &rhs) const
@@ -82,8 +92,8 @@ private:
     };
 
     static EventDispatcher *mDispatcher;
-    static std::map<bt_addr_le_t, BleConnection *, CompareBtAddr> mConnections;
-    static std::array<BleConnection, MAX_CLIENT_CONNECTIONS> mClientConnections;
+    static std::array<BleConnection *, CONFIG_BT_MAX_CONN> mConnectionsArray;
+    static std::array<BleConnection, CONFIG_IB_BT_MAX_CLIENT_CONNECTIONS> mClientConnections;
     static const struct bt_data advertizingData[];
     static const struct bt_le_adv_param advParam;
     static struct k_work advertisingWork;
@@ -114,6 +124,10 @@ private:
     static void onBtPassKeyConfirmResponse(const BtPassKeyConfirmResponse &response);
 
     static void advertisingWorkHandler(struct k_work *work);
+
+    static void storeConnectionRef(BleConnection *connection);
+    static void removeConnectionRef(BleConnection *connection);
+    static BleConnection *findStoredConnection(struct bt_conn *conn);
 };
 
 #endif // BLE_COMM_H

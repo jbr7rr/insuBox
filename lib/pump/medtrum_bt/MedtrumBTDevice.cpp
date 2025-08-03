@@ -28,7 +28,7 @@ MedtrumBTDevice::MedtrumBTDevice() : mPumpBleComm(*this), mNotificationPacket(mP
 
 MedtrumBTDevice::~MedtrumBTDevice()
 {
-    // Destructor
+    k_work_queue_drain(&mWorkQueue, true);
 }
 
 void MedtrumBTDevice::init()
@@ -44,6 +44,26 @@ void MedtrumBTDevice::init()
     LOG_DBG("Pump state: %d", static_cast<uint8_t>(state));
     auto level = mPumpSync.getReservoirLevel();
     LOG_DBG("Reservoir level: %f", static_cast<double>(level));
+}
+
+void MedtrumBTDevice::onBolusRequest(float amount, time_t timestamp)
+{
+    // Handle a bolus request
+    LOG_DBG("Bolus request: %.2f units at %lld", static_cast<double>(amount), timestamp);
+    LOG_ERR("Bolus request not implemented (yet)");
+}
+
+void MedtrumBTDevice::onStopBolusRequest()
+{
+    // Handle a stop bolus request
+    LOG_DBG("Stop bolus request");
+    LOG_ERR("Stop bolus request not implemented (yet)");
+}
+
+void MedtrumBTDevice::onRetractRequest()
+{
+    // Handle a retract request
+    LOG_DBG("Retract request not needed for Medtrum devices");
 }
 
 void MedtrumBTDevice::onReadyForCommands()

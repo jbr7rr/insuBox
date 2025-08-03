@@ -4,20 +4,7 @@
 #include <ble/BLEComm.h>
 #include <events/EventDispatcher.h>
 #include <hmi/IHmiDevice.h>
-
-#include <zephyr/zbus/zbus.h>
-
-class IHmiCallback
-{
-public:
-    /**
-     * @brief Handle the user response to the pairing request
-     *
-     * @param conn Connection object
-     * @param accepted True if the user accepted the pairing request, false otherwise
-     */
-    virtual void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) = 0;
-};
+#include <pump/PumpService.h>
 
 class HmiService : public IHmiCallback
 {
@@ -28,11 +15,23 @@ public:
     ~HmiService();
     void init();
 
-    void onUserBtPairingResponse(struct bt_conn *conn, bool accepted) override;
+protected:
+    void userBtPairingResponse(struct bt_conn *conn, bool accepted) override;
+    void bolusRequest(float amount, time_t timestamp) override;
+    void stopBolusRequest() override;
+    void retractRequest() override;
 
 private:
     EventDispatcher &mDispatcher;
     IHmiDevice &mHmiDevice;
+
+    struct SimpleTask
+    {
+        HmiService *service;
+        struct k_work work;
+    };
+    SimpleTask mInitTask;
+    SimpleTask mBtBluetoothStateChangedTask;
 
     struct PassKeyDisplayTask
     {
@@ -43,8 +42,16 @@ private:
     };
     PassKeyDisplayTask mPassKeyDisplayTask;
 
-    k_work_q mWorkQueue;
-    K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, KB(2));
+    struct BolusProgressUpdateTask
+    {
+        HmiService *service;
+        struct k_work work;
+        BolusProgressUpdate update;
+    };
+    BolusProgressUpdateTask mBolusProgressUpdateTask;
+
+    static k_work_q mWorkQueue;
+    K_KERNEL_STACK_MEMBER(mWorkQueueBuffer, CONFIG_IB_HMI_STACK_SIZE);
 
     /**
      * @brief Get the hmi internal hmi device object of the selected type in Kconfig

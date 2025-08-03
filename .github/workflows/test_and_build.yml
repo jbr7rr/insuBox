@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
     
 jobs:
-  build:
+  test_and_build:
     runs-on: ubuntu-22.04
     container: ghcr.io/zephyrproject-rtos/ci:v0.26.12
     env:
@@ -35,12 +35,12 @@ jobs:
       - name: Twister Tests
         working-directory: insuBox
         run: |
-          west twister -T tests --integration --jobs 1
+          west twister -T tests --integration
 
-      - name: Build
+      - name: Build app
         working-directory: insuBox
         run: |
-          west build -b native_sim app
+          west build -b native_sim/native/64 app
 
       - name: Upload test logs
         if: ${{ always() }}
@@ -83,4 +83,3 @@ jobs:
           name: doxygen-html
           path: doc/html
           retention-days: 3
-

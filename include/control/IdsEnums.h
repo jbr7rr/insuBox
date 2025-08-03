@@ -1,0 +1,74 @@
+#ifndef IDS_ENUMS_H
+#define IDS_ENUMS_H
+
+#include <cstdint>
+#include <zephyr/sys/util.h>
+
+enum class TherapyControlState : uint8_t
+{
+    UNDETERMINED = 0X0F,
+    STOP = 0x33,
+    PAUSE = 0x3C,
+    RUN = 0x55
+};
+
+enum class OperationalState : uint8_t
+{
+    UNDETERMINED = 0X0F,
+    OFF = 0x33,
+    STANDBY = 0x3C,
+    PREPARING = 0x55,
+    PRIMING = 0X5A,
+    WAITING = 0x56,
+    READY = 0x96
+};
+
+enum class StatusChangedFlags : uint8_t
+{
+    THERAPY_CONTROL_STATE_CHANGED = BIT(0),
+    OPERATIONAL_STATE_CHANGED = BIT(1),
+    RESERVOIR_CHANGED = BIT(2),
+    ANNUNCIATION_CHANGED = BIT(3),
+    TOTAL_DAILY_INSULIN_CHANGED = BIT(4),
+    ACTIVE_BASAL_RATE_CHANGED = BIT(5),
+    ACTIVE_BOLUS_CHANGED = BIT(6),
+    HISTORY_EVENT_RECORDED = BIT(7)
+};
+
+enum class AnnunciationType : uint16_t
+{
+    SYSTEM_ISSUE = 0x000F,
+    MECHANICAL_ISSUE = 0x0033,
+    OCCLUSION_DETECTED = 0x003C,
+    RESERVOIR_ISSUE = 0x0055,
+    RESERVOIR_EMPTY = 0x005A,
+    RESERVOIR_LOW = 0x0066,
+    PRIMING_ISSUE = 0x0069,
+    INFUSION_SET_INCOMPLETE = 0x0096,
+    INFUSION_SET_DETACHED = 0x0099,
+    POWER_SOURCE_INSUFFICIENT = 0x00A5,
+    BATTERY_EMPTY = 0x00AA,
+    BATTERY_LOW = 0x00C3,
+    BATTERY_MEDIUM = 0x00CC,
+    BATTERY_FULL = 0x00F0,
+    TEMPERATURE_OUT_OF_RANGE = 0x00FF,
+    AIR_PRESSURE_OUT_OF_RANGE = 0x0303,
+    BOLUS_CANCELED = 0x030C,
+    TBR_OVER = 0x0330,
+    TBR_CANCELED = 0x033F,
+    MAX_DELIVERY = 0x0356,
+    DATE_TIME_ISSUE = 0x0359,
+    TEMPERATURE = 0x0365
+    // MANUFACTURER_RESERVED_RANGE_START = 0xF000,
+    // MANUFACTURER_RESERVED_RANGE_END = 0xFFF0
+};
+
+enum class AnnunciationStatus : uint8_t
+{
+    UNDETERMINED = 0x0F,
+    PENDING = 0x33,
+    SNOOZED = 0x3C,
+    CONFIRMED = 0x55
+};
+
+#endif // IDS_ENUMS_H

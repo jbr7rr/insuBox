@@ -1,0 +1,6 @@
+board:
+  name: insubox_rev_zero
+  full_name: InsuBox rev Zero
+  vendor: Arasakeru
+  socs:
+  - name: esp32s3

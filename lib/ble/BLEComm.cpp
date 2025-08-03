@@ -12,8 +12,8 @@
 LOG_MODULE_REGISTER(ib_ble);
 
 EventDispatcher *BLEComm::mDispatcher = nullptr;
-std::map<bt_addr_le_t, BleConnection *, BLEComm::CompareBtAddr> BLEComm::mConnections;
-std::array<BleConnection, BLEComm::MAX_CLIENT_CONNECTIONS> BLEComm::mClientConnections = {};
+std::array<BleConnection *, CONFIG_BT_MAX_CONN> BLEComm::mConnectionsArray = {};
+std::array<BleConnection, CONFIG_IB_BT_MAX_CLIENT_CONNECTIONS> BLEComm::mClientConnections = {};
 
 const struct bt_data BLEComm::advertizingData[] = {
     BT_DATA_BYTES(BT_DATA_FLAGS, (BT_LE_AD_GENERAL | BT_LE_AD_NO_BREDR)),
@@ -61,11 +61,11 @@ int BLEComm::connect(bt_addr_le_t &peer, BleConnection *connection)
     int err = bt_conn_le_create(&peer, create_param, param, &connection->conn);
     if (err)
     {
-        LOG_ERR("Connection failed (err %d)", err);
+        LOG_ERR("Connect failed (err %d)", err);
         return err;
     }
     // Save the connection object to the connection map
-    mConnections[peer] = connection;
+    storeConnectionRef(connection);
     return err;
 }
 
@@ -96,7 +96,7 @@ int BLEComm::discover(BleConnection *connection, struct bt_gatt_discover_params 
 uint8_t BLEComm::onDiscover(struct bt_conn *conn, const struct bt_gatt_attr *attr,
                             struct bt_gatt_discover_params *params)
 {
-    auto connection = mConnections[*bt_conn_get_dst(conn)];
+    auto connection = findStoredConnection(conn);
     if (connection != nullptr && connection->callback != nullptr)
     {
         return connection->callback->onDiscover(conn, attr, params);
@@ -125,7 +125,7 @@ uint8_t BLEComm::onGattChanged(struct bt_conn *conn, struct bt_gatt_subscribe_pa
                                uint16_t length)
 {
     LOG_DBG("Gatt changed");
-    auto connection = mConnections[*bt_conn_get_dst(conn)];
+    auto connection = findStoredConnection(conn);
     if (connection != nullptr && connection->callback != nullptr)
     {
         connection->callback->onGattChanged(conn, params, data, length);
@@ -146,60 +146,74 @@ void BLEComm::connected(struct bt_conn *conn, uint8_t err)
     if (err)
     {
         LOG_ERR("Connection failed (err %u)", err);
-        bt_conn_unref(conn);
-    }
-    else
-    {
-        char addr[BT_ADDR_LE_STR_LEN];
-        bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
-        LOG_INF("Connected to %s", addr);
+        return;
     }
 
-    // get connection object from mConnections map
-    auto connection = mConnections[*bt_conn_get_dst(conn)];
-    if (connection != nullptr && connection->callback != nullptr)
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    LOG_INF("Connected to %s", addr);
+
+    auto connection = findStoredConnection(conn);
+    if (connection)
     {
-        connection->callback->onConnected(conn, err);
-    }
-    else if (connection == nullptr)
-    {
-        LOG_INF("Connection object not found");
-        // Find unused client connection object in array
-        for (auto &clientConnection : mClientConnections)
+        if (connection->callback)
         {
-            if (clientConnection.conn == nullptr)
-            {
-                clientConnection.conn = conn;
-                mConnections[*bt_conn_get_dst(conn)] = &clientConnection;
-                break;
-            }
-            else
-            {
-                LOG_ERR("No free client connection object found");
-                // disconnect
-                bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
-            }
+            connection->callback->onConnected(conn, err);
         }
+
+        if (mDispatcher)
+        {
+            mDispatcher->dispatch<BtBluetoothStateChanged>({conn, BtState::BT_STATE_CONNECTED});
+        }
+        return;
     }
+
+    LOG_INF("Connection object not found, registering as new client connection");
+
+    for (auto &clientConnection : mClientConnections)
+    {
+        if (clientConnection.conn != nullptr)
+        {
+            continue;
+        }
+
+        clientConnection.conn = conn;
+        storeConnectionRef(&clientConnection);
+        LOG_INF("Connection object stored");
+
+        if (mDispatcher)
+        {
+            mDispatcher->dispatch<BtBluetoothStateChanged>({conn, BtState::BT_STATE_CONNECTED});
+        }
+        return;
+    }
+
+    LOG_ERR("No free client connection object found, disconnecting");
+    bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
 }
 
 void BLEComm::disconnected(struct bt_conn *conn, uint8_t reason)
 {
-    LOG_INF("Disconnected (reason 0x%02x)", reason);
-    auto connection = mConnections[*bt_conn_get_dst(conn)];
+    char addr[BT_ADDR_LE_STR_LEN];
+    bt_addr_le_to_str(bt_conn_get_dst(conn), addr, sizeof(addr));
+    LOG_INF("Disconnected (reason 0x%02x), dst: %s", reason, addr);
+    auto connection = findStoredConnection(conn);
     if (connection != nullptr && connection->callback != nullptr)
     {
         connection->callback->onDisconnected(conn, reason);
     }
 
-    // remove connection object from mConnections map
-    if (mConnections.find(*bt_conn_get_dst(conn)) != mConnections.end())
+    if (connection != nullptr)
     {
-        bt_conn_unref(connection->conn);
-        connection->conn = nullptr;
-        mConnections.erase(*bt_conn_get_dst(conn));
+        LOG_DBG("Removing connection object from map");
+        removeConnectionRef(connection);
     }
     k_work_submit(&advertisingWork);
+    // Emit event to dispatcher
+    if (mDispatcher)
+    {
+        mDispatcher->dispatch<BtBluetoothStateChanged>({conn, BtState::BT_STATE_DISCONNECTED});
+    }
 }
 
 void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt_security_err err)
@@ -219,7 +233,7 @@ void BLEComm::securityChanged(struct bt_conn *conn, bt_security_t level, enum bt
         }
     }
 
-    auto connection = mConnections[*bt_conn_get_dst(conn)];
+    auto connection = findStoredConnection(conn);
     if (connection != nullptr && connection->callback != nullptr)
     {
         connection->callback->onSecurityChanged(conn, level, err);
@@ -272,6 +286,7 @@ void BLEComm::init(EventDispatcher *dispatcher)
     if (err)
     {
         LOG_ERR("Bluetooth enable failed: %d", err);
+        return;
     }
 
     k_sem_take(&semBtReady, K_FOREVER);
@@ -363,6 +378,45 @@ void BLEComm::advertisingWorkHandler(struct k_work *work)
             {
                 LOG_WRN("Advertising failed to start (ret %d)", err);
             }
+            break;
         }
     }
+}
+
+void BLEComm::storeConnectionRef(BleConnection *connection)
+{
+    for (auto &storedConnection : mConnectionsArray)
+    {
+        if (storedConnection == nullptr)
+        {
+            storedConnection = connection;
+            bt_conn_ref(connection->conn);
+            return;
+        }
+    }
+}
+void BLEComm::removeConnectionRef(BleConnection *connection)
+{
+    for (auto &storedConnection : mConnectionsArray)
+    {
+        if (storedConnection == connection)
+        {
+            bt_conn_unref(storedConnection->conn);
+            storedConnection->conn = nullptr;
+            storedConnection = nullptr;
+            LOG_DBG("Connection object removed from map");
+            return;
+        }
+    }
+}
+BleConnection *BLEComm::findStoredConnection(struct bt_conn *conn)
+{
+    for (auto &connection : mConnectionsArray)
+    {
+        if (connection != nullptr && connection->conn == conn)
+        {
+            return connection;
+        }
+    }
+    return nullptr;
 }

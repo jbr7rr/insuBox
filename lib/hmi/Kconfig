@@ -1,5 +1,3 @@
-menu "Libraries"
-
 config IB_HMI
     bool "InsuBox HMI module"
     help
@@ -19,6 +17,14 @@ config IB_HMI_VIRTUAL
 
 endchoice
 
+rsource "insubox/Kconfig"
+
+config IB_HMI_STACK_SIZE
+    int "InsuBox HMI stack size"
+    default 2048
+    help
+        This option sets the stack size for the InsuBox HMI task.
+        The default value is 2048 bytes.
+
 endif
 
-endmenu

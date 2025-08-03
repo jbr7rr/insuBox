@@ -1,7 +1,7 @@
 common:
   tags: extensibility
   integration_platforms:
-    - native_posix
+    - native_sim/native/64
 tests:
   lib.hmi: 
     harness: gtest

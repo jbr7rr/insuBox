@@ -1,9 +1,10 @@
-menu "Libraries"
 
 config IB_PUMP
 	bool "Insulin Pump"
     help
         This option enables support for insulin pumps.
+        Note: This module is concerned with the insulin delivery, 
+        certain parts of a hardware pump such as HMI will reside in their own modules.
 
 if IB_PUMP
 
@@ -21,5 +22,4 @@ endchoice
 endif
 
 rsource "medtrum_bt/Kconfig"
-
-endmenu
+rsource "insubox/Kconfig"

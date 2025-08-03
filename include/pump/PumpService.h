@@ -1,16 +1,23 @@
 #ifndef PUMP_SERVICE_H
 #define PUMP_SERVICE_H
 
+#include <events/EventDispatcher.h>
 #include <pump/IPumpDevice.h>
 
-class PumpService
+class PumpService : public IPumpDeviceCallback
 {
 public:
-    PumpService(IPumpDevice &pumpDevice = PumpService::getPumpDevice());
+    PumpService(EventDispatcher &dispatcher);
+    PumpService(EventDispatcher &dispatcher, IPumpDevice &pumpDevice);
     ~PumpService();
     void init();
 
+protected:
+    void pumpStatusUpdate(const PumpStatus &status) override;
+    void bolusProgressUpdate(const BolusProgressUpdate &update) override;
+
 private:
+    EventDispatcher &mDispatcher;
     IPumpDevice &mPumpDevice;
 
     /**
@@ -18,7 +25,7 @@ private:
      *
      * @return IPumpDevice&
      */
-    static IPumpDevice &getPumpDevice();
+    static IPumpDevice &getPumpDevice(IPumpDeviceCallback &pumpDeviceCallback);
 };
 
 #endif // PUMP_SERVICE_H

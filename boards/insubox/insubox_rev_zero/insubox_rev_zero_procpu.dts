@@ -1,0 +1,247 @@
+/dts-v1/;
+
+#include <espressif/esp32s3/esp32s3_wroom_n8.dtsi>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/lvgl/lvgl.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
+#include <zephyr/dt-bindings/mipi_dbi/mipi_dbi.h>
+#include <zephyr/dt-bindings/sensor/tmag5273.h>
+#include <espressif/partitions_0x0_amp.dtsi>
+#include "insubox_rev_zero-pinctrl.dtsi"
+
+/ {
+	model = "InsuBox Rev Zero PROCPU";
+	compatible = "espressif,esp32s3";
+	
+	chosen {
+		zephyr,sram = &sram1;
+		zephyr,console = &usb_serial;
+		zephyr,shell-uart = &usb_serial;
+		zephyr,flash = &flash0;
+		zephyr,code-partition = &slot0_partition;
+		zephyr,display = &st7789v;
+		zephyr,bt-hci = &esp32_bt_hci;
+	};
+	
+	aliases {
+		i2c-0 = &i2c0;
+		watchdog0 = &wdt0;
+		
+		sw0 = &button_enter;
+		
+		chrg-pg = &chrg_pg;
+		chrg-stat1 = &chrg_stat1;
+		chrg-stat2 = &chrg_stat2;
+		
+		pwm-step-vref = &pwm_step_vref;
+		pwm-buzzer = &pwm_buzzer;
+		mag-bottom = &tmag5273_bottom;
+		mag-top = &tmag5273_top;
+		
+		stepper = &drv8428;
+	};
+	
+	keys: keys {
+		compatible = "gpio-keys";
+		button_enter: button_enter {
+			gpios = <&gpio0 4 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Enter";
+			zephyr,code = <INPUT_KEY_ENTER>;
+		};
+		button_up: button_up {
+			gpios = <&gpio0 17 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "Up";
+			zephyr,code = <INPUT_KEY_UP>;
+		};
+		button_down: button_down {
+			gpios = <&gpio1 6 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 38
+			label = "Down";
+			zephyr,code = <INPUT_KEY_DOWN>;
+		};
+	};
+	
+	charg_status {
+		compatible = "gpio-leds";
+		chrg_pg: chrg_pg {
+			gpios = <&gpio0 12 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 12
+			label = "Power Good";
+		};
+		chrg_stat1: stat1 {
+			gpios = <&gpio1 9 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 41
+			label = "Stat 1";
+		};
+		chrg_stat2: stat2 {
+			gpios = <&gpio1 10 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;// GPIO 42
+			label = "Stat 2";
+		};
+	};
+	
+	vaux_enable: vaux_enable {
+		compatible = "regulator-fixed";
+		regulator-name = "vaux_enable";
+		enable-gpios = <&gpio1 15 GPIO_ACTIVE_HIGH>;
+		regulator-boot-on;
+	};
+	
+	lvgl_keypad_input {
+		compatible = "zephyr,lvgl-keypad-input";
+		input = <&keys>;
+		input-codes = <INPUT_KEY_UP INPUT_KEY_DOWN INPUT_KEY_ENTER>;
+		lvgl-codes = <LV_KEY_RIGHT LV_KEY_LEFT LV_KEY_ENTER>;
+	};
+	
+	drv8428: drv8428 {
+		status = "okay";
+		compatible = "ti,drv84xx";
+		
+		dir-gpios = <&gpio1 11 0>;// GPIO 43
+		step-gpios = <&gpio0 2 0>;
+		sleep-gpios = <&gpio1 12 (GPIO_ACTIVE_LOW)>;// GPIO 44
+		en-gpios  = <&gpio0 7 0>;
+		m0-gpios = <&gpio0 5 0>;
+		m1-gpios = <&gpio0 3 0>;
+		// TODO: Check in new zephyr version if support for countertop is added to esp32 driver
+		// counter = <&timer0>;
+		
+		#address-cells = <1>;
+		#size-cells = <0>;
+		#stepper-motor-cells = <0>;
+	};
+	
+	pwms {
+		compatible = "pwm-leds";
+		pwm_step_vref: pwm_gpio0_8 {
+			label = "VREF";
+			pwms = <&mcpwm0 0 0 PWM_POLARITY_NORMAL>;
+		};
+		pwm_buzzer: pwm_gpio0_16 {
+			label = "Buzzer";
+			pwms = <&mcpwm0 2 0 PWM_POLARITY_NORMAL>;
+		};
+	};
+	
+	mipi_dbi {
+		compatible = "zephyr,mipi-dbi-spi";
+		spi-dev = <&spi2>;
+		dc-gpios = <&gpio1 1 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpio1 16 GPIO_ACTIVE_LOW>;
+		write-only;
+		#address-cells = <1>;
+		#size-cells = <0>;
+		
+		st7789v: st7789v@0 {
+			compatible = "sitronix,st7789v";
+			inversion-off;
+			
+			reg = <0>;
+			mipi-max-frequency = <27000000>;
+			
+			width = <284>;
+			height = <76>;
+			x-offset = <18>;
+			y-offset = <82>;
+			
+			vcom = <0x2b>;
+			gctrl = <0x35>;
+			vrhs = <0x0f>;
+			vdvs = <0x20>;
+			mdac = <0x60>;
+			gamma = <0x01>;
+			colmod = <0x55>;
+			lcm = <0x2c>;
+			porch-param = [0c 0c 00 33 33];
+			cmd2en-param = [5a 69 02 01];
+			pwctrl1-param = [52 a1];
+			pvgam-param = [D0 00 02 07 0B 1A 35 32 4A 29 12 12 12 17];
+			nvgam-param = [D0 00 02 07 05 15 3E 33 5C 1C 18 16 1C 1D];
+			ram-param = [00 F8];
+			rgb-param = [CD 08 14];
+			mipi-mode = "MIPI_DBI_MODE_SPI_4WIRE";
+		};
+	};
+};
+
+&usb_serial {
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&mcpwm0 {
+	pinctrl-0 = <&mcpwm0_default>;
+	pinctrl-names = "default";
+	prescale = <10>;
+	prescale-timer0 = <10>;
+	prescale-timer1 = <10>;
+	status = "okay";
+};
+
+&uart0 {
+	status = "disabled";
+};
+
+&i2c0 {
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_STANDARD>;
+	pinctrl-0 = <&i2c0_default>;
+	pinctrl-names = "default";
+	
+	// U3 - TMAG5273_D1
+	tmag5273_bottom: tmag5273@44 {
+		compatible = "ti,tmag5273";
+		reg = <0x44>;
+		label = "tmag5273_bottom";
+		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
+		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
+	};
+	
+	tmag5273_top: tmag5273@78 {
+		compatible = "ti,tmag5273";
+		reg = <0x78>;
+		label = "tmag5273_top";
+		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
+		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
+	};
+};
+
+&spi2 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+	pinctrl-0 = <&spim2_default>;
+	pinctrl-names = "default";
+};
+
+&timer0 {
+	status = "disabled";
+};
+
+&timer1 {
+	status = "disabled";
+};
+
+&timer2 {
+	status = "disabled";
+};
+
+&timer3 {
+	status = "disabled";
+};
+
+&wdt0 {
+	status = "okay";
+};
+
+&trng0 {
+	status = "okay";
+};
+
+&esp32_bt_hci {
+	status = "okay";
+};
