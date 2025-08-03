@@ -11,6 +11,11 @@ LOG_MODULE_REGISTER(ib_hmi_service);
 
 k_work_q HmiService::mWorkQueue;
 
+namespace
+{
+    K_MSGQ_DEFINE(bluetoothStateChangeQueue, sizeof(BtBluetoothStateChanged), CONFIG_BT_MAX_CONN, 4);
+}
+
 HmiService::HmiService(EventDispatcher &dispatcher) : HmiService(dispatcher, getHmiDevice(*this)) {}
 
 HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
@@ -22,7 +27,6 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
     static k_work_queue_config config = {.name = "hmi", .no_yield = false, .essential = true};
     k_work_queue_start(&mWorkQueue, mWorkQueueBuffer, K_THREAD_STACK_SIZEOF(mWorkQueueBuffer), 0, &config);
 
-
     mInitTask.service = this;
     k_work_init(&mInitTask.work, [](struct k_work *work) {
         auto *container = CONTAINER_OF(work, SimpleTask, work);
@@ -33,6 +37,12 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
     k_work_init(&mPassKeyDisplayTask.work, [](struct k_work *work) {
         auto *container = CONTAINER_OF(work, PassKeyDisplayTask, work);
         container->service->mHmiDevice.onUserBtPairingRequest(container->conn, container->passkey);
+    });
+
+    mBolusProgressUpdateTask.service = this;
+    k_work_init(&mBolusProgressUpdateTask.work, [](struct k_work *work) {
+        auto *container = CONTAINER_OF(work, BolusProgressUpdateTask, work);
+        container->service->mHmiDevice.onBolusProgressUpdate(container->update);
     });
 
     mDispatcher.subscribe<BtPassKeyConfirmRequest>([this](const BtPassKeyConfirmRequest &request) {
@@ -49,25 +59,38 @@ HmiService::HmiService(EventDispatcher &dispatcher, IHmiDevice &hmiDevice)
 
     mBtBluetoothStateChangedTask.service = this;
     k_work_init(&mBtBluetoothStateChangedTask.work, [](struct k_work *work) {
-        auto *container = CONTAINER_OF(work, BtBluetoothStateChangedTask, work);
-        container->service->mHmiDevice.onBtBluetoothStateChanged(container->conn, container->state);
+        auto *container = CONTAINER_OF(work, SimpleTask, work);
+        BtBluetoothStateChanged state;
+        int err = k_msgq_get(&bluetoothStateChangeQueue, &state, K_NO_WAIT);
+        if (err == -ENOMSG)
+        {
+            LOG_DBG("No Bluetooth state change message available in queue");
+            return;
+        }
+        else if (err < 0)
+        {
+            LOG_ERR("Failed to get Bluetooth state change message from queue: %d", err);
+            k_work_submit_to_queue(&mWorkQueue, work);
+            return;
+        }
+
+        container->service->mHmiDevice.onBtBluetoothStateChanged(state.conn, state.state);
+        if (k_msgq_num_used_get(&bluetoothStateChangeQueue) > 0)
+        {
+            k_work_submit_to_queue(&mWorkQueue, work);
+        }
     });
 
     mDispatcher.subscribe<BtBluetoothStateChanged>([this](const BtBluetoothStateChanged &state) {
-        if (k_work_busy_get(&mBtBluetoothStateChangedTask.work))
+        LOG_DBG("Bluetooth state changed: conn=%p, state=%d", state.conn, static_cast<int>(state.state));
+        if (k_msgq_put(&bluetoothStateChangeQueue, &state, K_NO_WAIT) != 0)
         {
-            LOG_ERR("Bluetooth state change task is busy");
+            LOG_ERR("Failed to put Bluetooth state change message in queue");
+            k_msgq_purge(&bluetoothStateChangeQueue);
             return;
         }
-        this->mBtBluetoothStateChangedTask.conn = state.conn;
-        this->mBtBluetoothStateChangedTask.state = state.state;
         k_work_submit_to_queue(&mWorkQueue, &mBtBluetoothStateChangedTask.work);
-    });
-
-    mBolusProgressUpdateTask.service = this;
-    k_work_init(&mBolusProgressUpdateTask.work, [](struct k_work *work) {
-        auto *container = CONTAINER_OF(work, BolusProgressUpdateTask, work);
-        container->service->mHmiDevice.onBolusProgressUpdate(container->update);
+        LOG_DBG("Bluetooth state change message submitted to work queue");
     });
 
     mDispatcher.subscribe<BolusProgressUpdate>([this](const BolusProgressUpdate &update) {

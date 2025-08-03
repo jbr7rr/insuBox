@@ -31,6 +31,7 @@ private:
         struct k_work work;
     };
     SimpleTask mInitTask;
+    SimpleTask mBtBluetoothStateChangedTask;
 
     struct PassKeyDisplayTask
     {
@@ -40,15 +41,6 @@ private:
         unsigned int passkey;
     };
     PassKeyDisplayTask mPassKeyDisplayTask;
-
-    struct BtBluetoothStateChangedTask
-    {
-        HmiService *service;
-        struct k_work work;
-        struct bt_conn *conn;
-        BtState state;
-    };
-    BtBluetoothStateChangedTask mBtBluetoothStateChangedTask;
 
     struct BolusProgressUpdateTask
     {

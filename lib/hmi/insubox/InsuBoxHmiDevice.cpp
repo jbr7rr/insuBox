@@ -1,5 +1,6 @@
 #include <hmi/insubox/InsuBoxHmiDevice.h>
 
+#include <string>
 #include <ctime>
 #include <lvgl.h>
 #include <lvgl_input_device.h>
@@ -86,7 +87,7 @@ void InsuBoxHmiDevice::init()
 
 void InsuBoxHmiDevice::onUserBtPairingRequest(struct bt_conn *conn, uint32_t passkey)
 {
-    LOG_DBG("onUserBtPairingRequest: passkey=%u", passkey);
+    LOG_DBG("passkey=%u", passkey);
 
     // Define colors
     lv_color_t purple_color = lv_color_hex(0xff00ff);
