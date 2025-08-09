@@ -13,10 +13,6 @@ LOG_MODULE_REGISTER(ib_insubox_pump_device);
 #include <zephyr/drivers/sensor.h>
 #include <zephyr/kernel.h>
 
-// Sensor devices
-static const struct device *sensor0 = DEVICE_DT_GET(DT_ALIAS(mag_bottom));
-static const struct device *sensor1 = DEVICE_DT_GET(DT_ALIAS(mag_top));
-
 namespace
 {
     constexpr char settingsSubKey[] = "ib";
@@ -24,15 +20,9 @@ namespace
 }
 
 InsuBoxDevice::InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback)
-    : mPumpDeviceCallback(pumpDeviceCallback), mMotor(createMotorInstance(*this))
+    : mPumpDeviceCallback(pumpDeviceCallback), mMotor(createMotorInstance(*this)), mPosSensor(createPosSensorInstance())
 {
     LOG_DBG("InsuBoxDevice constructor");
-
-    mSensorTask.mDevice = this;
-    k_work_init_delayable(&mSensorTask.work, [](struct k_work *work) {
-        auto *container = CONTAINER_OF(work, SimpleTask, work);
-        container->mDevice->sensorTask();
-    });
 
     mBolusTask.device = this;
     mBolusTask.completed = true;
@@ -64,8 +54,6 @@ InsuBoxDevice::~InsuBoxDevice()
 void InsuBoxDevice::init()
 {
     LOG_DBG("InsuBoxDevice init");
-
-    k_work_reschedule(&mSensorTask.work, K_NO_WAIT);
 }
 
 void InsuBoxDevice::onBolusRequest(float amount, time_t timestamp)
@@ -119,56 +107,17 @@ void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopp
     std::string key = std::string(settingsSubKey) + "/" + settingsPlungerPosKey;
     settings_save_one(key.c_str(), &position, sizeof(position));
 
-    if (mState == State::RETRACTING)
-    {
-        k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
-        return;
-    }
-
     if (mState == State::DELIVERING_BOLUS)
     {
         mBolusTask.deliveredBolus += delivered;
         mBolusTask.completed = (stopped || error);
-        k_work_reschedule(&mBolusTask.work, K_MSEC(500));
     }
-}
-
-void read_sensor(const struct device *sensor)
-{
-    if (!device_is_ready(sensor))
-    {
-        LOG_ERR("Device %s is not ready", sensor->name);
-        return;
-    }
-
-    struct sensor_value mag_x, mag_y, mag_z;
-
-    if (sensor_sample_fetch(sensor) < 0)
-    {
-        LOG_ERR("Failed to fetch samples");
-        return;
-    }
-
-    sensor_channel_get(sensor, SENSOR_CHAN_MAGN_X, &mag_x);
-    sensor_channel_get(sensor, SENSOR_CHAN_MAGN_Y, &mag_y);
-    sensor_channel_get(sensor, SENSOR_CHAN_MAGN_Z, &mag_z);
-
-    LOG_DBG("%s Magnetic field (uT): X=%d, Y=%d, Z=%d", sensor->name, mag_x.val1, mag_y.val1, mag_z.val1);
-}
-
-void InsuBoxDevice::sensorTask()
-{
-    read_sensor(sensor0);
-    read_sensor(sensor1);
-
-    k_work_reschedule(&mSensorTask.work, K_MSEC(10000));
 }
 
 void InsuBoxDevice::bolusTask()
 {
     LOG_DBG("Bolus work");
 
-    // TODO: Verify plunger pos here?
     float remainingBolus = mBolusTask.requestedBolus - mBolusTask.deliveredBolus;
     if (mBolusTask.completed || remainingBolus <= 0.01f)
     {
@@ -294,4 +243,10 @@ Motor &InsuBoxDevice::createMotorInstance(IMotorCallback &callback)
 {
     static Motor motor(callback);
     return motor;
+}
+
+PosSensor &InsuBoxDevice::createPosSensorInstance()
+{
+    static PosSensor posSensor;
+    return posSensor;
 }

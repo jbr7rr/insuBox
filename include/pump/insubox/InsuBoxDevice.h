@@ -7,6 +7,7 @@
 #include <pump/IPumpDevice.h>
 #include <pump/PumpServiceMessages.h>
 #include <pump/insubox/motor/Motor.h>
+#include <pump/insubox/posSensor/PosSensor.h>
 #include <zephyr/kernel.h>
 #include <zephyr/settings/settings.h>
 
@@ -38,7 +39,6 @@ private:
         InsuBoxDevice *mDevice;
         k_work_delayable work;
     };
-    SimpleTask mSensorTask;
     SimpleTask mRetractTask;
     struct BolusTask
     {
@@ -52,15 +52,16 @@ private:
 
     IPumpDeviceCallback &mPumpDeviceCallback;
     Motor &mMotor;
+    PosSensor &mPosSensor;
 
-    void sensorTask();
     void bolusTask();
     void retractTask();
 
     void sendBolusProgressUpdate();
-
+    
     int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
     static Motor &createMotorInstance(IMotorCallback &callback);
+    static PosSensor &createPosSensorInstance();
 };
 
 #endif // CONFIG_IB_PUMP_INSUBOX
