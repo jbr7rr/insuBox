@@ -37,6 +37,12 @@ InsuBoxDevice::InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback)
         container->mDevice->retractTask();
     });
 
+    mCalSensorTask.mDevice = this;
+    k_work_init_delayable(&mCalSensorTask.work, [](struct k_work *work) {
+        auto *container = CONTAINER_OF(work, SimpleTask, work);
+        container->mDevice->calSensorTask();
+    });
+
     settings_subsys_init();
     settings_load_subtree_direct(
         settingsSubKey,
@@ -111,6 +117,20 @@ void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopp
     {
         mBolusTask.deliveredBolus += delivered;
         mBolusTask.completed = (stopped || error);
+        k_work_reschedule(&mBolusTask.work, K_NO_WAIT);
+    }
+    else if (mState == State::RETRACTING)
+    {
+        k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
+    }
+    else if (mState == State::CAL_SENSOR)
+    {
+        k_work_reschedule(&mCalSensorTask.work, K_NO_WAIT);
+    }
+    else
+    {
+        LOG_ERR("Whoops motor completed in unexpected state: %d", static_cast<int>(mState.load()));
+        return;
     }
 }
 
@@ -127,6 +147,25 @@ void InsuBoxDevice::bolusTask()
         sendBolusProgressUpdate();
         return;
     }
+
+    // Validate sensor pos
+    auto currentMotorposition = mMotor.getPosition();
+    auto currentSensorPosition = mPosSensor.getPosition();
+    constexpr float POSITION_TOLERANCE = 2.0f;
+    if (std::fabs(currentMotorposition.value_or(-99.0f) - currentSensorPosition.value_or(-95.0f)) > POSITION_TOLERANCE)
+    {
+        LOG_ERR("Motor position %.2f does not match sensor position %.2f, cannot deliver bolus",
+                static_cast<double>(currentMotorposition.value_or(-99.0f)),
+                static_cast<double>(currentSensorPosition.value_or(-95.0f)));
+        // TODO: Error here
+        mState = State::IDLE;
+        mBolusTask.completed = true;
+        sendBolusProgressUpdate();
+        return;
+    }
+    LOG_WRN("Motor pos: %.2f, sensor pos %.3f, continuing delivery",
+            static_cast<double>(currentMotorposition.value_or(-99.0f)),
+            static_cast<double>(currentSensorPosition.value_or(-95.0f)));
 
     // Deliver 0.5 per time, and update the delivered amount
     float bolusToDeliver = (remainingBolus > 0.5f) ? 0.5f : remainingBolus;
@@ -163,15 +202,15 @@ void InsuBoxDevice::retractTask()
     }
 
     constexpr float TOLERANCE = 0.0001f;
-    constexpr float SLOW_RETRACT_POSITION = 15.0f;
+    constexpr float SLOW_RETRACT_POSITION = 20.0f;
     constexpr float FULL_RETRACT_POSITION = 0.0f;
-    constexpr float EXTRA_UNITS = 5.0f;
+    constexpr float EXTRA_UNITS = 15.0f;
 
     if (currentPosition.value() > SLOW_RETRACT_POSITION)
     {
-        // Start retract at full speed
-        constexpr int RETRACT_SPEED = 100;     // Set speed to 100% for retract
-        constexpr uint8_t RETRACT_POWER = 100; // Set power to 80% for retract, to not block the motor
+        // Start retract
+        constexpr int RETRACT_SPEED = 80;
+        constexpr uint8_t RETRACT_POWER = 110;
         int err = mMotor.moveToPosition(SLOW_RETRACT_POSITION, RETRACT_SPEED, RETRACT_POWER);
         if (err)
         {
@@ -190,13 +229,72 @@ void InsuBoxDevice::retractTask()
         if (err)
         {
             LOG_ERR("Failed to bump forward: %d", err);
+            mState = State::IDLE;
             return;
         }
     }
     else
     {
-        // Update here?
+        // TODO: Maybe also check here if the position is correct, and handle (error etc?)
+        if (!mPosSensor.getPosition().has_value())
+        {
+            LOG_DBG("Already in retracted position, no need to retract");
+            mState = CAL_SENSOR;
+            k_work_reschedule(&mCalSensorTask.work, K_NO_WAIT);
+            return;
+        }
+        else
+        {
+            mState = State::IDLE;
+        }
+    }
+}
+
+void InsuBoxDevice::calSensorTask()
+{
+    LOG_DBG("Calibrate sensor work");
+
+    if (mState != State::CAL_SENSOR)
+    {
+        LOG_ERR("Invalid state for calibration task: %d", static_cast<int>(mState.load()));
+        return;
+    }
+
+    // This will build the LUT for the position sensor
+    auto position = mMotor.getPosition();
+    if (!position.has_value())
+    {
+        LOG_ERR("Failed to get position from motor, cannot calibrate");
         mState = State::IDLE;
+        return;
+    }
+
+    if (!mPosSensor.storePositionToLUT(static_cast<int>(position.value())))
+    {
+        LOG_ERR("Failed to store position to LUT");
+        mState = State::IDLE;
+        return;
+    }
+
+    // Increment motor pos until we reach the end of reservoir
+    constexpr float MAX_POSITION = CONFIG_IB_PUMP_RESERVOIR_VOLUME;
+    constexpr float STEP_SIZE = 1.0f; // Increment by 1
+    constexpr int SPEED = 10;         // Speed for calibration
+
+    if (position.value() >= MAX_POSITION)
+    {
+        LOG_DBG("Reached maximum position, calibration complete");
+        mState = State::RETRACTING;
+        k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
+        return;
+    }
+
+    int err = mMotor.deliver(STEP_SIZE, SPEED);
+    if (err)
+    {
+        LOG_ERR("Failed to deliver during calibration: %d", err);
+        mState = State::IDLE;
+        return;
     }
 }
 

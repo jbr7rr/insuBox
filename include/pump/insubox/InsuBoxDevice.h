@@ -32,6 +32,7 @@ private:
         IDLE,
         DELIVERING_BOLUS,
         RETRACTING,
+        CAL_SENSOR,
     };
     std::atomic<State> mState = State::IDLE;
     struct SimpleTask
@@ -40,6 +41,7 @@ private:
         k_work_delayable work;
     };
     SimpleTask mRetractTask;
+    SimpleTask mCalSensorTask;
     struct BolusTask
     {
         InsuBoxDevice *device;
@@ -56,9 +58,10 @@ private:
 
     void bolusTask();
     void retractTask();
+    void calSensorTask();
 
     void sendBolusProgressUpdate();
-    
+
     int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
     static Motor &createMotorInstance(IMotorCallback &callback);
     static PosSensor &createPosSensorInstance();

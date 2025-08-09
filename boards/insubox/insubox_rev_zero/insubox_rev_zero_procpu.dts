@@ -197,16 +197,18 @@
 		compatible = "ti,tmag5273";
 		reg = <0x22>;
 		label = "tmag5273_bottom";
-		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
-		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
+		operation-mode = <TMAG5273_DT_OPER_MODE_STANDBY>;
+		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XZ>;
+		average-mode = <TMAG5273_DT_AVERAGING_32X>;
 	};
 	
 	tmag5273_top: tmag5273@78 {
 		compatible = "ti,tmag5273";
 		reg = <0x78>;
 		label = "tmag5273_top";
-		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
-		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
+		operation-mode = <TMAG5273_DT_OPER_MODE_STANDBY>;
+		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XZ>;
+		average-mode = <TMAG5273_DT_AVERAGING_32X>;
 	};
 };
 
