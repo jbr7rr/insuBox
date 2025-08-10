@@ -16,7 +16,7 @@ public:
     std::optional<float> getPosition() const;
 
     /**
-     * @brief Reads the top and bottom sensors and returns their values.
+     * @brief Reads the top and bottom sensors and stores the position in the lookup table (LUT).
      * @param position The position to store in the lookup table (LUT).
      *
      * Only whole numbers are allowed for input, as the LUT is indexed by integers.
@@ -39,6 +39,9 @@ private:
     };
     std::array<SensorVals, CONFIG_IB_PUMP_RESERVOIR_VOLUME + 1> mSensorLUT = {0};
     bool mLUTReady = false;
+
+    int16_t transformValue(int16_t value) const;
+    bool postProcessLUT();
 
     std::pair<int16_t, int16_t> readSensor(const struct device *sensor) const;
     int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);

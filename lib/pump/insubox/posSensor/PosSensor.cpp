@@ -46,20 +46,17 @@ std::optional<float> PosSensor::getPosition() const
         return std::nullopt;
     }
 
-    auto currentTopVals = readSensor(mTopSensor);
-    auto currentBottomVals = readSensor(mBottomSensor);
+    SensorVals currentVals = {readSensor(mTopSensor).first, readSensor(mTopSensor).second,
+                              readSensor(mBottomSensor).first, readSensor(mBottomSensor).second};
 
-    LOG_DBG("Current sensor values - Top: X=%d, Z=%d; Bottom: X=%d, Z=%d", currentTopVals.first, currentTopVals.second,
-            currentBottomVals.first, currentBottomVals.second);
+    LOG_DBG("Current sensor values - Top: X=%d, Z=%d; Bottom: X=%d, Z=%d", currentVals.x1, currentVals.z1,
+            currentVals.x2, currentVals.z2);
 
-    if (currentTopVals == std::pair<int16_t, int16_t>{0, 0} || currentBottomVals == std::pair<int16_t, int16_t>{0, 0})
+    if ((currentVals.x1 == 0 && currentVals.z1 == 0) || (currentVals.x2 == 0 && currentVals.z2 == 0))
     {
         LOG_ERR("Failed to read sensor values");
         return std::nullopt;
     }
-
-    SensorVals currentVals = {currentTopVals.first, currentTopVals.second, currentBottomVals.first,
-                              currentBottomVals.second};
 
     // Find the nearest key in the LUT
     int nearestIndex = -1;
@@ -144,19 +141,59 @@ bool PosSensor::storePositionToLUT(int position)
     LOG_DBG("Stored position %d: Top(X=%d, Z=%d), Bottom(X=%d, Z=%d)", position, topVals.first, topVals.second,
             bottomVals.first, bottomVals.second);
 
-    if (position == 300)
+    if (position == CONFIG_IB_PUMP_RESERVOIR_VOLUME)
     {
-        // Save the LUT to persistent storage
-        std::string key = std::string(settingsSubKey) + "/" + settingsPosLUTKey;
-        if (settings_save_one(key.c_str(), mSensorLUT.data(), mSensorLUT.size() * sizeof(SensorVals)) < 0)
-        {
-            LOG_ERR("Failed to save position LUT to settings");
-            return false;
-        }
-        mLUTReady = true;
-        LOG_INF("Position sensor LUT saved successfully");
+        // TODO: We might want to move this to a separate public method
+        return postProcessLUT();
     }
 
+    return true;
+}
+
+int16_t PosSensor::transformValue(int16_t value) const
+{
+    // Transofrm values from range -2000, 2000 to 0, 4000
+    return value + 2000; // Shift range to 0-4000
+}
+
+bool PosSensor::postProcessLUT()
+{
+    if (mLUTReady)
+    {
+        LOG_DBG("LUT is already ready, skipping post-processing");
+        return true;
+    }
+
+    for (size_t i = 0; i < mSensorLUT.size(); ++i)
+    {
+        // Check if any of the values are zero, which indicates no data
+        if (mSensorLUT[i].x1 == 0 && mSensorLUT[i].z1 == 0 && mSensorLUT[i].x2 == 0 && mSensorLUT[i].z2 == 0)
+        {
+            // LUT not complete
+            return false;
+        }
+        // Apply average smoothing to the LUT
+        if (i == 0 || i == mSensorLUT.size() - 1)
+        {
+            // Skip first and last elements, as they cannot be smoothed
+            continue;
+        }
+        mSensorLUT[i].x1 = std::round((mSensorLUT[i - 1].x1 + mSensorLUT[i].x1 + mSensorLUT[i + 1].x1) / 3.0f);
+        mSensorLUT[i].z1 = std::round((mSensorLUT[i - 1].z1 + mSensorLUT[i].z1 + mSensorLUT[i + 1].z1) / 3.0f);
+        mSensorLUT[i].x2 = std::round((mSensorLUT[i - 1].x2 + mSensorLUT[i].x2 + mSensorLUT[i + 1].x2) / 3.0f);
+        mSensorLUT[i].z2 = std::round((mSensorLUT[i - 1].z2 + mSensorLUT[i].z2 + mSensorLUT[i + 1].z2) / 3.0f);
+    }
+
+    // Save the LUT to persistent storage
+    std::string key = std::string(settingsSubKey) + "/" + settingsPosLUTKey;
+    if (settings_save_one(key.c_str(), mSensorLUT.data(), mSensorLUT.size() * sizeof(SensorVals)) < 0)
+    {
+        LOG_ERR("Failed to save position LUT to settings");
+    }
+
+    // Mark as ready, even when storing fails, we have data at least for the duration when the device is powered
+    mLUTReady = true;
+    LOG_INF("Position sensor LUT post-processed successfully");
     return true;
 }
 
@@ -178,7 +215,7 @@ std::pair<int16_t, int16_t> PosSensor::readSensor(const struct device *sensor) c
     sensor_channel_get(sensor, SENSOR_CHAN_MAGN_X, &mag_x);
     sensor_channel_get(sensor, SENSOR_CHAN_MAGN_Z, &mag_z);
 
-    return {mag_x.val1, mag_z.val1};
+    return {transformValue(mag_x.val1), transformValue(mag_z.val1)};
 }
 
 int PosSensor::loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param)
