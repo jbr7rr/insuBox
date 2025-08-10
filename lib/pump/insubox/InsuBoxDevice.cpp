@@ -138,21 +138,22 @@ void InsuBoxDevice::bolusTask()
 {
     LOG_DBG("Bolus work");
 
-    float remainingBolus = mBolusTask.requestedBolus - mBolusTask.deliveredBolus;
-    if (mBolusTask.completed || remainingBolus <= 0.01f)
-    {
-        LOG_DBG("Bolus completed");
-        mState = State::IDLE;
-        mBolusTask.completed = true;
-        sendBolusProgressUpdate();
-        return;
-    }
-
     // Validate sensor pos
     auto currentMotorposition = mMotor.getPosition();
     auto currentSensorPosition = mPosSensor.getPosition();
     constexpr float POSITION_TOLERANCE = 2.0f;
-    if (std::fabs(currentMotorposition.value_or(-99.0f) - currentSensorPosition.value_or(-95.0f)) > POSITION_TOLERANCE)
+
+    float posDiff = std::fabs(currentMotorposition.value_or(0.0f) - currentSensorPosition.value_or(0.0f));
+    if (posDiff > mMaxPlungerDifference)
+    {
+        LOG_WRN("Max plunger difference exceeded: %.2f > %.2f", static_cast<double>(posDiff),
+                static_cast<double>(mMaxPlungerDifference));
+        mMaxPlungerDifference = posDiff;
+    }
+    LOG_WRN("Motor pos: %.2f, sensor pos %.3f, diff: %.3f", static_cast<double>(currentMotorposition.value_or(0.0f)),
+            static_cast<double>(currentSensorPosition.value_or(0.0f)), static_cast<double>(posDiff));
+
+    if (posDiff > POSITION_TOLERANCE)
     {
         LOG_ERR("Motor position %.2f does not match sensor position %.2f, cannot deliver bolus",
                 static_cast<double>(currentMotorposition.value_or(-99.0f)),
@@ -163,9 +164,19 @@ void InsuBoxDevice::bolusTask()
         sendBolusProgressUpdate();
         return;
     }
-    LOG_WRN("Motor pos: %.2f, sensor pos %.3f, continuing delivery",
-            static_cast<double>(currentMotorposition.value_or(-99.0f)),
-            static_cast<double>(currentSensorPosition.value_or(-95.0f)));
+
+    // Check if bolus is completed
+    float remainingBolus = mBolusTask.requestedBolus - mBolusTask.deliveredBolus;
+    if (mBolusTask.completed || remainingBolus <= 0.01f)
+    {
+        LOG_DBG("Bolus completed");
+        LOG_WRN("Max plunger difference: %.2f", static_cast<double>(mMaxPlungerDifference));
+
+        mState = State::IDLE;
+        mBolusTask.completed = true;
+        sendBolusProgressUpdate();
+        return;
+    }
 
     // Deliver 0.5 per time, and update the delivered amount
     float bolusToDeliver = (remainingBolus > 0.5f) ? 0.5f : remainingBolus;
@@ -269,6 +280,7 @@ void InsuBoxDevice::calSensorTask()
         return;
     }
 
+    k_sleep(K_MSEC(100)); // Wait for motor to stabilize
     if (!mPosSensor.storePositionToLUT(static_cast<int>(position.value())))
     {
         LOG_ERR("Failed to store position to LUT");
@@ -278,8 +290,9 @@ void InsuBoxDevice::calSensorTask()
 
     // Increment motor pos until we reach the end of reservoir
     constexpr float MAX_POSITION = CONFIG_IB_PUMP_RESERVOIR_VOLUME;
-    constexpr float STEP_SIZE = 1.0f; // Increment by 1
+    constexpr float STEP_SIZE = 1.0f; // TODO: Get increment val from sensor config
     constexpr int SPEED = 10;         // Speed for calibration
+    constexpr int POWER = 100;        // Power for calibration
 
     if (position.value() >= MAX_POSITION)
     {
@@ -289,7 +302,7 @@ void InsuBoxDevice::calSensorTask()
         return;
     }
 
-    int err = mMotor.deliver(STEP_SIZE, SPEED);
+    int err = mMotor.moveToPosition(position.value() + STEP_SIZE, SPEED, POWER);
     if (err)
     {
         LOG_ERR("Failed to deliver during calibration: %d", err);

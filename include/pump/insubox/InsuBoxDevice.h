@@ -56,6 +56,8 @@ private:
     Motor &mMotor;
     PosSensor &mPosSensor;
 
+    float mMaxPlungerDifference = 0;
+
     void bolusTask();
     void retractTask();
     void calSensorTask();

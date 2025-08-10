@@ -32,18 +32,18 @@ private:
     // Y is disregarded, as it has a very low signal
     struct SensorVals
     {
-        int16_t x1;
-        int16_t z1;
-        int16_t x2;
-        int16_t z2;
+        uint16_t x1;
+        uint16_t z1;
+        uint16_t x2;
+        uint16_t z2;
     };
     std::array<SensorVals, CONFIG_IB_PUMP_RESERVOIR_VOLUME + 1> mSensorLUT = {0};
     bool mLUTReady = false;
 
-    int16_t transformValue(int16_t value) const;
+    uint16_t transformValue(int16_t value) const;
     bool postProcessLUT();
 
-    std::pair<int16_t, int16_t> readSensor(const struct device *sensor) const;
+    std::pair<uint16_t, uint16_t> readSensor(const struct device *sensor) const;
     int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
 };
 

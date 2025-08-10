@@ -8,7 +8,7 @@ LOG_MODULE_REGISTER(ib_motor);
 
 namespace
 {
-    constexpr int UNITS_PER_MICRO_STEP = (4 * 190); // 4 microsteps per step, 190 steps per revolution
+    constexpr int UNITS_PER_MICRO_STEP = (4 * 192); // 4 microsteps per step, 190 steps per revolution
 }
 
 Motor::Motor(IMotorCallback &callback) : mCallback(callback)

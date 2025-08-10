@@ -136,6 +136,17 @@ bool PosSensor::storePositionToLUT(int position)
     auto topVals = readSensor(mTopSensor);
     auto bottomVals = readSensor(mBottomSensor);
 
+    if (topVals.first == 0 && topVals.second == 0)
+    {
+        LOG_ERR("Failed to read top sensor values");
+        return false;
+    }
+    if (bottomVals.first == 0 && bottomVals.second == 0)
+    {
+        LOG_ERR("Failed to read bottom sensor values");
+        return false;
+    }
+
     mSensorLUT[position] = {topVals.first, topVals.second, bottomVals.first, bottomVals.second};
 
     LOG_DBG("Stored position %d: Top(X=%d, Z=%d), Bottom(X=%d, Z=%d)", position, topVals.first, topVals.second,
@@ -150,10 +161,10 @@ bool PosSensor::storePositionToLUT(int position)
     return true;
 }
 
-int16_t PosSensor::transformValue(int16_t value) const
+uint16_t PosSensor::transformValue(int16_t value) const
 {
-    // Transofrm values from range -2000, 2000 to 0, 4000
-    return value + 2000; // Shift range to 0-4000
+    // Transofrm values from range -2000, 2000 to 0, 40000
+    return (value + 2000) * 10; // Shift range to 0-40000
 }
 
 bool PosSensor::postProcessLUT()
@@ -197,7 +208,7 @@ bool PosSensor::postProcessLUT()
     return true;
 }
 
-std::pair<int16_t, int16_t> PosSensor::readSensor(const struct device *sensor) const
+std::pair<uint16_t, uint16_t> PosSensor::readSensor(const struct device *sensor) const
 {
     if (!device_is_ready(sensor))
     {
