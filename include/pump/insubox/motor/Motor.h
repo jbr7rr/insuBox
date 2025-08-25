@@ -29,7 +29,7 @@ public:
      *
      * @return int 0 on success, negative error code on failure.
      */
-    int deliver(float units, uint8_t speed = 10);
+    int deliver(float units, uint8_t speed = 10, uint8_t powerPct = 100);
 
     /**
      * @brief Move the motor to the specified position.
@@ -63,7 +63,9 @@ private:
     std::optional<float> mCurrentPosition = std::nullopt;
     IMotorCallback &mCallback;
 
-    int setVref(uint8_t powerPct = 80);
+    int prepareForMove(uint8_t speed, uint8_t powerPct);
+
+    int setVref(uint8_t powerPct);
 
     static void drvCallback(const struct device *dev, enum stepper_event event, void *userData);
 };

@@ -8,7 +8,12 @@ LOG_MODULE_REGISTER(ib_motor);
 
 namespace
 {
-    constexpr int UNITS_PER_MICRO_STEP = (4 * 192); // 4 microsteps per step, 190 steps per revolution
+    // Motor settings, for motor: m3, ratio 1:298
+    constexpr auto STEPPER_MICRO_STEP = STEPPER_MICRO_STEP_1;
+    constexpr auto INTERVAL_MAX = (15000000 / STEPPER_MICRO_STEP);
+    constexpr auto INTERVAL_MIN = (750000 / STEPPER_MICRO_STEP);
+    constexpr auto FULL_STEPS_PER_UNIT = 1144; // TODO: Maybe make this KConfig, or based on a motor selection?
+    constexpr auto STEPS_PER_UNIT = (STEPPER_MICRO_STEP * FULL_STEPS_PER_UNIT);
 }
 
 Motor::Motor(IMotorCallback &callback) : mCallback(callback)
@@ -24,53 +29,27 @@ Motor::Motor(IMotorCallback &callback) : mCallback(callback)
     }
 
     stepper_set_event_callback(mStepperDev, drvCallback, this);
-    stepper_set_micro_step_res(mStepperDev, STEPPER_MICRO_STEP_4);
+    stepper_set_micro_step_res(mStepperDev, STEPPER_MICRO_STEP);
 }
 
 Motor::~Motor() {}
 
-int Motor::deliver(float units, uint8_t speed)
+int Motor::deliver(float units, uint8_t speed, uint8_t powerPct)
 {
-    if (!mCurrentPosition.has_value())
-    {
-        LOG_ERR("Current position is not set");
-        return -ENOENT;
-    }
-
-    if (units < 0 || speed > 100 || speed == 0)
+    if (units < 0)
     {
         return -EINVAL;
     }
 
-    LOG_INF("Delivering %.2f units at speed %d", static_cast<double>(units), speed);
-
-    int err = setVref();
+    int err = prepareForMove(speed, powerPct);
     if (err)
     {
-        LOG_ERR("Failed to enable Vref: %d", err);
-        return err;
-    }
-    // interval 100000 is the max speed, we take 10000000 as the convenient min
-    int interval = 10000000 / speed;
-    err = stepper_set_microstep_interval(mStepperDev, interval);
-    if (err)
-    {
-        LOG_ERR("Failed to set microstep interval: %d", err);
-        setVref(0);
         return err;
     }
 
-    err = stepper_enable(mStepperDev);
-    if (err)
-    {
-        LOG_ERR("Failed to enable motor: %d", err);
-        setVref(0);
-        return err;
-    }
+    int steps = static_cast<int>(round(units * STEPS_PER_UNIT));
 
-    int steps = static_cast<int>(round(units * UNITS_PER_MICRO_STEP));
-
-    LOG_DBG("Moving plunger by %d steps", steps);
+    LOG_INF("Delivering %.2f units at speed %d with power %d%%", static_cast<double>(units), speed, powerPct);
     err = stepper_move_by(mStepperDev, steps);
     if (err)
     {
@@ -85,44 +64,20 @@ int Motor::deliver(float units, uint8_t speed)
 
 int Motor::moveToPosition(float units, uint8_t speed, uint8_t powerPct)
 {
-    if (!mCurrentPosition.has_value())
-    {
-        LOG_ERR("Current position is not set");
-        return -ENOENT;
-    }
-    if (units < 0 || speed > 100 || speed == 0 || powerPct > 150)
+
+    if (units < 0)
     {
         return -EINVAL;
     }
 
+    int err = prepareForMove(speed, powerPct);
+    if (err)
+    {
+        return err;
+    }
+
     LOG_INF("Moving to position %.2f at speed %d with power %d%%", static_cast<double>(units), speed, powerPct);
-
-    int err = setVref(powerPct);
-    if (err)
-    {
-        LOG_ERR("Failed to enable Vref: %d", err);
-        return err;
-    }
-
-    // interval 100000 is the max speed, we take 10000000 as the convenient min
-    int interval = 10000000 / speed;
-    err = stepper_set_microstep_interval(mStepperDev, interval);
-    if (err)
-    {
-        LOG_ERR("Failed to set microstep interval: %d", err);
-        setVref(0);
-        return err;
-    }
-
-    err = stepper_enable(mStepperDev);
-    if (err)
-    {
-        LOG_ERR("Failed to enable motor: %d", err);
-        setVref(0);
-        return err;
-    }
-
-    err = stepper_move_to(mStepperDev, static_cast<int32_t>(round(units * UNITS_PER_MICRO_STEP)));
+    err = stepper_move_to(mStepperDev, static_cast<int32_t>(round(units * STEPS_PER_UNIT)));
     if (err)
     {
         LOG_ERR("Failed to move motor: %d", err);
@@ -157,7 +112,7 @@ int Motor::setPosition(float position)
 
     LOG_INF("Setting position to %.2f", static_cast<double>(position));
 
-    int err = stepper_set_reference_position(mStepperDev, static_cast<int32_t>(round(position * UNITS_PER_MICRO_STEP)));
+    int err = stepper_set_reference_position(mStepperDev, static_cast<int32_t>(round(position * STEPS_PER_UNIT)));
     if (err)
     {
         LOG_ERR("Failed to set reference position: %d", err);
@@ -171,6 +126,47 @@ int Motor::setPosition(float position)
 std::optional<float> Motor::getPosition() const
 {
     return mCurrentPosition;
+}
+
+int Motor::prepareForMove(uint8_t speed, uint8_t powerPct)
+{
+    if (!mCurrentPosition.has_value())
+    {
+        LOG_ERR("Current position is not set");
+        return -ENOENT;
+    }
+
+    if (speed > 100 || speed == 0 || powerPct > 150 || powerPct == 0)
+    {
+        LOG_ERR("Invalid input params: speed %d, powerPct %d", speed, powerPct);
+        return -EINVAL;
+    }
+
+    int err = setVref(powerPct);
+    if (err)
+    {
+        LOG_ERR("Failed to enable Vref: %d", err);
+        return err;
+    }
+
+    int interval = INTERVAL_MIN + (INTERVAL_MAX - INTERVAL_MIN) * (100 - speed) / 100;
+    err = stepper_set_microstep_interval(mStepperDev, interval);
+    if (err)
+    {
+        LOG_ERR("Failed to set microstep interval: %d", err);
+        setVref(0);
+        return err;
+    }
+
+    err = stepper_enable(mStepperDev);
+    if (err)
+    {
+        LOG_ERR("Failed to enable motor: %d", err);
+        setVref(0);
+        return err;
+    }
+
+    return 0;
 }
 
 int Motor::setVref(uint8_t powerPct)
@@ -230,7 +226,7 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
     }
     else
     {
-        motor->mCurrentPosition = static_cast<float>(stepperPos) / UNITS_PER_MICRO_STEP;
+        motor->mCurrentPosition = static_cast<float>(stepperPos) / STEPS_PER_UNIT;
     }
 
     switch (event)
@@ -258,6 +254,7 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
         break;
     }
 
+    // TODO: Maybe separate enable/disable methods?
     stepper_disable(dev);
     motor->setVref(0);
     motor->mCallback.onMotorCompleted(motor->mCurrentPosition.value() - previousPosition,

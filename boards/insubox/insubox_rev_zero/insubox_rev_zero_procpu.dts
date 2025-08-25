@@ -93,15 +93,14 @@
 	drv8428: drv8428 {
 		status = "okay";
 		compatible = "ti,drv84xx";
-		
-		dir-gpios = <&gpio1 11 0>;// GPIO 43
+
+		dir-gpios = <&gpio1 11 (GPIO_ACTIVE_LOW)>;// GPIO 43
 		step-gpios = <&gpio0 2 0>;
 		sleep-gpios = <&gpio1 12 (GPIO_ACTIVE_LOW)>;// GPIO 44
 		en-gpios  = <&gpio0 7 0>;
 		m0-gpios = <&gpio0 5 0>;
 		m1-gpios = <&gpio0 3 0>;
-		// TODO: Check in new zephyr version if support for countertop is added to esp32 driver
-		// counter = <&timer0>;
+		counter = <&timer0_counter>;
 		
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -221,7 +220,10 @@
 };
 
 &timer0 {
-	status = "disabled";
+	status = "okay";
+	timer0_counter: counter {
+		status = "okay";
+	};
 };
 
 &timer1 {

@@ -1,17 +1,13 @@
 #include <pump/insubox/InsuBoxDevice.h>
+#include <zephyr/kernel.h>
+
+#include <cmath>
+#include <string>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
 
 LOG_MODULE_REGISTER(ib_insubox_pump_device);
-
-#include <cmath>
-#include <string>
-
-// TODO: move low level stuff to its own files
-#include <zephyr/device.h>
-#include <zephyr/drivers/sensor.h>
-#include <zephyr/kernel.h>
 
 namespace
 {
@@ -101,6 +97,12 @@ void InsuBoxDevice::onRetractRequest()
         LOG_ERR("Cannot handle retract request, device is busy");
         return;
     }
+    // Force motorpos
+    auto position = mMotor.getPosition();
+    if (position.has_value())
+    {
+        mMotor.setPosition(position.value() + 1.0f); // Ensure we are not at 0 position
+    }
     mState = State::RETRACTING;
     k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
 }
@@ -178,10 +180,11 @@ void InsuBoxDevice::bolusTask()
         return;
     }
 
-    // Deliver 0.5 per time, and update the delivered amount
-    float bolusToDeliver = (remainingBolus > 0.5f) ? 0.5f : remainingBolus;
-    constexpr int BOLUS_SPEED = 2;
-    int err = mMotor.deliver(bolusToDeliver, BOLUS_SPEED);
+    constexpr int BOLUS_SPEED = 30;
+    constexpr uint8_t BOLUS_POWER = 100;
+    constexpr float BOLUS_DELIVERY_STEP = 0.25f;
+    float bolusToDeliver = (remainingBolus > BOLUS_DELIVERY_STEP) ? BOLUS_DELIVERY_STEP : remainingBolus;
+    int err = mMotor.deliver(bolusToDeliver, BOLUS_SPEED, BOLUS_POWER);
     if (err)
     {
         LOG_ERR("Failed to deliver bolus: %d", err);
@@ -213,14 +216,14 @@ void InsuBoxDevice::retractTask()
     }
 
     constexpr float TOLERANCE = 0.0001f;
-    constexpr float SLOW_RETRACT_POSITION = 20.0f;
+    constexpr float SLOW_RETRACT_POSITION = 5.0f;
     constexpr float FULL_RETRACT_POSITION = 0.0f;
-    constexpr float EXTRA_UNITS = 15.0f;
+    constexpr float EXTRA_UNITS = 10.0f;
 
     if (currentPosition.value() > SLOW_RETRACT_POSITION)
     {
         // Start retract
-        constexpr int RETRACT_SPEED = 80;
+        constexpr int RETRACT_SPEED = 100;
         constexpr uint8_t RETRACT_POWER = 110;
         int err = mMotor.moveToPosition(SLOW_RETRACT_POSITION, RETRACT_SPEED, RETRACT_POWER);
         if (err)
@@ -234,8 +237,8 @@ void InsuBoxDevice::retractTask()
         // Add some unit to ensure we fully retract
         mMotor.setPosition(currentPosition.value() + EXTRA_UNITS);
 
-        constexpr int RETRACT_SPEED = 20;
-        constexpr uint8_t RETRACT_POWER = 50;
+        constexpr int RETRACT_SPEED = 95;
+        constexpr uint8_t RETRACT_POWER = 80;
         int err = mMotor.moveToPosition(FULL_RETRACT_POSITION, RETRACT_SPEED, RETRACT_POWER);
         if (err)
         {
@@ -246,12 +249,20 @@ void InsuBoxDevice::retractTask()
     }
     else
     {
-        // TODO: Maybe also check here if the position is correct, and handle (error etc?)
+        constexpr float POSITION_TOLERANCE = 2;
         if (!mPosSensor.getPosition().has_value())
         {
-            LOG_DBG("Already in retracted position, no need to retract");
-            mState = CAL_SENSOR;
+            LOG_DBG("Position sensor not calibrated, starting calibration");
+            mState = State::CAL_SENSOR;
             k_work_reschedule(&mCalSensorTask.work, K_NO_WAIT);
+            return;
+        }
+        else if (mPosSensor.getPosition().value() > POSITION_TOLERANCE)
+        {
+            LOG_WRN("Sensor position %.2f is not fully retracted. Updating motor position to match.",
+                    static_cast<double>(mPosSensor.getPosition().value()));
+            mMotor.setPosition(mPosSensor.getPosition().value());
+            k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
             return;
         }
         else
@@ -289,12 +300,11 @@ void InsuBoxDevice::calSensorTask()
     }
 
     // Increment motor pos until we reach the end of reservoir
-    constexpr float MAX_POSITION = CONFIG_IB_PUMP_RESERVOIR_VOLUME;
     constexpr float STEP_SIZE = 1.0f; // TODO: Get increment val from sensor config
-    constexpr int SPEED = 10;         // Speed for calibration
+    constexpr int SPEED = 95;         // Speed for calibration
     constexpr int POWER = 100;        // Power for calibration
 
-    if (position.value() >= MAX_POSITION)
+    if (position.value() >= CONFIG_IB_PUMP_RESERVOIR_VOLUME)
     {
         LOG_DBG("Reached maximum position, calibration complete");
         mState = State::RETRACTING;
@@ -302,7 +312,7 @@ void InsuBoxDevice::calSensorTask()
         return;
     }
 
-    int err = mMotor.moveToPosition(position.value() + STEP_SIZE, SPEED, POWER);
+    int err = mMotor.deliver(STEP_SIZE, SPEED, POWER);
     if (err)
     {
         LOG_ERR("Failed to deliver during calibration: %d", err);
