@@ -39,6 +39,12 @@ InsuBoxDevice::InsuBoxDevice(IPumpDeviceCallback &pumpDeviceCallback)
         container->mDevice->calSensorTask();
     });
 
+    mPrimeTask.mDevice = this;
+    k_work_init_delayable(&mPrimeTask.work, [](struct k_work *work) {
+        auto *container = CONTAINER_OF(work, SimpleTask, work);
+        container->mDevice->primeTask();
+    });
+
     settings_subsys_init();
     settings_load_subtree_direct(
         settingsSubKey,
@@ -112,6 +118,7 @@ void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopp
     LOG_DBG("Deliver completed: units: %.2f, position: %.2f, stopped: %d, error: %d", static_cast<double>(delivered),
             static_cast<double>(position), stopped, error);
 
+    // TODO: Move to motor class? Or ensure that we save it also when we set pos manually
     std::string key = std::string(settingsSubKey) + "/" + settingsPlungerPosKey;
     settings_save_one(key.c_str(), &position, sizeof(position));
 
@@ -128,6 +135,10 @@ void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopp
     else if (mState == State::CAL_SENSOR)
     {
         k_work_reschedule(&mCalSensorTask.work, K_NO_WAIT);
+    }
+    else if (mState == State::PRIMING)
+    {
+        k_work_reschedule(&mPrimeTask.work, K_NO_WAIT);
     }
     else
     {
@@ -180,7 +191,7 @@ void InsuBoxDevice::bolusTask()
         return;
     }
 
-    constexpr int BOLUS_SPEED = 30;
+    constexpr int BOLUS_SPEED = 10;
     constexpr uint8_t BOLUS_POWER = 100;
     constexpr float BOLUS_DELIVERY_STEP = 0.25f;
     float bolusToDeliver = (remainingBolus > BOLUS_DELIVERY_STEP) ? BOLUS_DELIVERY_STEP : remainingBolus;
@@ -249,13 +260,12 @@ void InsuBoxDevice::retractTask()
     }
     else
     {
-        constexpr float POSITION_TOLERANCE = 2;
+        constexpr float POSITION_TOLERANCE = 5.0f;
         if (!mPosSensor.getPosition().has_value())
         {
             LOG_DBG("Position sensor not calibrated, starting calibration");
             mState = State::CAL_SENSOR;
             k_work_reschedule(&mCalSensorTask.work, K_NO_WAIT);
-            return;
         }
         else if (mPosSensor.getPosition().value() > POSITION_TOLERANCE)
         {
@@ -263,11 +273,12 @@ void InsuBoxDevice::retractTask()
                     static_cast<double>(mPosSensor.getPosition().value()));
             mMotor.setPosition(mPosSensor.getPosition().value());
             k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
-            return;
         }
         else
         {
-            mState = State::IDLE;
+            // TODO: We probably want the user to start the priming task
+            mState = State::PRIMING;
+            k_work_reschedule(&mPrimeTask.work, K_NO_WAIT);
         }
     }
 }
@@ -316,6 +327,40 @@ void InsuBoxDevice::calSensorTask()
     if (err)
     {
         LOG_ERR("Failed to deliver during calibration: %d", err);
+        mState = State::IDLE;
+        return;
+    }
+}
+
+void InsuBoxDevice::primeTask()
+{
+    // For now we only feel the plunger, and either need to manually prime the tube or deliver boli
+    LOG_DBG("Prime work");
+
+    auto currentMotorposition = mMotor.getPosition();
+    auto currentSensorPosition = mPosSensor.getPosition();
+    constexpr float POSITION_TOLERANCE = 5.0f;
+
+    float posDiff = std::fabs(currentMotorposition.value_or(0.0f) - currentSensorPosition.value_or(0.0f));
+    if (posDiff > POSITION_TOLERANCE)
+    {
+        // Assume plunger hit the reservoir end, update motor pos
+        LOG_WRN("Plunger position difference too high: %.2f > %.2f, updating motor position to sensor position",
+                static_cast<double>(posDiff), static_cast<double>(POSITION_TOLERANCE));
+        if (currentSensorPosition.has_value())
+        {
+            mMotor.setPosition(currentSensorPosition.value());
+        }
+        mState = State::IDLE;
+        return;
+    }
+
+    constexpr int SPEED = 95;
+    constexpr uint8_t POWER = 80;
+    int err = mMotor.deliver(1.0f, SPEED, POWER);
+    if (err)
+    {
+        LOG_ERR("Failed to deliver during priming: %d", err);
         mState = State::IDLE;
         return;
     }

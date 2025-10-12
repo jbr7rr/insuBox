@@ -32,6 +32,7 @@ private:
         IDLE,
         DELIVERING_BOLUS,
         RETRACTING,
+        PRIMING,
         CAL_SENSOR,
     };
     std::atomic<State> mState = State::IDLE;
@@ -42,6 +43,7 @@ private:
     };
     SimpleTask mRetractTask;
     SimpleTask mCalSensorTask;
+    SimpleTask mPrimeTask;
     struct BolusTask
     {
         InsuBoxDevice *device;
@@ -61,6 +63,7 @@ private:
     void bolusTask();
     void retractTask();
     void calSensorTask();
+    void primeTask();
 
     void sendBolusProgressUpdate();
 
