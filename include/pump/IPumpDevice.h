@@ -42,6 +42,11 @@ public:
      * @brief Handle a request to retract the plunger.
      */
     virtual void onRetractRequest() = 0;
+
+    /**
+     * @brief Handle a request to prime the pump.
+     */
+    virtual void onPrimeRequest() = 0;
 };
 
 #endif // IPUMP_DEVICE_H

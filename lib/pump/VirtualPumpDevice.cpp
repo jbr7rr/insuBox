@@ -65,6 +65,15 @@ void VirtualPumpDevice::onRetractRequest()
     k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
 }
 
+void VirtualPumpDevice::onPrimeRequest()
+{
+    LOG_DBG("Prime request");
+    mReservoirLevel = mReservoirLevel - 10.0f;
+    mSubContainer.requestedBolus = 0.0f;
+    mSubContainer.deliveredBolus = 0.0f;
+    k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);
+}
+
 void VirtualPumpDevice::_updateStatus()
 {
     LOG_DBG("VirtualPumpDevice update status");

@@ -113,6 +113,18 @@ void InsuBoxDevice::onRetractRequest()
     k_work_reschedule(&mRetractTask.work, K_NO_WAIT);
 }
 
+void InsuBoxDevice::onPrimeRequest()
+{
+    LOG_DBG("Prime request");
+    if (mState != State::IDLE)
+    {
+        LOG_ERR("Cannot handle prime request, device is busy");
+        return;
+    }
+    mState = State::PRIMING;
+    k_work_reschedule(&mPrimeTask.work, K_NO_WAIT);
+}
+
 void InsuBoxDevice::onMotorCompleted(float delivered, float position, bool stopped, bool error)
 {
     LOG_DBG("Deliver completed: units: %.2f, position: %.2f, stopped: %d, error: %d", static_cast<double>(delivered),

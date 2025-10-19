@@ -33,6 +33,11 @@ public:
      * @brief Request to retract the last bolus delivery
      */
     virtual void retractRequest() = 0;
+
+    /**
+     * @brief Request to prime the pump
+     */
+    virtual void primeRequest() = 0;
 };
 
 class IHmiDevice

@@ -1,10 +1,10 @@
 #include <hmi/insubox/InsuBoxHmiDevice.h>
 
-#include <string>
 #include <ctime>
 #include <lvgl.h>
 #include <lvgl_input_device.h>
 #include <lvgl_zephyr.h>
+#include <string>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/display.h>
 #include <zephyr/init.h>
@@ -284,12 +284,13 @@ void InsuBoxHmiDevice::showMainScreen()
     lv_obj_set_size(retractBtn, 55, 22);
     lv_obj_align(retractBtn, LV_ALIGN_RIGHT_MID, -10, 15);
     lv_obj_t *retractLabel = lv_label_create(retractBtn);
-    lv_label_set_text(retractLabel, "mMainMenu");
+    lv_label_set_text(retractLabel, "Menu");
     lv_obj_center(retractLabel);
 
     lv_obj_add_event_cb(
         bolusBtn,
         [](lv_event_t *e) {
+            LOG_DBG("Bolus button clicked");
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
             device->showBolusScreen();
         },
@@ -298,6 +299,7 @@ void InsuBoxHmiDevice::showMainScreen()
     lv_obj_add_event_cb(
         retractBtn,
         [](lv_event_t *e) {
+            LOG_DBG("mMainMenu button clicked");
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
             device->showMenu();
         },
@@ -376,51 +378,79 @@ void InsuBoxHmiDevice::showMenu()
 
     mMainMenu = lv_menu_create(lv_screen_active());
     lv_menu_set_mode_root_back_button(mMainMenu, LV_MENU_ROOT_BACK_BUTTON_ENABLED);
-    lv_obj_set_size(mMainMenu, lv_display_get_horizontal_resolution(nullptr), lv_display_get_vertical_resolution(nullptr));
+    lv_obj_set_style_bg_color(mMainMenu, lv_color_hex(0x000000), LV_PART_MAIN);
+    lv_obj_set_size(mMainMenu, lv_display_get_horizontal_resolution(nullptr),
+                    lv_display_get_vertical_resolution(nullptr));
     lv_obj_center(mMainMenu);
+    lv_obj_add_event_cb(
+        mMainMenu,
+        [](lv_event_t *e) {
+            lv_obj_t *obj = static_cast<lv_obj_t *>(lv_event_get_target(e));
+            auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
+            if (lv_menu_back_button_is_root(device->mMainMenu, obj))
+            {
+                device->showMainScreen();
+            }
+        },
+        LV_EVENT_CLICKED, this);
 
     // Create a sub page
     lv_obj_t *resChangePage = lv_menu_page_create(mMainMenu, nullptr);
 
     lv_obj_t *retractCont = lv_menu_cont_create(resChangePage);
     lv_obj_t *retractLabel = lv_label_create(retractCont);
+    lv_group_add_obj(lv_group_get_default(), retractCont);
     lv_label_set_text(retractLabel, "Retract plunger");
+    lv_obj_add_flag(retractCont, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(
         retractCont,
         [](lv_event_t *e) {
+            LOG_DBG("Retract plunger requested from HMI");
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
             device->mHmiCallback.retractRequest();
             device->showMainScreen();
         },
         LV_EVENT_CLICKED, this);
 
-    // Create a main page
-    lv_obj_t *mainPage = lv_menu_page_create(mMainMenu, nullptr);
-
-    lv_obj_t *item2Cont = lv_menu_cont_create(mainPage);
-    lv_obj_t *item2Label = lv_label_create(item2Cont);
-    lv_label_set_text(item2Label, "Reservoir change");
-    lv_menu_set_load_page_event(mMainMenu, item2Cont, resChangePage);
-
-    lv_menu_set_page(mMainMenu, mainPage);
-
+    lv_obj_t *primeCont = lv_menu_cont_create(resChangePage);
+    lv_obj_t *primeLabel = lv_label_create(primeCont);
+    lv_group_add_obj(lv_group_get_default(), primeCont);
+    lv_label_set_text(primeLabel, "Prime pump");
+    lv_obj_add_flag(primeCont, LV_OBJ_FLAG_CLICKABLE);
     lv_obj_add_event_cb(
-        mMainMenu,
+        primeCont,
         [](lv_event_t *e) {
-            lv_obj_t *obj = static_cast<lv_obj_t *>(lv_event_get_target(e));
+            LOG_DBG("Prime pump requested from HMI");
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
-            if(lv_menu_back_button_is_root(device->mMainMenu, obj))
-            {
-                device->showMainScreen();
-            }
-            else
-            {
-                // Propagate the event to the menu object/container
-                // This allows for adding a event to the menu items
-                lv_obj_send_event(lv_obj_get_child(obj, 0), LV_EVENT_CLICKED, nullptr);
-            }
+            device->mHmiCallback.primeRequest();
+            device->showMainScreen();
         },
         LV_EVENT_CLICKED, this);
+
+    lv_obj_t *calibratePlungerCont = lv_menu_cont_create(resChangePage);
+    lv_obj_t *calibratePlungerLabel = lv_label_create(calibratePlungerCont);
+    lv_group_add_obj(lv_group_get_default(), calibratePlungerCont);
+    lv_label_set_text(calibratePlungerLabel, "Calibrate plunger");
+    lv_obj_add_flag(calibratePlungerCont, LV_OBJ_FLAG_CLICKABLE);
+    lv_obj_add_event_cb(
+        calibratePlungerCont,
+        [](lv_event_t *e) {
+            auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
+            LOG_DBG("Calibrate plunger requested from HMI");
+            // TODO
+            device->showMainScreen();
+        },
+        LV_EVENT_CLICKED, this);
+
+    // Create a main page
+    lv_obj_t *mainPage = lv_menu_page_create(mMainMenu, nullptr);
+    lv_obj_t *resChangeCont = lv_menu_cont_create(mainPage);
+    lv_obj_t *resChangeLabel = lv_label_create(resChangeCont);
+    lv_group_add_obj(lv_group_get_default(), resChangeCont);
+    lv_label_set_text(resChangeLabel, "Reservoir change");
+    lv_menu_set_load_page_event(mMainMenu, resChangeCont, resChangePage);
+
+    lv_menu_set_page(mMainMenu, mainPage);
 }
 
 void InsuBoxHmiDevice::createBolusProgressPopup()

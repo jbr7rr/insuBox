@@ -35,6 +35,10 @@ struct RetractRequest
 {
 };
 
+struct PrimeRequest
+{
+};
+
 struct BolusProgressUpdate
 {
     float requestedAmount;

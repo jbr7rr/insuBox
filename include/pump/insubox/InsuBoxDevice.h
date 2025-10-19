@@ -23,6 +23,7 @@ protected:
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolusRequest() override;
     void onRetractRequest() override;
+    void onPrimeRequest() override;
 
     void onMotorCompleted(float delivered, float position, bool stopped, bool error) override;
 
