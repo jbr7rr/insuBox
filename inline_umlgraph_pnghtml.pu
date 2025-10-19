@@ -18,7 +18,7 @@ node "InsuBox" {
 
     package "Devices" {
         [WavezAlgorithm]
-        [MedtrumPump]
+        [InsuBoxPump]
         [DexcomG6Sensor]
         [InsuBoxControlBleServices]
         [InsuBoxHMI]
@@ -41,14 +41,12 @@ Controller <-left-> EventDispatcher
 
 ' Services
 AlgorithmService -down-> WavezAlgorithm
-PumpService -down-> MedtrumPump
+PumpService -down-> InsuBoxPump
 SensorService -down-> DexcomG6Sensor
 InsuBoxControlService -down-> InsuBoxControlBleServices
 HMIService -down-> InsuBoxHMI
 
 ' Devices
-MedtrumPump -down-> BLEComm
-MedtrumPump -down-> ZephyrBLELibrary
 DexcomG6Sensor -down-> BLEComm
 DexcomG6Sensor -down-> ZephyrBLELibrary
 InsuBoxControlBleServices -down-> BLEComm

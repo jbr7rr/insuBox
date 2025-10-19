@@ -1,31 +1,5 @@
 var searchData=
 [
-  ['generaterandomtoken_0',['generateRandomToken',['../classCrypt.html#a9ef67a01e345bf9e99f5624657a99220',1,'Crypt']]],
-  ['getbasalrate_1',['getBasalRate',['../classMedtrumPumpSync.html#a8da4fcb501a4fae452ef39063c591fb6',1,'MedtrumPumpSync']]],
-  ['getbasalsequence_2',['getBasalSequence',['../classMedtrumPumpSync.html#a3476a68c9efe238a4d49c314b3df8656',1,'MedtrumPumpSync']]],
-  ['getbasalstarttime_3',['getBasalStartTime',['../classMedtrumPumpSync.html#a06e2f0474c562a73b50bf82c53eff789',1,'MedtrumPumpSync']]],
-  ['getbasaltype_4',['getBasalType',['../classMedtrumPumpSync.html#ab93fb2de568158d12549f9bf97915462',1,'MedtrumPumpSync']]],
-  ['getbolusamountdelivered_5',['getBolusAmountDelivered',['../classMedtrumPumpSync.html#afd82ad911528f20ab220545d63b3356b',1,'MedtrumPumpSync']]],
-  ['getbolusinprogress_6',['getBolusInProgress',['../classMedtrumPumpSync.html#af8ed301417c572d75c6cc81d3e7f6f0b',1,'MedtrumPumpSync']]],
-  ['getbolusprogresslasttime_7',['getBolusProgressLastTime',['../classMedtrumPumpSync.html#ad77ba950fe76e092ecd761755a021fc8',1,'MedtrumPumpSync']]],
-  ['getcurrentsequencenumber_8',['getCurrentSequenceNumber',['../classMedtrumPumpSync.html#a4127c14230274ba986faedfb7e8bf843',1,'MedtrumPumpSync']]],
-  ['getcurrenttime_9',['getCurrentTime',['../classMedtrumTimeUtil.html#a8e62ff09d5fe2fcea5858b3cb557c88f',1,'MedtrumTimeUtil']]],
-  ['getcurrenttimepumpseconds_10',['getCurrentTimePumpSeconds',['../classMedtrumTimeUtil.html#a66d0849448be38a7ed9bd6bae33fe143',1,'MedtrumTimeUtil']]],
-  ['getdevicetype_11',['getDeviceType',['../classMedtrumPumpSync.html#a0d98be286bd8b9c08a70e29a2d36429f',1,'MedtrumPumpSync']]],
-  ['gethmidevice_12',['getHmiDevice',['../classHmiService.html#a43968cdf1f68d461d0c448ef030fc01e',1,'HmiService']]],
-  ['getinsulindeliverydevice_13',['getInsulinDeliveryDevice',['../classControlService.html#a9ca67f3fc5bf7a5ed8851019281e77c2',1,'ControlService']]],
-  ['getnextpacket_14',['getNextPacket',['../classWriteCommandPackets.html#a324cb5e2e194112a58f6f84bdc687b7b',1,'WriteCommandPackets']]],
-  ['getpatchid_15',['getPatchId',['../classMedtrumPumpSync.html#a4fa042b54eec73274afa51e1cc59c096',1,'MedtrumPumpSync']]],
-  ['getpatchstarttime_16',['getPatchStartTime',['../classMedtrumPumpSync.html#a56d25c563268674b5f5abd677b1ccc02',1,'MedtrumPumpSync']]],
-  ['getposition_17',['getPosition',['../classMotor.html#a9a7dcbadb4e0787095f8da47afb2bc76',1,'Motor']]],
-  ['getprimeprogress_18',['getPrimeProgress',['../classMedtrumPumpSync.html#a23cce6b936141cb0dcce4ccc5cfa1f20',1,'MedtrumPumpSync']]],
-  ['getpumpdevice_19',['getPumpDevice',['../classPumpService.html#a685ded19c8c393f7255149ca1f7ca582',1,'PumpService']]],
-  ['getpumpstate_20',['getPumpState',['../classMedtrumPumpSync.html#aa1e3122b1bd41998ac05aae3d2bc106b',1,'MedtrumPumpSync']]],
-  ['getrequest_21',['getrequest',['../classAuthPacket.html#a98d19b683cc8c787ffe8e8955b6cb306',1,'AuthPacket::getRequest()'],['../classMedtrumBasePacket.html#a0199f164fe5667dca8617fad0a1f3380',1,'MedtrumBasePacket::getRequest()'],['../classSetBolusPacket.html#af3cd458bc62a598984b6ad905dd2fdaa',1,'SetBolusPacket::getRequest()'],['../classSetTempBasalPacket.html#a023568a31624ab96601e391fb8458a10',1,'SetTempBasalPacket::getRequest()'],['../classSubscribePacket.html#ae632da9d00b2b0d9d4756ad1ea4dfecd',1,'SubscribePacket::getRequest()']]],
-  ['getreservoirlevel_22',['getReservoirLevel',['../classMedtrumPumpSync.html#a4a7423f42561960b5cc78b769d138ecf',1,'MedtrumPumpSync']]],
-  ['getresponse_23',['getResponse',['../classTestMedtrumBasePacket.html#ac30746ccb55a928d37f2f9f7e8ff700c',1,'TestMedtrumBasePacket']]],
-  ['getservice_24',['getService',['../namespacebt__ids.html#a4e4d2264be16fc11c5bc0ab2c7f7c95d',1,'bt_ids']]],
-  ['getsessiontoken_25',['getSessionToken',['../classMedtrumPumpSync.html#a91e00eaf1316fa198ac4223c8d0ab555',1,'MedtrumPumpSync']]],
-  ['getswversion_26',['getSwVersion',['../classMedtrumPumpSync.html#a791b82069cc7bf7b4495997d48e9c700',1,'MedtrumPumpSync']]],
-  ['getsyncedsequencenumber_27',['getSyncedSequenceNumber',['../classMedtrumPumpSync.html#a23c7254d83096c0110d329aa4bbcf109',1,'MedtrumPumpSync']]]
+  ['hmiservice_0',['hmiservice',['../classHmiService.html#a41b09bd49184bcf39ee65e95c7641d11',1,'HmiService::HmiService(EventDispatcher &amp;dispatcher)'],['../classHmiService.html#a1778b16fa43871cf3cabb0abc79d018d',1,'HmiService::HmiService(EventDispatcher &amp;dispatcher, IHmiDevice &amp;hmiDevice)']]],
+  ['hmiservicetest_1',['HmiServiceTest',['../classHmiServiceTest.html#ac00f2657039a609983f1f7d8bec2b2f4',1,'HmiServiceTest']]]
 ];

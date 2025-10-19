@@ -1,7 +1,5 @@
 <map id="BLEComm::storeConnectionRef" name="BLEComm::storeConnectionRef">
-<area shape="rect" id="Node000001" title=" " alt="" coords="439,5,664,31"/>
-<area shape="rect" id="Node000002" href="$classBLEComm.html#af50847fe35fba732aed2bfe79c9bc3a3" title=" " alt="" coords="243,5,391,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="425,21,391,21,391,15,425,15"/>
-<area shape="rect" id="Node000003" href="$classPumpBleComm.html#a4bce6af223470907c5140711dc028a66" title=" " alt="" coords="5,5,195,31"/>
-<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="229,21,195,21,195,15,229,15"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="201,5,427,31"/>
+<area shape="rect" id="Node000002" href="$classBLEComm.html#af50847fe35fba732aed2bfe79c9bc3a3" title=" " alt="" coords="5,5,153,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="188,21,154,21,154,15,188,15"/>
 </map>

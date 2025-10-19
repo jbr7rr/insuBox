@@ -1,9 +1,0 @@
-<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="Node000000" title=" " alt="" coords="5,55,177,80"/>
-<area shape="rect" id="Node000001" href="$classEventDispatcherParameterizedTest.html" title=" " alt="" coords="225,5,475,31"/>
-<area shape="poly" id="edge28_Node000000_Node000001" title=" " alt="" coords="171,49,282,28,283,33,172,55"/>
-<area shape="rect" id="Node000002" href="$classSFloatFromFloatTest.html" title=" " alt="" coords="273,55,427,80"/>
-<area shape="poly" id="edge29_Node000000_Node000002" title=" " alt="" coords="191,65,273,65,273,70,191,70"/>
-<area shape="rect" id="Node000003" href="$classSFloatToFloatTest.html" title=" " alt="" coords="282,104,418,129"/>
-<area shape="poly" id="edge30_Node000000_Node000003" title=" " alt="" coords="172,80,283,101,282,107,171,85"/>
-</map>

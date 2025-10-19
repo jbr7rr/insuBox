@@ -102,17 +102,16 @@ var NAVTREE =
       [ "Class Hierarchy", "hierarchy.html", "hierarchy" ],
       [ "Class Members", "functions.html", [
         [ "All", "functions.html", "functions_dup" ],
-        [ "Functions", "functions_func.html", "functions_func" ],
+        [ "Functions", "functions_func.html", null ],
         [ "Variables", "functions_vars.html", null ],
         [ "Typedefs", "functions_type.html", null ],
-        [ "Enumerations", "functions_enum.html", null ],
-        [ "Enumerator", "functions_eval.html", null ]
+        [ "Enumerations", "functions_enum.html", null ]
       ] ]
     ] ],
     [ "Files", "files.html", [
       [ "File List", "files.html", "files_dup" ],
       [ "File Members", "globals.html", [
-        [ "All", "globals.html", "globals_dup" ],
+        [ "All", "globals.html", null ],
         [ "Functions", "globals_func.html", null ],
         [ "Variables", "globals_vars.html", null ],
         [ "Enumerations", "globals_enum.html", null ],
@@ -125,11 +124,9 @@ var NAVTREE =
 
 var NAVTREEINDEX =
 [
-"AuthPacket_8cpp.html",
-"Tunes_8h.html#adfbdbc36baee852981842d731e0ccf6da2ab7ae8994788289893e5579ece3e92a",
-"classBuzzer.html#ac9380686a8aa8ed9ec7ab32ff658d4b6",
-"classNotificationPacket.html#a0469452f10ddc13cbadb2fb6cfbe5c6b",
-"functions_func_d.html"
+"BLEComm_8cpp.html",
+"Tunes_8h.html#adfbdbc36baee852981842d731e0ccf6daf4912cae458ad19ebb8828d9883e7bf7",
+"dir_a8f641299cfea9f7461c2df1141b7786.html"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

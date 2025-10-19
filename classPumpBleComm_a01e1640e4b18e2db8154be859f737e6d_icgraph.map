@@ -1,5 +1,0 @@
-<map id="PumpBleComm::connect" name="PumpBleComm::connect">
-<area shape="rect" id="Node000001" title="Create a connection to the pump." alt="" coords="225,5,408,31"/>
-<area shape="rect" id="Node000002" href="$classMedtrumBTDevice.html#a1b8798bd86a2c4cc62086fbf393ff3fc" title=" " alt="" coords="5,5,177,31"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="211,21,177,21,177,15,211,15"/>
-</map>

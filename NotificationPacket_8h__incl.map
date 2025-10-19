@@ -1,9 +1,0 @@
-<map id="include/pump/medtrum_bt/comm/packets/NotificationPacket.h" name="include/pump/medtrum_bt/comm/packets/NotificationPacket.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="7,5,227,60"/>
-<area shape="rect" id="Node000002" title=" " alt="" coords="5,108,56,133"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="93,62,54,100,50,96,89,58"/>
-<area shape="rect" id="Node000003" title=" " alt="" coords="80,108,155,133"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="120,60,120,94,115,94,115,60"/>
-<area shape="rect" id="Node000004" title=" " alt="" coords="179,108,250,133"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="149,58,193,97,189,101,145,62"/>
-</map>

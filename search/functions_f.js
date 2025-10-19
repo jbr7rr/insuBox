@@ -1,13 +1,13 @@
 var searchData=
 [
-  ['pairingcomplete_0',['pairingComplete',['../classBLEComm.html#afb134d3a739de32d47fc9fa5ea287149',1,'BLEComm']]],
-  ['pairingfailed_1',['pairingFailed',['../classBLEComm.html#a54d712becbf6ed129f04b6b5933de0cc',1,'BLEComm']]],
-  ['passkeyconfirm_2',['passkeyConfirm',['../classBLEComm.html#abd6839eb62d6f63cdc9ebe9a6ec17bf6',1,'BLEComm']]],
-  ['passkeydisplay_3',['passkeyDisplay',['../classBLEComm.html#a52137ade331a4227c2cd20c3ffa98237',1,'BLEComm']]],
-  ['playtune_4',['playTune',['../classBuzzer.html#ac9380686a8aa8ed9ec7ab32ff658d4b6',1,'Buzzer']]],
-  ['pumpblecomm_5',['PumpBleComm',['../classPumpBleComm.html#afafd1c76b0688b31bd98eb711d48841d',1,'PumpBleComm']]],
-  ['pumpscanner_6',['PumpScanner',['../classPumpScanner.html#a0e7b349633c2ef5575cc2e78ca62ca6a',1,'PumpScanner']]],
-  ['pumpservice_7',['pumpservice',['../classPumpService.html#acaaf5a15902c46baf393e8b0cdc5eb2c',1,'PumpService::PumpService(EventDispatcher &amp;dispatcher)'],['../classPumpService.html#a2f91a1cc86d94bcb2dde2e41742832cf',1,'PumpService::PumpService(EventDispatcher &amp;dispatcher, IPumpDevice &amp;pumpDevice)']]],
-  ['pumpstate_8',['pumpstate',['../classPumpState.html#aeed2df41bf16abc50ac0ae84ac0baf22',1,'PumpState::PumpState()'],['../classPumpState.html#ad8a709133b07ffd706df835e8752b3a9',1,'PumpState::PumpState(State v)'],['../classPumpState.html#a5a9728c53df4bcb7a9587ebb28f15c13',1,'PumpState::PumpState(uint8_t v)']]],
-  ['pumpstatusupdate_9',['pumpstatusupdate',['../classIPumpDeviceCallback.html#a9bdfba94004f873b72ddef38bb653cbf',1,'IPumpDeviceCallback::pumpStatusUpdate()'],['../classPumpService.html#a1fde612afce6d5b8c7d5293940640876',1,'PumpService::pumpStatusUpdate()']]]
+  ['securitychanged_0',['securityChanged',['../classBLEComm.html#a538ead40d87b3978fd509895a1b37383',1,'BLEComm']]],
+  ['setposition_1',['setPosition',['../classMotor.html#ab3a0404322eb9782466d18fefdba3248',1,'Motor']]],
+  ['setvref_2',['setVref',['../classMotor.html#a40e46bd9d3e3704399e5f7429b718bd8',1,'Motor']]],
+  ['sfloat_3',['sfloat',['../classSFloat.html#ae74b1ccd93c41fc1a44ddf2d8d2ab969',1,'SFloat::SFloat()=default'],['../classSFloat.html#a3eb22c6be41b45e4c8ce6340f4c06759',1,'SFloat::SFloat(float value)'],['../classSFloat.html#a616a5137afdae8b4b7a1b7c4c9c5690c',1,'SFloat::SFloat(uint16_t rawValue)']]],
+  ['sfloatfromfloat_4',['sfloatFromFloat',['../classSFloat.html#ad0bdba06d5c27f65069efbf222347229',1,'SFloat']]],
+  ['stop_5',['stop',['../classMotor.html#a015fd5308d4d27e5dcf7f9ea3d5c03f6',1,'Motor::stop()'],['../classBuzzer.html#acbb32df95ae1af7d4ba9bb01dc9e3b20',1,'Buzzer::stop()']]],
+  ['stopbolusrequest_6',['stopbolusrequest',['../classHmiService.html#a54956d3eabd768c952cbe5e614a391ec',1,'HmiService::stopBolusRequest()'],['../classIHmiCallback.html#a478888ff3bddf7f88b2bba75389e4fdb',1,'IHmiCallback::stopBolusRequest()']]],
+  ['storeconnectionref_7',['storeConnectionRef',['../classBLEComm.html#a93b57befd3174393349015f676f7c5d2',1,'BLEComm']]],
+  ['subscribe_8',['subscribe',['../classBLEComm.html#a081b8aa552974b5892c079f31d5c67a2',1,'BLEComm::subscribe()'],['../classEventDispatcher.html#a787b104271e80549604769cfc82a6678',1,'EventDispatcher::subscribe()']]],
+  ['sys_5finit_9',['SYS_INIT',['../InsuBoxHmiDevice_8cpp.html#a355356889726a25f54aff7a0878075dd',1,'InsuBoxHmiDevice.cpp']]]
 ];

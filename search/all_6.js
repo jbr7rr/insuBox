@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['features_0',['Features',['../index.html#autotoc_md3',1,'']]],
-  ['filled_1',['FILLED',['../classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a6b909fd940269f7e56fe9cefd098cba0',1,'PumpState']]],
-  ['findstoredconnection_2',['findStoredConnection',['../classBLEComm.html#a388ecdc0646a6235f07d7fbc4fdcb5c0',1,'BLEComm']]],
-  ['flags_3',['flags',['../structInsulinDeliveryDevice_1_1IddStatusChangedChar.html#a83ada3ee24329235a25eb98f7eb0d0c4',1,'InsulinDeliveryDevice::IddStatusChangedChar::flags'],['../structInsulinDeliveryDevice_1_1IddStatusChar.html#a3597ea007470b353948e042e95a40221',1,'InsulinDeliveryDevice::IddStatusChar::flags'],['../structInsulinDeliveryDevice_1_1IddAnnunciationChar.html#abba0af5867e6b9bc60878cb197ddcbce',1,'InsulinDeliveryDevice::IddAnnunciationChar::flags'],['../BleInterfaceSpec.html#idas-flags',1,'Flags']]],
-  ['floatval_4',['floatVal',['../structSFloatTestParams.html#a51da59dc88b153d073344eb101da31b1',1,'SFloatTestParams']]],
-  ['frequency_5',['frequency',['../structTune.html#ae2e291981f0f8f2e59956944b86a2b49',1,'Tune']]],
-  ['frombasalendreason_6',['fromBasalEndReason',['../classBasalType.html#a19f882270898ff61d3ed8b90273c0996',1,'BasalType']]]
+  ['get_20aid_20state_0',['get aid state',['../BleInterfaceSpec.html#idas-get-aid-state',1,'Get AID State'],['../BleInterfaceSpec.html#idas-operand-get-aid-state',1,'Operand of Get AID State']]],
+  ['get_20algorithm_20mode_1',['get algorithm mode',['../BleInterfaceSpec.html#idas-get-algorithm-mode',1,'Get Algorithm Mode'],['../BleInterfaceSpec.html#idas-operand-get-algorithm-mode',1,'Operand of Get Algorithm Mode']]],
+  ['get_20dexcom_20id_2',['get dexcom id',['../BleInterfaceSpec.html#iss-get-dexcom-id',1,'Get Dexcom ID'],['../BleInterfaceSpec.html#iss-operand-get-dexcom-id',1,'Operand of Get Dexcom ID']]],
+  ['gethmidevice_3',['getHmiDevice',['../classHmiService.html#a43968cdf1f68d461d0c448ef030fc01e',1,'HmiService']]],
+  ['getinsulindeliverydevice_4',['getInsulinDeliveryDevice',['../classControlService.html#a9ca67f3fc5bf7a5ed8851019281e77c2',1,'ControlService']]],
+  ['getposition_5',['getPosition',['../classMotor.html#a9a7dcbadb4e0787095f8da47afb2bc76',1,'Motor']]],
+  ['getpumpdevice_6',['getPumpDevice',['../classPumpService.html#a685ded19c8c393f7255149ca1f7ca582',1,'PumpService']]],
+  ['getservice_7',['getService',['../namespacebt__ids.html#a4e4d2264be16fc11c5bc0ab2c7f7c95d',1,'bt_ids']]]
 ];

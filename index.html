@@ -100,10 +100,11 @@ Introduction</h1>
 <h2><a class="anchor" id="autotoc_md3"></a>
 Features</h2>
 <p>Initial target features:</p><ul>
-<li>Medtrum Nano support</li>
-<li>Dexcom G6 support</li>
+<li>InsuBox Pump support</li>
+<li>Dexcom G6 (Maybe G7) support</li>
 <li>Algorithm based on <a href="https://github.com/openaps/oref0">OpenAPS</a> and <a href="https://github.com/piecycle/tsunami">Tsunami</a> but simplified (no carb input)</li>
 <li>Bluetooth communication with phone for configuration and monitoring</li>
+<li>TBD</li>
 </ul>
 <h1><a class="anchor" id="autotoc_md4"></a>
 How to develop</h1>
@@ -118,7 +119,7 @@ west update
 </pre></li>
 <li>Build the project for your target board, for example: <a href="https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html">https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html</a></li>
 </ul>
-<p>To select an additional config file use: </p><div class="fragment"><div class="line">west build -b $BOARD app -- -DOVERLAY_CONFIG=medtrum_bt.conf</div>
+<p>To select an additional config file use: </p><div class="fragment"><div class="line">west build -b $BOARD app -- -DOVERLAY_CONFIG=hw_insubox.conf</div>
 </div><!-- fragment --><h2><a class="anchor" id="autotoc_md6"></a>
 Run unit tests</h2>
 <p>Run the tests: </p><pre class="fragment">west twister -T tests --integration

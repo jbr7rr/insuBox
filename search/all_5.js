@@ -1,14 +1,8 @@
 var searchData=
 [
-  ['ejected_0',['EJECTED',['../classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9afc9dc32c4609206199210bfc0d87da08',1,'PumpState']]],
-  ['ejecting_1',['EJECTING',['../classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a482312ce71d6ec11988ccdb131014327',1,'PumpState']]],
-  ['encode_2',['encode',['../classSFloat.html#a2ffcaa67fef292617a2f60b54b8f2615',1,'SFloat']]],
-  ['eventcallback_3',['EventCallback',['../classCallbackHolder.html#a0d58756121a314494abaaad2c33f99a8',1,'CallbackHolder']]],
-  ['eventdispatcher_4',['EventDispatcher',['../classEventDispatcher.html',1,'']]],
-  ['eventdispatcher_2eh_5',['EventDispatcher.h',['../EventDispatcher_8h.html',1,'']]],
-  ['eventdispatcherparameterizedtest_6',['EventDispatcherParameterizedTest',['../classEventDispatcherParameterizedTest.html',1,'']]],
-  ['eventdispatchertest_7',['EventDispatcherTest',['../classEventDispatcherTest.html',1,'']]],
-  ['eventid_8',['EventID',['../structEventID.html',1,'']]],
-  ['exercise_9',['EXERCISE',['../classBasalType.html#a6899be7659ea5677d7f6ec478007eb83a264b6577cfaf26364237c62ec6e3b8e9',1,'BasalType']]],
-  ['expired_10',['EXPIRED',['../classPumpState.html#a64afd6d69f98afee65eb1a0bc71ea3c9a2e775562f70ec9d04c1c0ac190cabc2e',1,'PumpState']]]
+  ['features_0',['Features',['../index.html#autotoc_md3',1,'']]],
+  ['findstoredconnection_1',['findStoredConnection',['../classBLEComm.html#a388ecdc0646a6235f07d7fbc4fdcb5c0',1,'BLEComm']]],
+  ['flags_2',['flags',['../structInsulinDeliveryDevice_1_1IddStatusChangedChar.html#a83ada3ee24329235a25eb98f7eb0d0c4',1,'InsulinDeliveryDevice::IddStatusChangedChar::flags'],['../structInsulinDeliveryDevice_1_1IddStatusChar.html#a3597ea007470b353948e042e95a40221',1,'InsulinDeliveryDevice::IddStatusChar::flags'],['../structInsulinDeliveryDevice_1_1IddAnnunciationChar.html#abba0af5867e6b9bc60878cb197ddcbce',1,'InsulinDeliveryDevice::IddAnnunciationChar::flags'],['../BleInterfaceSpec.html#idas-flags',1,'Flags']]],
+  ['floatval_3',['floatVal',['../structSFloatTestParams.html#a51da59dc88b153d073344eb101da31b1',1,'SFloatTestParams']]],
+  ['frequency_4',['frequency',['../structTune.html#ae2e291981f0f8f2e59956944b86a2b49',1,'Tune']]]
 ];

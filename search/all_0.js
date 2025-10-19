@@ -1,6 +1,27 @@
 var searchData=
 [
-  ['_5fconnect_0',['_connect',['../classPumpBleComm.html#a4bce6af223470907c5140711dc028a66',1,'PumpBleComm']]],
-  ['_5fnegotiateconnection_1',['_negotiateConnection',['../classMedtrumBTDevice.html#a73ddafafc96f220c5a5a20f77b04002c',1,'MedtrumBTDevice']]],
-  ['_5fwrite_2',['_write',['../classPumpBleComm.html#a48ebc017d8a14840cc5db958107b42ff',1,'PumpBleComm']]]
+  ['accept_0',['accept',['../structBtPassKeyConfirmResponse.html#a370084a52585ded2f5e2f528e55a7283',1,'BtPassKeyConfirmResponse']]],
+  ['active_5fbasal_5frate_5fchanged_1',['ACTIVE_BASAL_RATE_CHANGED',['../IdsEnums_8h.html#ad91823b3e43beef5ccd12321e1d0e0c4aa72ac502d7b51996f2c96c1fe1e931ef',1,'IdsEnums.h']]],
+  ['active_5fbolus_5fchanged_2',['ACTIVE_BOLUS_CHANGED',['../IdsEnums_8h.html#ad91823b3e43beef5ccd12321e1d0e0c4acdaa0f16f7784bb6c1ec3675b3501239',1,'IdsEnums.h']]],
+  ['advertisingwork_3',['advertisingWork',['../classBLEComm.html#a4c5a7d05d7c145fbe89ba286bfadde4b',1,'BLEComm']]],
+  ['advertisingworkhandler_4',['advertisingWorkHandler',['../classBLEComm.html#a2dd90c6af74f5f3c5483fa89df446f79',1,'BLEComm']]],
+  ['advertizingdata_5',['advertizingData',['../classBLEComm.html#ad926092562e790f9730ccef5c83e55ec',1,'BLEComm']]],
+  ['advparam_6',['advParam',['../classBLEComm.html#a2814f2ffa27da7a3963eb38ea8c8214f',1,'BLEComm']]],
+  ['aid_20state_7',['aid state',['../BleInterfaceSpec.html#idas-aid-state',1,'AID State'],['../BleInterfaceSpec.html#idas-get-aid-state',1,'Get AID State'],['../BleInterfaceSpec.html#idas-operand-get-aid-state',1,'Operand of Get AID State'],['../BleInterfaceSpec.html#idas-set-aid-state',1,'Set AID State']]],
+  ['aid_20suspend_20remaining_20time_8',['AID Suspend Remaining Time',['../BleInterfaceSpec.html#idas-aid-suspend-remaining-time',1,'']]],
+  ['air_5fpressure_5fout_5fof_5frange_9',['AIR_PRESSURE_OUT_OF_RANGE',['../IdsEnums_8h.html#a087c597e7803bb4bec3d80631c2a3bd6acd9372a9e8935093fedc69c9d7b37b40',1,'IdsEnums.h']]],
+  ['algorithm_20mode_10',['algorithm mode',['../BleInterfaceSpec.html#idas-get-algorithm-mode',1,'Get Algorithm Mode'],['../BleInterfaceSpec.html#idas-operand-get-algorithm-mode',1,'Operand of Get Algorithm Mode'],['../BleInterfaceSpec.html#idas-set-algorithm-mode',1,'Set Algorithm Mode']]],
+  ['amount_11',['amount',['../structBolusRequest.html#a8dd4abad00d766e8dc645c55bd417a29',1,'BolusRequest']]],
+  ['annunciation_12',['annunciation',['../structPumpAnnunciationStatus.html#ad630fa230eed068e110c4fefe248d567',1,'PumpAnnunciationStatus']]],
+  ['annunciation_5fchanged_13',['ANNUNCIATION_CHANGED',['../IdsEnums_8h.html#ad91823b3e43beef5ccd12321e1d0e0c4acb4d159cd29d94ddc3c56f5adbafbb04',1,'IdsEnums.h']]],
+  ['annunciationstatus_14',['AnnunciationStatus',['../IdsEnums_8h.html#ae8f470184a265f34212f951ed7108bec',1,'IdsEnums.h']]],
+  ['annunciationtype_15',['AnnunciationType',['../IdsEnums_8h.html#a087c597e7803bb4bec3d80631c2a3bd6',1,'IdsEnums.h']]],
+  ['architecture_16',['Architecture',['../index.html#autotoc_md7',1,'']]],
+  ['authcancel_17',['authCancel',['../classBLEComm.html#a9b65a891b9767491bdd511806347bfbc',1,'BLEComm']]],
+  ['automation_20command_20data_18',['IDD Automation Command Data',['../BleInterfaceSpec.html#idas-idd-automation-command-data',1,'']]],
+  ['automation_20control_20point_19',['IDD Automation Control Point',['../BleInterfaceSpec.html#idas-idd-automation-control-point',1,'']]],
+  ['automation_20control_20point_20procedure_20requirements_20',['IDD Automation Control Point procedure requirements',['../BleInterfaceSpec.html#idas-idd-automation-control-point-procedure-requirements',1,'']]],
+  ['automation_20service_21',['Insulin Delivery Automation Service',['../BleInterfaceSpec.html#insulin-delivery-automation-service',1,'']]],
+  ['automation_20status_22',['IDD Automation Status',['../BleInterfaceSpec.html#idas-idd-automation-status',1,'']]],
+  ['aux_23',['aux',['../structInsulinDeliveryDevice_1_1IddAnnunciationChar.html#a11eab9dc83186aac884592d574c8bb8f',1,'InsulinDeliveryDevice::IddAnnunciationChar']]]
 ];
