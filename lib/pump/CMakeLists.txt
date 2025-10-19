@@ -1,5 +1,4 @@
 add_subdirectory_ifdef(CONFIG_IB_PUMP_INSUBOX insubox)
-add_subdirectory_ifdef(CONFIG_IB_PUMP_MEDTRUM_BT medtrum_bt)
 
 zephyr_library()
 zephyr_library_compile_options(-Wall -Werror)

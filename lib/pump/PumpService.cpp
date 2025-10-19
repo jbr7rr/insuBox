@@ -1,7 +1,6 @@
 #include <pump/PumpService.h>
 #include <pump/VirtualPumpDevice.h>
 #include <pump/insubox/InsuBoxDevice.h>
-#include <pump/medtrum_bt/MedtrumBTDevice.h>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -56,8 +55,6 @@ IPumpDevice &PumpService::getPumpDevice(IPumpDeviceCallback &pumpDeviceCallback)
 {
 #ifdef CONFIG_IB_PUMP_INSUBOX
     static InsuBoxDevice pumpDevice(pumpDeviceCallback);
-#elif defined(CONFIG_IB_PUMP_MEDTRUM_BT)
-    static MedtrumBTDevice pumpDevice;
 #elif defined(CONFIG_IB_PUMP_VIRTUAL)
     static VirtualPumpDevice pumpDevice(pumpDeviceCallback);
 #else

@@ -12,10 +12,11 @@ Intended use case is as a stand alone loop system, so one don't need to carry a 
 ## Features
 
 Initial target features:
-- Medtrum Nano support
-- Dexcom G6 support
+- InsuBox Pump support
+- Dexcom G6 (Maybe G7) support
 - Algorithm based on [OpenAPS](https://github.com/openaps/oref0) and [Tsunami](https://github.com/piecycle/tsunami) but simplified (no carb input)
 - Bluetooth communication with phone for configuration and monitoring
+- TBD
 
 # How to develop
 
@@ -35,7 +36,7 @@ https://docs.zephyrproject.org/latest/boards/seeed/xiao_esp32s3/doc/index.html
 
 To select an additional config file use:
 ```
-west build -b $BOARD app -- -DOVERLAY_CONFIG=medtrum_bt.conf
+west build -b $BOARD app -- -DOVERLAY_CONFIG=hw_insubox.conf
 ```
 
 ## Run unit tests
@@ -71,7 +72,7 @@ node "InsuBox" {
 
     package "Devices" {
         [WavezAlgorithm]
-        [MedtrumPump]
+        [InsuBoxPump]
         [DexcomG6Sensor]
         [InsuBoxControlBleServices]
         [InsuBoxHMI]
@@ -94,14 +95,12 @@ Controller <-left-> EventDispatcher
 
 ' Services
 AlgorithmService -down-> WavezAlgorithm
-PumpService -down-> MedtrumPump
+PumpService -down-> InsuBoxPump
 SensorService -down-> DexcomG6Sensor
 InsuBoxControlService -down-> InsuBoxControlBleServices
 HMIService -down-> InsuBoxHMI
 
 ' Devices
-MedtrumPump -down-> BLEComm
-MedtrumPump -down-> ZephyrBLELibrary
 DexcomG6Sensor -down-> BLEComm
 DexcomG6Sensor -down-> ZephyrBLELibrary
 InsuBoxControlBleServices -down-> BLEComm

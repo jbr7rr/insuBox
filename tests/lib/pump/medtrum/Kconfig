@@ -1,7 +1,0 @@
-source "Kconfig.zephyr"
-
-config BT_MAX_CONN
-    default 3
-
-config IB_BT_MAX_CLIENT_CONNECTIONS
-    default 1
