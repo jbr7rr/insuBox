@@ -23,4 +23,16 @@ config IB_PUMP_RESERVOIR_VOLUME
 	  This option sets the reservoir volume for the InsuBox pump in units.
 	  The default value is 300 units, which is equivalent to 3.00 ml.
 
+choice IB_PUMP_INSUBOX_MOTOR_SPEC
+	prompt "InsuBox motor specification"
+	default IB_PUMP_INSUBOX_MOTOR_M3_1_298
+
+config IB_PUMP_INSUBOX_MOTOR_M3_1_298
+	bool "M3-1:298"
+
+config IB_PUMP_INSUBOX_MOTOR_M3_1_50
+	bool "M3-1:50"
+
+endchoice
+
 endif

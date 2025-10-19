@@ -10,10 +10,22 @@ namespace
 {
     // Motor settings, for motor: m3, ratio 1:298
     constexpr auto STEPPER_MICRO_STEP = STEPPER_MICRO_STEP_1;
+#ifdef CONFIG_IB_PUMP_INSUBOX_MOTOR_M3_1_298
     constexpr auto INTERVAL_MAX = (15000000 / STEPPER_MICRO_STEP);
     constexpr auto INTERVAL_MIN = (750000 / STEPPER_MICRO_STEP);
-    constexpr auto FULL_STEPS_PER_UNIT = 1144; // TODO: Maybe make this KConfig, or based on a motor selection?
+    constexpr auto FULL_STEPS_PER_UNIT = 1144;
     constexpr auto STEPS_PER_UNIT = (STEPPER_MICRO_STEP * FULL_STEPS_PER_UNIT);
+#elif defined(CONFIG_IB_PUMP_INSUBOX_MOTOR_M3_1_50)
+#warn "This motor is very likely to skip steps, use only for testing!"
+    // Note: This motor skips steps very easily under load, maybe one can fine tune the settings to get it to work
+    // properly, but that is unlikely. For now we go with the slower 1:298 motor
+    constexpr auto INTERVAL_MAX = (90000000 / STEPPER_MICRO_STEP);
+    constexpr auto INTERVAL_MIN = (500000 / STEPPER_MICRO_STEP);
+    constexpr auto FULL_STEPS_PER_UNIT = 192;
+    constexpr auto STEPS_PER_UNIT = (STEPPER_MICRO_STEP * FULL_STEPS_PER_UNIT);
+#else
+#error "No motor configuration selected"
+#endif
 }
 
 Motor::Motor(IMotorCallback &callback) : mCallback(callback)
