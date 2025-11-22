@@ -43,7 +43,7 @@ private:
     uint16_t transformValue(int16_t value) const;
     bool postProcessLUT();
 
-    std::pair<uint16_t, uint16_t> readSensor(const struct device *sensor) const;
+    SensorVals readSensors() const;
     int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
 };
 

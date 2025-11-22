@@ -280,12 +280,12 @@ void InsuBoxHmiDevice::showMainScreen()
     lv_label_set_text(btnLabel, "Bolus");
     lv_obj_center(btnLabel);
 
-    lv_obj_t *retractBtn = lv_btn_create(lv_screen_active());
-    lv_obj_set_size(retractBtn, 55, 22);
-    lv_obj_align(retractBtn, LV_ALIGN_RIGHT_MID, -10, 15);
-    lv_obj_t *retractLabel = lv_label_create(retractBtn);
-    lv_label_set_text(retractLabel, "Menu");
-    lv_obj_center(retractLabel);
+    lv_obj_t *menuBtn = lv_btn_create(lv_screen_active());
+    lv_obj_set_size(menuBtn, 55, 22);
+    lv_obj_align(menuBtn, LV_ALIGN_RIGHT_MID, -10, 15);
+    lv_obj_t *menuLabel = lv_label_create(menuBtn);
+    lv_label_set_text(menuLabel, "Menu");
+    lv_obj_center(menuLabel);
 
     lv_obj_add_event_cb(
         bolusBtn,
@@ -297,13 +297,15 @@ void InsuBoxHmiDevice::showMainScreen()
         LV_EVENT_CLICKED, this);
 
     lv_obj_add_event_cb(
-        retractBtn,
+        menuBtn,
         [](lv_event_t *e) {
-            LOG_DBG("mMainMenu button clicked");
+            LOG_DBG("Menu button clicked");
             auto *device = static_cast<InsuBoxHmiDevice *>(lv_event_get_user_data(e));
             device->showMenu();
         },
         LV_EVENT_CLICKED, this);
+
+    lv_group_set_editing(lv_group_get_default(), false);
 }
 
 void InsuBoxHmiDevice::showBolusScreen()

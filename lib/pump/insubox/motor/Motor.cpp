@@ -1,5 +1,6 @@
 #include <cmath>
 #include <pump/insubox/motor/Motor.h>
+#include <string>
 
 #define LOG_LEVEL LOG_LEVEL_DBG
 #include <zephyr/logging/log.h>
@@ -26,6 +27,9 @@ namespace
 #else
 #error "No motor configuration selected"
 #endif
+
+    constexpr char settingsSubKey[] = "ib";
+    constexpr char settingsPlungerPosKey[] = "plPos";
 }
 
 Motor::Motor(IMotorCallback &callback) : mCallback(callback)
@@ -42,6 +46,14 @@ Motor::Motor(IMotorCallback &callback) : mCallback(callback)
 
     stepper_set_event_callback(mStepperDev, drvCallback, this);
     stepper_set_micro_step_res(mStepperDev, STEPPER_MICRO_STEP);
+
+    settings_subsys_init();
+    settings_load_subtree_direct(
+        settingsSubKey,
+        [](const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param) {
+            return static_cast<Motor *>(param)->loadCb(key, len, read_cb, cb_arg, param);
+        },
+        this);
 }
 
 Motor::~Motor() {}
@@ -76,12 +88,6 @@ int Motor::deliver(float units, uint8_t speed, uint8_t powerPct)
 
 int Motor::moveToPosition(float units, uint8_t speed, uint8_t powerPct)
 {
-
-    if (units < 0)
-    {
-        return -EINVAL;
-    }
-
     int err = prepareForMove(speed, powerPct);
     if (err)
     {
@@ -117,11 +123,6 @@ void Motor::stop()
 
 int Motor::setPosition(float position)
 {
-    if (position < 0)
-    {
-        return -EINVAL;
-    }
-
     LOG_INF("Setting position to %.2f", static_cast<double>(position));
 
     int err = stepper_set_reference_position(mStepperDev, static_cast<int32_t>(round(position * STEPS_PER_UNIT)));
@@ -132,6 +133,8 @@ int Motor::setPosition(float position)
     }
 
     mCurrentPosition = position;
+    std::string key = std::string(settingsSubKey) + "/" + settingsPlungerPosKey;
+    settings_save_one(key.c_str(), &mCurrentPosition, sizeof(mCurrentPosition));
     return 0;
 }
 
@@ -239,6 +242,8 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
     else
     {
         motor->mCurrentPosition = static_cast<float>(stepperPos) / STEPS_PER_UNIT;
+        std::string key = std::string(settingsSubKey) + "/" + settingsPlungerPosKey;
+        settings_save_one(key.c_str(), &motor->mCurrentPosition, sizeof(motor->mCurrentPosition));
     }
 
     switch (event)
@@ -271,4 +276,28 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
     motor->setVref(0);
     motor->mCallback.onMotorCompleted(motor->mCurrentPosition.value() - previousPosition,
                                       motor->mCurrentPosition.value(), stopped, error);
+}
+
+int Motor::loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param)
+{
+    // Load the settings from the settings subsystem
+    if (strcmp(key, settingsPlungerPosKey) == 0)
+    {
+        LOG_DBG("Loading plunger position");
+        float position;
+        int len = read_cb(cb_arg, &position, sizeof(position));
+        if (len != sizeof(position))
+        {
+            LOG_ERR("Failed to read plunger position from settings");
+            return -1;
+        }
+        setPosition(position);
+    }
+    else
+    {
+        LOG_ERR("Unknown key: %s", key);
+        return -1;
+    }
+
+    return 0;
 }

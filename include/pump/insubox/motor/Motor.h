@@ -5,6 +5,7 @@
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/drivers/stepper.h>
 #include <zephyr/kernel.h>
+#include <zephyr/settings/settings.h>
 
 #include <optional>
 
@@ -68,6 +69,7 @@ private:
     int setVref(uint8_t powerPct);
 
     static void drvCallback(const struct device *dev, enum stepper_event event, void *userData);
+    int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
 };
 
 #endif // MOTOR_H

@@ -9,7 +9,6 @@
 #include <pump/insubox/motor/Motor.h>
 #include <pump/insubox/posSensor/PosSensor.h>
 #include <zephyr/kernel.h>
-#include <zephyr/settings/settings.h>
 
 class InsuBoxDevice : public IPumpDevice, public IMotorCallback
 {
@@ -68,7 +67,6 @@ private:
 
     void sendBolusProgressUpdate();
 
-    int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
     static Motor &createMotorInstance(IMotorCallback &callback);
     static PosSensor &createPosSensorInstance();
 };

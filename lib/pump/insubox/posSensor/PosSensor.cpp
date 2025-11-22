@@ -46,8 +46,7 @@ std::optional<float> PosSensor::getPosition() const
         return std::nullopt;
     }
 
-    SensorVals currentVals = {readSensor(mTopSensor).first, readSensor(mTopSensor).second,
-                              readSensor(mBottomSensor).first, readSensor(mBottomSensor).second};
+    SensorVals currentVals = readSensors();
 
     LOG_DBG("Current sensor values - Top: X=%d, Z=%d; Bottom: X=%d, Z=%d", currentVals.x1, currentVals.z1,
             currentVals.x2, currentVals.z2);
@@ -133,28 +132,20 @@ bool PosSensor::storePositionToLUT(int position)
         return false;
     }
 
-    auto topVals = readSensor(mTopSensor);
-    auto bottomVals = readSensor(mBottomSensor);
-
-    if (topVals.first == 0 && topVals.second == 0)
+    SensorVals sensorVals = readSensors();
+    if ((sensorVals.x1 == 0 && sensorVals.z1 == 0) || (sensorVals.x2 == 0 && sensorVals.z2 == 0))
     {
-        LOG_ERR("Failed to read top sensor values");
-        return false;
-    }
-    if (bottomVals.first == 0 && bottomVals.second == 0)
-    {
-        LOG_ERR("Failed to read bottom sensor values");
+        LOG_ERR("Failed to read sensor values");
         return false;
     }
 
-    mSensorLUT[position] = {topVals.first, topVals.second, bottomVals.first, bottomVals.second};
+    mSensorLUT[position] = sensorVals;
 
-    LOG_DBG("Stored position %d: Top(X=%d, Z=%d), Bottom(X=%d, Z=%d)", position, topVals.first, topVals.second,
-            bottomVals.first, bottomVals.second);
+    LOG_DBG("Stored position %d: x1=%d, z1=%d; x2=%d, z2=%d", position, sensorVals.x1, sensorVals.z1, sensorVals.x2,
+            sensorVals.z2);
 
     if (position == CONFIG_IB_PUMP_RESERVOIR_VOLUME)
     {
-        // TODO: We might want to move this to a separate public method
         return postProcessLUT();
     }
 
@@ -175,8 +166,12 @@ bool PosSensor::postProcessLUT()
         return true;
     }
 
+    SensorVals prevVals = {0, 0, 0, 0};
+    SensorVals currentVals = {0, 0, 0, 0};
     for (size_t i = 0; i < mSensorLUT.size(); ++i)
     {
+        LOG_DBG("LUT before processing pos %d: x1=%d, z1=%d; x2=%d, z2=%d", static_cast<int>(i),
+                mSensorLUT[i].x1, mSensorLUT[i].z1, mSensorLUT[i].x2, mSensorLUT[i].z2);
         // Check if any of the values are zero, which indicates no data
         if (mSensorLUT[i].x1 == 0 && mSensorLUT[i].z1 == 0 && mSensorLUT[i].x2 == 0 && mSensorLUT[i].z2 == 0)
         {
@@ -184,15 +179,45 @@ bool PosSensor::postProcessLUT()
             return false;
         }
         // Apply average smoothing to the LUT
-        if (i == 0 || i == mSensorLUT.size() - 1)
+        if (i == 0)
         {
-            // Skip first and last elements, as they cannot be smoothed
+            // Smooth first element using only center and next value
+            constexpr float weight = 0.5f;
+            mSensorLUT[i].x1 = std::round((mSensorLUT[i].x1 * weight + mSensorLUT[i + 1].x1 * weight));
+            mSensorLUT[i].z1 = std::round((mSensorLUT[i].z1 * weight + mSensorLUT[i + 1].z1 * weight));
+            mSensorLUT[i].x2 = std::round((mSensorLUT[i].x2 * weight + mSensorLUT[i + 1].x2 * weight));
+            mSensorLUT[i].z2 = std::round((mSensorLUT[i].z2 * weight + mSensorLUT[i + 1].z2 * weight));
+            prevVals = mSensorLUT[i];
+            LOG_DBG("LUT after processing pos %d: x1=%d, z1=%d; x2=%d, z2=%d", static_cast<int>(i),
+                    mSensorLUT[i].x1, mSensorLUT[i].z1, mSensorLUT[i].x2, mSensorLUT[i].z2);
             continue;
         }
-        mSensorLUT[i].x1 = std::round((mSensorLUT[i - 1].x1 + mSensorLUT[i].x1 + mSensorLUT[i + 1].x1) / 3.0f);
-        mSensorLUT[i].z1 = std::round((mSensorLUT[i - 1].z1 + mSensorLUT[i].z1 + mSensorLUT[i + 1].z1) / 3.0f);
-        mSensorLUT[i].x2 = std::round((mSensorLUT[i - 1].x2 + mSensorLUT[i].x2 + mSensorLUT[i + 1].x2) / 3.0f);
-        mSensorLUT[i].z2 = std::round((mSensorLUT[i - 1].z2 + mSensorLUT[i].z2 + mSensorLUT[i + 1].z2) / 3.0f);
+        if (i == mSensorLUT.size() - 1)
+        {
+            // Smooth last element using only previous and center value
+            constexpr float weight = 0.5f;
+            currentVals = mSensorLUT[i];
+            mSensorLUT[i].x1 = std::round((prevVals.x1 * weight + mSensorLUT[i].x1 * weight));
+            mSensorLUT[i].z1 = std::round((prevVals.z1 * weight + mSensorLUT[i].z1 * weight));
+            mSensorLUT[i].x2 = std::round((prevVals.x2 * weight + mSensorLUT[i].x2 * weight));
+            mSensorLUT[i].z2 = std::round((prevVals.z2 * weight + mSensorLUT[i].z2 * weight));
+            prevVals = currentVals;
+            LOG_DBG("LUT after processing pos %d: x1=%d, z1=%d; x2=%d, z2=%d", static_cast<int>(i),
+                    mSensorLUT[i].x1, mSensorLUT[i].z1, mSensorLUT[i].x2, mSensorLUT[i].z2);
+            continue;
+        }
+        constexpr float centerWeight = 0.4f; // Weight for the center value
+        constexpr float sideWeight = (1.0f - centerWeight) / 2.0f; // Weight for the side values
+
+        currentVals = mSensorLUT[i];
+        mSensorLUT[i].x1 = std::round((prevVals.x1 * sideWeight + mSensorLUT[i].x1 * centerWeight + mSensorLUT[i + 1].x1 * sideWeight));
+        mSensorLUT[i].z1 = std::round((prevVals.z1 * sideWeight + mSensorLUT[i].z1 * centerWeight + mSensorLUT[i + 1].z1 * sideWeight));
+        mSensorLUT[i].x2 = std::round((prevVals.x2 * sideWeight + mSensorLUT[i].x2 * centerWeight + mSensorLUT[i + 1].x2 * sideWeight));
+        mSensorLUT[i].z2 = std::round((prevVals.z2 * sideWeight + mSensorLUT[i].z2 * centerWeight + mSensorLUT[i + 1].z2 * sideWeight));
+        prevVals = currentVals;
+
+        LOG_DBG("LUT after processing pos %d: x1=%d, z1=%d; x2=%d, z2=%d", static_cast<int>(i),
+                mSensorLUT[i].x1, mSensorLUT[i].z1, mSensorLUT[i].x2, mSensorLUT[i].z2);
     }
 
     // Save the LUT to persistent storage
@@ -208,25 +233,36 @@ bool PosSensor::postProcessLUT()
     return true;
 }
 
-std::pair<uint16_t, uint16_t> PosSensor::readSensor(const struct device *sensor) const
+PosSensor::SensorVals PosSensor::readSensors() const
 {
-    if (!device_is_ready(sensor))
+    if (!device_is_ready(mTopSensor))
     {
-        LOG_ERR("Device %s is not ready", sensor->name);
-        return {0, 0};
+        LOG_ERR("Top sensor is not ready");
+        return {0, 0, 0, 0};
+    }
+    if (!device_is_ready(mBottomSensor))
+    {
+        LOG_ERR("Bottom sensor is not ready");
+        return {0, 0, 0, 0};
+    }
+    if (sensor_sample_fetch(mTopSensor) < 0)
+    {
+        LOG_ERR("Failed to fetch samples from top sensor");
+        return {0, 0, 0, 0};
+    }
+    if (sensor_sample_fetch(mBottomSensor) < 0)
+    {
+        LOG_ERR("Failed to fetch samples from bottom sensor");
+        return {0, 0, 0, 0};
     }
 
-    if (sensor_sample_fetch(sensor) < 0)
-    {
-        LOG_ERR("Failed to fetch samples");
-        return {0, 0};
-    }
-
-    struct sensor_value mag_x, mag_z;
-    sensor_channel_get(sensor, SENSOR_CHAN_MAGN_X, &mag_x);
-    sensor_channel_get(sensor, SENSOR_CHAN_MAGN_Z, &mag_z);
-
-    return {transformValue(mag_x.val1), transformValue(mag_z.val1)};
+    struct sensor_value top_mag_x, top_mag_z, bottom_mag_x, bottom_mag_z;
+    sensor_channel_get(mTopSensor, SENSOR_CHAN_MAGN_X, &top_mag_x);
+    sensor_channel_get(mTopSensor, SENSOR_CHAN_MAGN_Z, &top_mag_z);
+    sensor_channel_get(mBottomSensor, SENSOR_CHAN_MAGN_X, &bottom_mag_x);
+    sensor_channel_get(mBottomSensor, SENSOR_CHAN_MAGN_Z, &bottom_mag_z);
+    return {transformValue(top_mag_x.val1), transformValue(top_mag_z.val1),
+            transformValue(bottom_mag_x.val1), transformValue(bottom_mag_z.val1)};
 }
 
 int PosSensor::loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param)
