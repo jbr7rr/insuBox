@@ -28,6 +28,11 @@ PumpService::PumpService(EventDispatcher &dispatcher, IPumpDevice &pumpDevice)
         LOG_DBG("Retract request received");
         mPumpDevice.onRetractRequest();
     });
+
+    mDispatcher.subscribe<PrimeRequest>([this](const PrimeRequest &prime) {
+        LOG_DBG("Prime request received");
+        mPumpDevice.onPrimeRequest();
+    });
 }
 
 PumpService::~PumpService() {}

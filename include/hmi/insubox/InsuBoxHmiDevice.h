@@ -48,6 +48,8 @@ private:
         BolusProgressUpdate currentUpdate{};
     } mBolusUi;
 
+    lv_obj_t *mMainMenu = nullptr;
+
     IHmiCallback &mHmiCallback;
     k_work_q &mWorkQueue;
     Buzzer &mBuzzer;
@@ -57,6 +59,7 @@ private:
 
     void showMainScreen();
     void showBolusScreen();
+    void showMenu();
     void createBolusProgressPopup();
     void createBolusProgressWidget();
 

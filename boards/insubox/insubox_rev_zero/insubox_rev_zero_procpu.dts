@@ -87,21 +87,20 @@
 		compatible = "zephyr,lvgl-keypad-input";
 		input = <&keys>;
 		input-codes = <INPUT_KEY_UP INPUT_KEY_DOWN INPUT_KEY_ENTER>;
-		lvgl-codes = <LV_KEY_RIGHT LV_KEY_LEFT LV_KEY_ENTER>;
+		lvgl-codes = <LV_KEY_LEFT LV_KEY_RIGHT LV_KEY_ENTER>;
 	};
 	
 	drv8428: drv8428 {
 		status = "okay";
 		compatible = "ti,drv84xx";
-		
-		dir-gpios = <&gpio1 11 0>;// GPIO 43
+
+		dir-gpios = <&gpio1 11 (GPIO_ACTIVE_LOW)>;// GPIO 43
 		step-gpios = <&gpio0 2 0>;
 		sleep-gpios = <&gpio1 12 (GPIO_ACTIVE_LOW)>;// GPIO 44
 		en-gpios  = <&gpio0 7 0>;
 		m0-gpios = <&gpio0 5 0>;
 		m1-gpios = <&gpio0 3 0>;
-		// TODO: Check in new zephyr version if support for countertop is added to esp32 driver
-		// counter = <&timer0>;
+		counter = <&timer0_counter>;
 		
 		#address-cells = <1>;
 		#size-cells = <0>;
@@ -193,20 +192,22 @@
 	pinctrl-names = "default";
 	
 	// U3 - TMAG5273_D1
-	tmag5273_bottom: tmag5273@44 {
+	tmag5273_bottom: tmag5273@22 {
 		compatible = "ti,tmag5273";
-		reg = <0x44>;
+		reg = <0x22>;
 		label = "tmag5273_bottom";
-		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
-		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
+		operation-mode = <TMAG5273_DT_OPER_MODE_STANDBY>;
+		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XZ>;
+		average-mode = <TMAG5273_DT_AVERAGING_32X>;
 	};
 	
 	tmag5273_top: tmag5273@78 {
 		compatible = "ti,tmag5273";
 		reg = <0x78>;
 		label = "tmag5273_top";
-		operation-mode = <TMAG5273_DT_OPER_MODE_CONTINUOUS>;
-		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XY>;
+		operation-mode = <TMAG5273_DT_OPER_MODE_STANDBY>;
+		angle-magnitude-axis = <TMAG5273_DT_ANGLE_MAG_XZ>;
+		average-mode = <TMAG5273_DT_AVERAGING_32X>;
 	};
 };
 
@@ -219,7 +220,10 @@
 };
 
 &timer0 {
-	status = "disabled";
+	status = "okay";
+	timer0_counter: counter {
+		status = "okay";
+	};
 };
 
 &timer1 {

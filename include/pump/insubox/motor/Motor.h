@@ -5,6 +5,7 @@
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/drivers/stepper.h>
 #include <zephyr/kernel.h>
+#include <zephyr/settings/settings.h>
 
 #include <optional>
 
@@ -29,7 +30,7 @@ public:
      *
      * @return int 0 on success, negative error code on failure.
      */
-    int deliver(float units, uint8_t speed = 10);
+    int deliver(float units, uint8_t speed = 10, uint8_t powerPct = 100);
 
     /**
      * @brief Move the motor to the specified position.
@@ -40,10 +41,11 @@ public:
      * @param units The position to move to, in units. Can be negative in order to correct the position if it is
      * incorrect.
      * @param speed The speed of the motor. 0 - 100. (0 is slowest possible, 100 is fastest)
+     * @param powerPct The power percentage to use for the motor. 0 - 150. (0 is off, 100 is nominal, 150 is overdrive)
      *
      * @return int 0 on success, negative error code on failure.
      */
-    int moveToPosition(float units, uint8_t speed = 100);
+    int moveToPosition(float units, uint8_t speed = 100, uint8_t powerPct = 100);
 
     /**
      * @brief Stop the motor.
@@ -62,9 +64,12 @@ private:
     std::optional<float> mCurrentPosition = std::nullopt;
     IMotorCallback &mCallback;
 
-    int setVref(uint8_t powerPct = 80);
+    int prepareForMove(uint8_t speed, uint8_t powerPct);
+
+    int setVref(uint8_t powerPct);
 
     static void drvCallback(const struct device *dev, enum stepper_event event, void *userData);
+    int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
 };
 
 #endif // MOTOR_H

@@ -7,8 +7,8 @@
 #include <pump/IPumpDevice.h>
 #include <pump/PumpServiceMessages.h>
 #include <pump/insubox/motor/Motor.h>
+#include <pump/insubox/posSensor/PosSensor.h>
 #include <zephyr/kernel.h>
-#include <zephyr/settings/settings.h>
 
 class InsuBoxDevice : public IPumpDevice, public IMotorCallback
 {
@@ -22,20 +22,32 @@ protected:
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolusRequest() override;
     void onRetractRequest() override;
+    void onPrimeRequest() override;
 
     void onMotorCompleted(float delivered, float position, bool stopped, bool error) override;
 
 private:
-    struct SubContainer
+    enum State : uint8_t
+    {
+        IDLE,
+        DELIVERING_BOLUS,
+        RETRACTING,
+        PRIMING,
+        CAL_SENSOR,
+    };
+    std::atomic<State> mState = State::IDLE;
+    struct SimpleTask
     {
         InsuBoxDevice *mDevice;
-        k_work_delayable sensorWork;
-    } mSubContainer;
-
+        k_work_delayable work;
+    };
+    SimpleTask mRetractTask;
+    SimpleTask mCalSensorTask;
+    SimpleTask mPrimeTask;
     struct BolusTask
     {
         InsuBoxDevice *device;
-        k_work_delayable bolusWork;
+        k_work_delayable work;
         float requestedBolus;
         float deliveredBolus;
         time_t requestedTimestamp;
@@ -44,14 +56,19 @@ private:
 
     IPumpDeviceCallback &mPumpDeviceCallback;
     Motor &mMotor;
+    PosSensor &mPosSensor;
 
-    void sensorWork();
-    void bolusWork();
+    float mMaxPlungerDifference = 0;
+
+    void bolusTask();
+    void retractTask();
+    void calSensorTask();
+    void primeTask();
 
     void sendBolusProgressUpdate();
 
-    int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
     static Motor &createMotorInstance(IMotorCallback &callback);
+    static PosSensor &createPosSensorInstance();
 };
 
 #endif // CONFIG_IB_PUMP_INSUBOX

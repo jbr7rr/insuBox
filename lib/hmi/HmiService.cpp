@@ -135,6 +135,11 @@ void HmiService::retractRequest()
     mDispatcher.dispatch<RetractRequest>({});
 }
 
+void HmiService::primeRequest()
+{
+    mDispatcher.dispatch<PrimeRequest>({});
+}
+
 IHmiDevice &HmiService::getHmiDevice(IHmiCallback &hmiCallback)
 {
 #ifdef CONFIG_IB_HMI_VIRTUAL

@@ -20,6 +20,7 @@ protected:
     void bolusRequest(float amount, time_t timestamp) override;
     void stopBolusRequest() override;
     void retractRequest() override;
+    void primeRequest() override;
 
 private:
     EventDispatcher &mDispatcher;

@@ -17,6 +17,7 @@ public:
     void onBolusRequest(float amount, time_t timestamp) override;
     void onStopBolusRequest() override;
     void onRetractRequest() override;
+    void onPrimeRequest() override;
 
 private:
     struct SubContainer
