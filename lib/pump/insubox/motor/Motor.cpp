@@ -39,13 +39,19 @@ Motor::Motor(IMotorCallback &callback) : mCallback(callback)
         LOG_ERR("PWM device not ready");
     }
 
-    if (!device_is_ready(mStepperDev))
+    if (!device_is_ready(mStepperCtrlDev))
     {
-        LOG_ERR("Stepper device not ready");
+        LOG_ERR("Stepper controller not ready");
     }
 
-    stepper_set_event_callback(mStepperDev, drvCallback, this);
-    stepper_set_micro_step_res(mStepperDev, STEPPER_MICRO_STEP);
+    if (!device_is_ready(mStepperDrvDev))
+    {
+        LOG_ERR("Stepper driver not ready");
+    }
+
+    stepper_ctrl_set_event_cb(mStepperCtrlDev, ctrlCallback, this);
+    stepper_set_event_cb(mStepperDrvDev, drvCallback, this);
+    stepper_set_micro_step_res(mStepperDrvDev, STEPPER_MICRO_STEP);
 
     settings_subsys_init();
     settings_load_subtree_direct(
@@ -74,11 +80,11 @@ int Motor::deliver(float units, uint8_t speed, uint8_t powerPct)
     int steps = static_cast<int>(round(units * STEPS_PER_UNIT));
 
     LOG_INF("Delivering %.2f units at speed %d with power %d%%", static_cast<double>(units), speed, powerPct);
-    err = stepper_move_by(mStepperDev, steps);
+    err = stepper_ctrl_move_by(mStepperCtrlDev, steps);
     if (err)
     {
         LOG_ERR("Failed to move motor: %d", err);
-        stepper_disable(mStepperDev);
+        stepper_disable(mStepperDrvDev);
         setVref(0);
         return err;
     }
@@ -94,12 +100,11 @@ int Motor::moveToPosition(float units, uint8_t speed, uint8_t powerPct)
         return err;
     }
 
-    LOG_INF("Moving to position %.2f at speed %d with power %d%%", static_cast<double>(units), speed, powerPct);
-    err = stepper_move_to(mStepperDev, static_cast<int32_t>(round(units * STEPS_PER_UNIT)));
+    err = stepper_ctrl_move_to(mStepperCtrlDev, static_cast<int32_t>(round(units * STEPS_PER_UNIT)));
     if (err)
     {
         LOG_ERR("Failed to move motor: %d", err);
-        stepper_disable(mStepperDev);
+        stepper_disable(mStepperDrvDev);
         setVref(0);
         return err;
     }
@@ -112,7 +117,7 @@ void Motor::stop()
     // Stop the motor immediately
     LOG_INF("Stopping motor");
 
-    int err = stepper_stop(mStepperDev);
+    int err = stepper_ctrl_stop(mStepperCtrlDev);
     if (err)
     {
         LOG_ERR("Failed to stop motor: %d", err);
@@ -125,7 +130,7 @@ int Motor::setPosition(float position)
 {
     LOG_INF("Setting position to %.2f", static_cast<double>(position));
 
-    int err = stepper_set_reference_position(mStepperDev, static_cast<int32_t>(round(position * STEPS_PER_UNIT)));
+    int err = stepper_ctrl_set_reference_position(mStepperCtrlDev, static_cast<int32_t>(round(position * STEPS_PER_UNIT)));
     if (err)
     {
         LOG_ERR("Failed to set reference position: %d", err);
@@ -165,7 +170,7 @@ int Motor::prepareForMove(uint8_t speed, uint8_t powerPct)
     }
 
     int interval = INTERVAL_MIN + (INTERVAL_MAX - INTERVAL_MIN) * (100 - speed) / 100;
-    err = stepper_set_microstep_interval(mStepperDev, interval);
+    err = stepper_ctrl_set_microstep_interval(mStepperCtrlDev, interval);
     if (err)
     {
         LOG_ERR("Failed to set microstep interval: %d", err);
@@ -173,7 +178,7 @@ int Motor::prepareForMove(uint8_t speed, uint8_t powerPct)
         return err;
     }
 
-    err = stepper_enable(mStepperDev);
+    err = stepper_enable(mStepperDrvDev);
     if (err)
     {
         LOG_ERR("Failed to enable motor: %d", err);
@@ -217,10 +222,10 @@ int Motor::setVref(uint8_t powerPct)
     return 0;
 }
 
-void Motor::drvCallback(const struct device *dev, enum stepper_event event, void *userData)
+void Motor::ctrlCallback(const struct device *dev, enum stepper_ctrl_event event, void *userData)
 {
-    // Handle motor driver events
-    LOG_INF("Driver callback triggered with event %d", event);
+    // Handle stepper motion controller events
+    LOG_INF("Controller callback triggered with event %d", event);
 
     Motor *motor = static_cast<Motor *>(userData);
     if (motor == nullptr)
@@ -233,7 +238,7 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
     bool error = false;
     float previousPosition = motor->mCurrentPosition.value();
     int32_t stepperPos = 0;
-    int err = stepper_get_actual_position(dev, &stepperPos);
+    int err = stepper_ctrl_get_actual_position(dev, &stepperPos);
     if (err)
     {
         LOG_ERR("Failed to get actual position: %d", err);
@@ -248,34 +253,54 @@ void Motor::drvCallback(const struct device *dev, enum stepper_event event, void
 
     switch (event)
     {
-    case STEPPER_EVENT_STEPS_COMPLETED:
-        LOG_DBG("STEPPER_EVENT_STEPS_COMPLETED");
+    case STEPPER_CTRL_EVENT_STEPS_COMPLETED:
+        LOG_DBG("STEPPER_CTRL_EVENT_STEPS_COMPLETED");
         break;
+    case STEPPER_CTRL_EVENT_LEFT_END_STOP_DETECTED:
+        LOG_DBG("STEPPER_CTRL_EVENT_LEFT_END_STOP_DETECTED");
+        break;
+    case STEPPER_CTRL_EVENT_RIGHT_END_STOP_DETECTED:
+        LOG_DBG("STEPPER_CTRL_EVENT_RIGHT_END_STOP_DETECTED");
+        break;
+    case STEPPER_CTRL_EVENT_STOPPED:
+        LOG_DBG("STEPPER_CTRL_EVENT_STOPPED");
+        stopped = true;
+        break;
+    }
+
+    stepper_disable(motor->mStepperDrvDev);
+    motor->setVref(0);
+    motor->mCallback.onMotorCompleted(motor->mCurrentPosition.value() - previousPosition,
+                                      motor->mCurrentPosition.value(), stopped, error);
+}
+
+void Motor::drvCallback(const struct device *dev, enum stepper_event event, void *userData)
+{
+    // Handle stepper hardware driver events (stall, fault)
+    LOG_INF("Driver callback triggered with event %d", event);
+
+    Motor *motor = static_cast<Motor *>(userData);
+    if (motor == nullptr)
+    {
+        LOG_ERR("Motor ptr is null");
+        return;
+    }
+
+    switch (event)
+    {
     case STEPPER_EVENT_STALL_DETECTED:
         LOG_ERR("STEPPER_EVENT_STALL_DETECTED");
-        error = true;
-        break;
-    case STEPPER_EVENT_LEFT_END_STOP_DETECTED:
-        LOG_DBG("STEPPER_EVENT_LEFT_END_STOP_DETECTED");
-        break;
-    case STEPPER_EVENT_RIGHT_END_STOP_DETECTED:
-        LOG_DBG("STEPPER_EVENT_RIGHT_END_STOP_DETECTED");
-        break;
-    case STEPPER_EVENT_STOPPED:
-        LOG_DBG("STEPPER_EVENT_STOPPED");
-        stopped = true;
         break;
     case STEPPER_EVENT_FAULT_DETECTED:
         LOG_ERR("STEPPER_EVENT_FAULT_DETECTED");
-        error = true;
         break;
     }
 
     // TODO: Maybe separate enable/disable methods?
     stepper_disable(dev);
     motor->setVref(0);
-    motor->mCallback.onMotorCompleted(motor->mCurrentPosition.value() - previousPosition,
-                                      motor->mCurrentPosition.value(), stopped, error);
+    float previousPosition = motor->mCurrentPosition.value_or(0.0f);
+    motor->mCallback.onMotorCompleted(0.0f, previousPosition, false, true);
 }
 
 int Motor::loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param)

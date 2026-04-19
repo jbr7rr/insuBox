@@ -38,7 +38,8 @@
 		mag-bottom = &tmag5273_bottom;
 		mag-top = &tmag5273_top;
 		
-		stepper = &drv8428;
+		stepper = &step_dir_ctrl;
+		stepper-drv = &drv8428;
 	};
 	
 	keys: keys {
@@ -94,17 +95,20 @@
 		status = "okay";
 		compatible = "ti,drv84xx";
 
-		dir-gpios = <&gpio1 11 (GPIO_ACTIVE_LOW)>;// GPIO 43
-		step-gpios = <&gpio0 2 0>;
 		sleep-gpios = <&gpio1 12 (GPIO_ACTIVE_LOW)>;// GPIO 44
 		en-gpios  = <&gpio0 7 0>;
 		m0-gpios = <&gpio0 5 0>;
 		m1-gpios = <&gpio0 3 0>;
-		counter = <&timer0_counter>;
+	};
+
+	step_dir_ctrl: step_dir_ctrl {
+		status = "okay";
+		compatible = "zephyr,gpio-step-dir-stepper-ctrl";
 		
-		#address-cells = <1>;
-		#size-cells = <0>;
-		#stepper-motor-cells = <0>;
+		step-gpios = <&gpio0 2 GPIO_ACTIVE_HIGH>;
+		dir-gpios = <&gpio1 11 GPIO_ACTIVE_LOW>;// GPIO 43
+		stepper-driver = <&drv8428>;
+		counter = <&timer0_counter>;
 	};
 	
 	pwms {

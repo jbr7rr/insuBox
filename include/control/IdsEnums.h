@@ -2,7 +2,7 @@
 #define IDS_ENUMS_H
 
 #include <cstdint>
-#include <zephyr/sys/util.h>
+#include <zephyr/sys/util_macro.h>
 
 enum class TherapyControlState : uint8_t
 {

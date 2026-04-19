@@ -3,7 +3,8 @@
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/pwm.h>
-#include <zephyr/drivers/stepper.h>
+#include <zephyr/drivers/stepper/stepper.h>
+#include <zephyr/drivers/stepper/stepper_ctrl.h>
 #include <zephyr/kernel.h>
 #include <zephyr/settings/settings.h>
 
@@ -60,7 +61,8 @@ public:
 
 private:
     const struct pwm_dt_spec mPwmStepVref = PWM_DT_SPEC_GET(DT_ALIAS(pwm_step_vref));
-    const struct device *mStepperDev = DEVICE_DT_GET(DT_ALIAS(stepper));
+    const struct device *mStepperCtrlDev = DEVICE_DT_GET(DT_ALIAS(stepper));
+    const struct device *mStepperDrvDev = DEVICE_DT_GET(DT_ALIAS(stepper_drv));
     std::optional<float> mCurrentPosition = std::nullopt;
     IMotorCallback &mCallback;
 
@@ -68,6 +70,7 @@ private:
 
     int setVref(uint8_t powerPct);
 
+    static void ctrlCallback(const struct device *dev, enum stepper_ctrl_event event, void *userData);
     static void drvCallback(const struct device *dev, enum stepper_event event, void *userData);
     int loadCb(const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param);
 };
