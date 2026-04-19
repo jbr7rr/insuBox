@@ -1,3 +1,4 @@
+#include "../bt_cts/bt_cts.h"
 #include "bt_ids.h"
 #include <control/bt_ids/InsulinDeliveryDevice.h>
 
@@ -23,13 +24,14 @@ InsulinDeliveryDevice::~InsulinDeliveryDevice() {}
 void InsulinDeliveryDevice::init()
 {
     LOG_DBG("Initializing IDS device");
+    bt_cts::init();
     bt_ids::init(*this);
 
     auto attr = idsService.attrs[0];
     LOG_DBG("attr: %d", attr.handle);
 }
 
-void InsulinDeliveryDevice::onIddStatusUpdated(const PumpStatus &status)
+void InsulinDeliveryDevice::onPumpStatusUpdated(const PumpStatus &status)
 {
     uint16_t flagsStatusChanged = sys_get_le16(mStatusChangedCharData.flags);
 
@@ -84,7 +86,7 @@ void InsulinDeliveryDevice::onIddStatusUpdated(const PumpStatus &status)
     }
 }
 
-void InsulinDeliveryDevice::onIddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel)
+void InsulinDeliveryDevice::onAlarmStatusUpdated(const AnnunciationType &annunciation, bool cancel)
 {
     // TODO
     ;

@@ -1,22 +1,22 @@
 #ifndef CONTROL_SERVICE_H
 #define CONTROL_SERVICE_H
 
-#include <control/bt_ids/InsulinDeliveryDevice.h>
+#include <control/IControlDevice.h>
 #include <events/EventDispatcher.h>
 
 class ControlService
 {
 public:
     ControlService(EventDispatcher &dispatcher);
-    ControlService(EventDispatcher &dispatcher, IInsulinDeliveryDevice &insulinDeliveryDevice);
+    ControlService(EventDispatcher &dispatcher, IControlDevice &controlDevice);
     ~ControlService();
     void init();
 
 private:
     EventDispatcher &mDispatcher;
-    IInsulinDeliveryDevice &mInsulinDeliveryDevice;
+    IControlDevice &mControlDevice;
 
-    static IInsulinDeliveryDevice &getInsulinDeliveryDevice();
+    static IControlDevice &getControlDevice(EventDispatcher &dispatcher);
 };
 
 #endif // CONTROL_SERVICE_H

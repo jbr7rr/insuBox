@@ -1,30 +1,8 @@
 #ifndef INSULIN_DELIVERY_DEVICE_H
 #define INSULIN_DELIVERY_DEVICE_H
 
-#include <pump/PumpServiceMessages.h> // PumpStatusUpdated
+#include <control/IControlDevice.h>
 #include <zephyr/bluetooth/gatt.h>
-
-class IInsulinDeliveryDevice
-{
-public:
-    virtual ~IInsulinDeliveryDevice() = default;
-    virtual void init() = 0;
-
-    /**
-     * @brief Handle updates to the insulin delivery device status.
-     *
-     * @param status The updated status of the insulin delivery device.
-     */
-    virtual void onIddStatusUpdated(const PumpStatus &status) = 0;
-
-    /**
-     * @brief Handle updates to the insulin delivery device annunciation status.
-     *
-     * @param annunciation The type of annunciation that has been updated.
-     * @param cancel If true, the annunciation is being cancelled.
-     */
-    virtual void onIddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) = 0;
-};
 
 class IInsulinDeliveryDeviceCallback
 {
@@ -47,7 +25,7 @@ public:
                                                        uint8_t flags) = 0;
 };
 
-class InsulinDeliveryDevice : public IInsulinDeliveryDevice, public IInsulinDeliveryDeviceCallback
+class InsulinDeliveryDevice : public IControlDevice, public IInsulinDeliveryDeviceCallback
 {
 public:
     InsulinDeliveryDevice();
@@ -56,8 +34,8 @@ public:
 protected:
     void init() override;
 
-    void onIddStatusUpdated(const PumpStatus &status) override;
-    void onIddAnnunciationStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) override;
+    void onPumpStatusUpdated(const PumpStatus &status) override;
+    void onAlarmStatusUpdated(const AnnunciationType &annunciation, bool cancel = false) override;
 
     ssize_t onReadIddStatusChanged(struct bt_conn *conn, const struct bt_gatt_attr *attr, void *buf, uint16_t len,
                                    uint16_t offset) override;

@@ -3,3 +3,23 @@ config IB_CONTROL
     bool "InsuBox control module"
     help
         This option enables support for the InsuBox control module.
+
+if IB_CONTROL
+
+choice IB_CONTROL_IMPLEMENTATION
+    prompt "Control device implementation"
+    default IB_CONTROL_IDS
+
+config IB_CONTROL_IDS
+    bool "IDS (Insulin Delivery System) device"
+    help
+        Use the Bluetooth IDS GATT service for pump control.
+
+config IB_CONTROL_KALEIDO
+    bool "Kaleido device"
+    help
+        Use the Kaleido custom GATT service for pump control.
+
+endchoice
+
+endif # IB_CONTROL
