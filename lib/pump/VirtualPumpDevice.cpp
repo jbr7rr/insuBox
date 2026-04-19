@@ -68,7 +68,8 @@ void VirtualPumpDevice::onRetractRequest()
 void VirtualPumpDevice::onPrimeRequest()
 {
     LOG_DBG("Prime request");
-    mReservoirLevel = mReservoirLevel - 10.0f;
+    constexpr float kPrimeReservoirConsumption = 10.0f;
+    mReservoirLevel = (mReservoirLevel > kPrimeReservoirConsumption) ? (mReservoirLevel - kPrimeReservoirConsumption) : 0.0f;
     mSubContainer.requestedBolus = 0.0f;
     mSubContainer.deliveredBolus = 0.0f;
     k_work_reschedule(&mSubContainer.statusWork, K_NO_WAIT);

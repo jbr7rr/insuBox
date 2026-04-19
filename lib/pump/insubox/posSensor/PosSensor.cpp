@@ -114,7 +114,20 @@ std::optional<float> PosSensor::getPosition() const
     float d1 = nearestDistance;
     float d2 = secondNearestDistance;
 
-    float w1 = (d1 + d2 - d1) / (d1 + d2); // same as d2 / (d1 + d2)
+    if (d1 == 0.0f)
+    {
+        LOG_DBG("Exact LUT match found at index: %d", nearestIndex);
+        return static_cast<float>(nearestIndex);
+    }
+
+    float distanceSum = d1 + d2;
+    if (distanceSum == 0.0f)
+    {
+        LOG_ERR("Invalid inverse-distance weights: d1 + d2 is zero, using nearest index");
+        return static_cast<float>(nearestIndex);
+    }
+
+    float w1 = d2 / distanceSum;
     float w2 = 1.0f - w1;
 
     LOG_DBG("Weights: w1 = %f, w2 = %f", static_cast<double>(w1), static_cast<double>(w2));
@@ -154,7 +167,7 @@ bool PosSensor::storePositionToLUT(int position)
 
 uint16_t PosSensor::transformValue(int16_t value) const
 {
-    // Transofrm values from range -2000, 2000 to 0, 40000
+    // Transform values from range -2000, 2000 to 0, 40000
     return (value + 2000) * 10; // Shift range to 0-40000
 }
 
@@ -270,8 +283,8 @@ int PosSensor::loadCb(const char *key, size_t len, settings_read_cb read_cb, voi
     if (strcmp(key, settingsPosLUTKey) == 0)
     {
         LOG_DBG("Loading position LUT from settings");
-        size_t len = read_cb(cb_arg, &mSensorLUT[0], mSensorLUT.size() * sizeof(SensorVals));
-        if (len != mSensorLUT.size() * sizeof(SensorVals))
+        size_t read_len = read_cb(cb_arg, &mSensorLUT[0], mSensorLUT.size() * sizeof(SensorVals));
+        if (read_len != mSensorLUT.size() * sizeof(SensorVals))
         {
             LOG_ERR("Failed to read position LUT from settings");
             return -EIO;
