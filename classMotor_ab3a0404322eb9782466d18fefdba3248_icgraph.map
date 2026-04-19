@@ -1,0 +1,7 @@
+<map id="Motor::setPosition" name="Motor::setPosition">
+<area shape="rect" id="Node000001" title=" " alt="" coords="321,5,461,31"/>
+<area shape="rect" id="Node000002" href="$classMotor.html#adcc098680691071a2bf81aa6c9d7c83a" title=" " alt="" coords="160,5,273,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
+<area shape="rect" id="Node000003" href="$classMotor.html#aa14bcab84b65cca87651b0df79711aff" title=" " alt="" coords="5,5,112,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="146,21,112,21,112,15,146,15"/>
+</map>

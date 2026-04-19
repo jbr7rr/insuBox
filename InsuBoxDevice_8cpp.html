@@ -96,29 +96,23 @@ $(document).ready(function(){initNavTree('InsuBoxDevice_8cpp.html',''); initResi
 </div><!--header-->
 <div class="contents">
 <div class="textblock"><code>#include &lt;<a class="el" href="InsuBoxDevice_8h_source.html">pump/insubox/InsuBoxDevice.h</a>&gt;</code><br />
-<code>#include &lt;zephyr/logging/log.h&gt;</code><br />
-<code>#include &lt;string&gt;</code><br />
-<code>#include &lt;zephyr/device.h&gt;</code><br />
-<code>#include &lt;zephyr/drivers/sensor.h&gt;</code><br />
 <code>#include &lt;zephyr/kernel.h&gt;</code><br />
+<code>#include &lt;cmath&gt;</code><br />
+<code>#include &lt;zephyr/logging/log.h&gt;</code><br />
 </div><div class="textblock"><div class="dynheader">
 Include dependency graph for InsuBoxDevice.cpp:</div>
 <div class="dyncontent">
 <div class="center"><img src="InsuBoxDevice_8cpp__incl.png" border="0" usemap="#alib_2pump_2insubox_2InsuBoxDevice_8cpp" alt=""/></div>
 <map name="alib_2pump_2insubox_2InsuBoxDevice_8cpp" id="alib_2pump_2insubox_2InsuBoxDevice_8cpp">
-<area shape="rect" title=" " alt="" coords="426,5,617,45"/>
+<area shape="rect" title=" " alt="" coords="281,5,471,45"/>
 <area shape="rect" href="InsuBoxDevice_8h.html" title=" " alt="" coords="5,93,232,119"/>
-<area shape="poly" title=" " alt="" coords="426,48,191,93,190,88,425,43"/>
-<area shape="rect" title=" " alt="" coords="256,93,411,119"/>
-<area shape="poly" title=" " alt="" coords="477,48,375,90,373,85,475,43"/>
-<area shape="rect" title=" " alt="" coords="435,93,493,119"/>
-<area shape="poly" title=" " alt="" coords="510,47,483,84,479,80,505,44"/>
-<area shape="rect" title=" " alt="" coords="517,93,643,119"/>
-<area shape="poly" title=" " alt="" coords="538,44,565,80,561,84,533,47"/>
-<area shape="rect" title=" " alt="" coords="667,93,840,119"/>
-<area shape="poly" title=" " alt="" coords="578,43,707,86,706,91,576,48"/>
-<area shape="rect" title=" " alt="" coords="864,93,987,119"/>
-<area shape="poly" title=" " alt="" coords="618,43,854,88,853,93,617,48"/>
+<area shape="poly" title=" " alt="" coords="315,48,170,92,168,87,314,43"/>
+<area shape="rect" title=" " alt="" coords="256,93,379,119"/>
+<area shape="poly" title=" " alt="" coords="364,47,337,84,332,80,360,44"/>
+<area shape="rect" title=" " alt="" coords="403,93,466,119"/>
+<area shape="poly" title=" " alt="" coords="392,44,420,80,415,84,388,47"/>
+<area shape="rect" title=" " alt="" coords="491,93,645,119"/>
+<area shape="poly" title=" " alt="" coords="423,43,528,86,526,91,421,48"/>
 </map>
 </div>
 </div><table class="memberdecls">
@@ -131,8 +125,6 @@ Macros</h2></td></tr>
 Functions</h2></td></tr>
 <tr class="memitem:acd8a634836834bed221ef3094295e7f0" id="r_acd8a634836834bed221ef3094295e7f0"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="InsuBoxDevice_8cpp.html#acd8a634836834bed221ef3094295e7f0">LOG_MODULE_REGISTER</a> (ib_insubox_pump_device)</td></tr>
 <tr class="separator:acd8a634836834bed221ef3094295e7f0"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa23346a171433dd0c627e6a3682b1af1" id="r_aa23346a171433dd0c627e6a3682b1af1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="InsuBoxDevice_8cpp.html#aa23346a171433dd0c627e6a3682b1af1">read_sensor</a> (const struct device *sensor)</td></tr>
-<tr class="separator:aa23346a171433dd0c627e6a3682b1af1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Macro Definition Documentation</h2>
 <a id="a0b87e0d3bf5853bcbb0b66a7c48fdc05" name="a0b87e0d3bf5853bcbb0b66a7c48fdc05"></a>
@@ -161,24 +153,6 @@ Functions</h2></td></tr>
           <td>(</td>
           <td class="paramtype">ib_insubox_pump_device&#160;</td>
           <td class="paramname"></td><td>)</td>
-          <td></td>
-        </tr>
-      </table>
-</div><div class="memdoc">
-
-</div>
-</div>
-<a id="aa23346a171433dd0c627e6a3682b1af1" name="aa23346a171433dd0c627e6a3682b1af1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa23346a171433dd0c627e6a3682b1af1">&#9670;&#160;</a></span>read_sensor()</h2>
-
-<div class="memitem">
-<div class="memproto">
-      <table class="memname">
-        <tr>
-          <td class="memname">void read_sensor </td>
-          <td>(</td>
-          <td class="paramtype">const struct device *&#160;</td>
-          <td class="paramname"><em>sensor</em></td><td>)</td>
           <td></td>
         </tr>
       </table>

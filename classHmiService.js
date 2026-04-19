@@ -9,6 +9,7 @@ var classHmiService =
     [ "bolusRequest", "classHmiService.html#a196e227f462d57db883259e9e8de5b41", null ],
     [ "init", "classHmiService.html#acc90662f0488640db07e58793533eddc", null ],
     [ "K_KERNEL_STACK_MEMBER", "classHmiService.html#a1c62f75bb53180473226632c0c7535c7", null ],
+    [ "primeRequest", "classHmiService.html#a9658428996f450bac5a12e640323504e", null ],
     [ "retractRequest", "classHmiService.html#a2808211713b9fef64c20b38cc85a4b15", null ],
     [ "stopBolusRequest", "classHmiService.html#a54956d3eabd768c952cbe5e614a391ec", null ],
     [ "userBtPairingResponse", "classHmiService.html#a1be5bc0c3202dd6be5b0660cce13bc99", null ],

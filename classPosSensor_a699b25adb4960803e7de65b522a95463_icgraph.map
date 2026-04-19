@@ -1,0 +1,9 @@
+<map id="PosSensor::transformValue" name="PosSensor::transformValue">
+<area shape="rect" id="Node000001" title=" " alt="" coords="461,35,659,60"/>
+<area shape="rect" id="Node000002" href="$classPosSensor.html#a797dad1c0be0db180997965fae909423" title=" " alt="" coords="236,35,413,60"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="448,50,413,50,413,45,448,45"/>
+<area shape="rect" id="Node000003" href="$classPosSensor.html#a1f810d91026dd5fafc83c4a4ce1f6ee0" title=" " alt="" coords="11,5,182,31"/>
+<area shape="poly" id="edge2_Node000002_Node000003" title=" " alt="" coords="222,37,182,32,183,26,223,32"/>
+<area shape="rect" id="Node000004" href="$classPosSensor.html#a7ec6acdbc2fab8e55fef78e6e1181b56" title="Reads the top and bottom sensors and stores the position in the lookup table (LUT)." alt="" coords="5,55,188,95"/>
+<area shape="poly" id="edge3_Node000002_Node000004" title=" " alt="" coords="223,63,188,67,188,61,222,57"/>
+</map>

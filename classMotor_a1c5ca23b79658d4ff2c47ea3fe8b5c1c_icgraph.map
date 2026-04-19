@@ -1,0 +1,15 @@
+<map id="Motor::setVref" name="Motor::setVref">
+<area shape="rect" id="Node000001" title=" " alt="" coords="447,81,561,107"/>
+<area shape="rect" id="Node000002" href="$classMotor.html#ad3a6e4e0e538a86f8adf47d1aaee4e29" title="deliver the specified number of units, from the current position." alt="" coords="34,83,147,108"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="433,96,224,97,148,97,148,92,224,91,433,91"/>
+<area shape="rect" id="Node000003" href="$classMotor.html#a1498acfa0c1d788f3d2a3ca45f5e4257" title=" " alt="" coords="239,5,384,31"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="460,78,398,52,347,33,349,28,400,48,462,74"/>
+<area shape="rect" id="Node000005" href="$classMotor.html#a64060b2f1aaa23af3bfa01669949bc77" title="Move the motor to the specified position." alt="" coords="5,132,176,157"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="473,116,439,134,399,147,342,157,283,161,176,157,177,152,283,155,341,151,398,142,437,129,471,111"/>
+<area shape="rect" id="Node000006" href="$classMotor.html#a7bee1138a90c1b13c279a25513207197" title=" " alt="" coords="224,107,399,132"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="433,106,399,110,398,105,433,101"/>
+<area shape="rect" id="Node000004" href="$classMotor.html#aa14bcab84b65cca87651b0df79711aff" title=" " alt="" coords="37,5,144,31"/>
+<area shape="poly" id="edge3_Node000003_Node000004" title=" " alt="" coords="225,21,144,21,144,15,225,15"/>
+<area shape="poly" id="edge6_Node000006_Node000002" title=" " alt="" coords="210,111,147,104,148,99,211,106"/>
+<area shape="poly" id="edge7_Node000006_Node000005" title=" " alt="" coords="211,134,176,138,176,132,210,128"/>
+</map>

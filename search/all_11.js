@@ -17,10 +17,11 @@ var searchData=
   ['to_20develop_14',['How to develop',['../index.html#autotoc_md4',1,'']]],
   ['tofloat_15',['toFloat',['../classSFloat.html#aad591505d3484678c81f80b817ef77d6',1,'SFloat']]],
   ['total_5fdaily_5finsulin_5fchanged_16',['TOTAL_DAILY_INSULIN_CHANGED',['../IdsEnums_8h.html#ad91823b3e43beef5ccd12321e1d0e0c4a912750521e0bc4aec306dedff02a3218',1,'IdsEnums.h']]],
-  ['tst_5feventdispatcher_2ecpp_17',['tst_EventDispatcher.cpp',['../tst__EventDispatcher_8cpp.html',1,'']]],
-  ['tst_5fhmiservice_2ecpp_18',['tst_HmiService.cpp',['../tst__HmiService_8cpp.html',1,'']]],
-  ['tst_5fsfloat_2ecpp_19',['tst_sfloat.cpp',['../tst__sfloat_8cpp.html',1,'']]],
-  ['tune_20',['Tune',['../structTune.html',1,'']]],
-  ['tunes_2eh_21',['Tunes.h',['../Tunes_8h.html',1,'']]],
-  ['type_22',['type',['../structInsulinDeliveryDevice_1_1IddAnnunciationChar.html#af603e583a0ecdcb9f571509c2110af01',1,'InsulinDeliveryDevice::IddAnnunciationChar']]]
+  ['transformvalue_17',['transformValue',['../classPosSensor.html#a699b25adb4960803e7de65b522a95463',1,'PosSensor']]],
+  ['tst_5feventdispatcher_2ecpp_18',['tst_EventDispatcher.cpp',['../tst__EventDispatcher_8cpp.html',1,'']]],
+  ['tst_5fhmiservice_2ecpp_19',['tst_HmiService.cpp',['../tst__HmiService_8cpp.html',1,'']]],
+  ['tst_5fsfloat_2ecpp_20',['tst_sfloat.cpp',['../tst__sfloat_8cpp.html',1,'']]],
+  ['tune_21',['Tune',['../structTune.html',1,'']]],
+  ['tunes_2eh_22',['Tunes.h',['../Tunes_8h.html',1,'']]],
+  ['type_23',['type',['../structInsulinDeliveryDevice_1_1IddAnnunciationChar.html#af603e583a0ecdcb9f571509c2110af01',1,'InsulinDeliveryDevice::IddAnnunciationChar']]]
 ];

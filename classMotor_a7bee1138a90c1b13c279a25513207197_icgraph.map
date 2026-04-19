@@ -1,0 +1,7 @@
+<map id="Motor::prepareForMove" name="Motor::prepareForMove">
+<area shape="rect" id="Node000001" title=" " alt="" coords="224,31,399,56"/>
+<area shape="rect" id="Node000002" href="$classMotor.html#ad3a6e4e0e538a86f8adf47d1aaee4e29" title="deliver the specified number of units, from the current position." alt="" coords="34,5,147,31"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="210,34,147,27,148,22,211,29"/>
+<area shape="rect" id="Node000003" href="$classMotor.html#a64060b2f1aaa23af3bfa01669949bc77" title="Move the motor to the specified position." alt="" coords="5,55,176,80"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="211,57,176,61,176,55,210,52"/>
+</map>

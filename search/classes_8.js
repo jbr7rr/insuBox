@@ -1,10 +1,11 @@
 var searchData=
 [
-  ['sfloat_0',['SFloat',['../classSFloat.html',1,'']]],
-  ['sfloatfromfloattest_1',['SFloatFromFloatTest',['../classSFloatFromFloatTest.html',1,'']]],
-  ['sfloattestparams_2',['SFloatTestParams',['../structSFloatTestParams.html',1,'']]],
-  ['sfloattofloattest_3',['SFloatToFloatTest',['../classSFloatToFloatTest.html',1,'']]],
-  ['simpletask_4',['SimpleTask',['../structHmiService_1_1SimpleTask.html',1,'HmiService']]],
-  ['stopbolus_5',['StopBolus',['../structStopBolus.html',1,'']]],
-  ['subscribeparams_6',['SubscribeParams',['../structSubscribeParams.html',1,'']]]
+  ['sensorvals_0',['SensorVals',['../structPosSensor_1_1SensorVals.html',1,'PosSensor']]],
+  ['sfloat_1',['SFloat',['../classSFloat.html',1,'']]],
+  ['sfloatfromfloattest_2',['SFloatFromFloatTest',['../classSFloatFromFloatTest.html',1,'']]],
+  ['sfloattestparams_3',['SFloatTestParams',['../structSFloatTestParams.html',1,'']]],
+  ['sfloattofloattest_4',['SFloatToFloatTest',['../classSFloatToFloatTest.html',1,'']]],
+  ['simpletask_5',['SimpleTask',['../structHmiService_1_1SimpleTask.html',1,'HmiService']]],
+  ['stopbolus_6',['StopBolus',['../structStopBolus.html',1,'']]],
+  ['subscribeparams_7',['SubscribeParams',['../structSubscribeParams.html',1,'']]]
 ];

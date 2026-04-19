@@ -1,13 +1,15 @@
 <map id="include/pump/insubox/motor/Motor.h" name="include/pump/insubox/motor/Motor.h">
-<area shape="rect" id="Node000001" title=" " alt="" coords="348,5,513,45"/>
+<area shape="rect" id="Node000001" title=" " alt="" coords="435,5,600,45"/>
 <area shape="rect" id="Node000002" title=" " alt="" coords="5,93,131,119"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="348,47,135,93,134,88,347,42"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="435,44,145,94,144,89,434,38"/>
 <area shape="rect" id="Node000003" title=" " alt="" coords="155,93,317,119"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="385,48,278,91,276,86,383,43"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="451,48,291,92,289,87,449,43"/>
 <area shape="rect" id="Node000004" title=" " alt="" coords="341,93,520,119"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="433,46,433,79,428,79,428,46"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="498,48,456,86,452,82,495,44"/>
 <area shape="rect" id="Node000005" title=" " alt="" coords="544,93,667,119"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="474,43,568,85,566,90,471,48"/>
-<area shape="rect" id="Node000006" title=" " alt="" coords="691,93,765,119"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="503,43,678,89,677,94,501,48"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="540,44,584,82,580,86,537,48"/>
+<area shape="rect" id="Node000006" title=" " alt="" coords="691,93,882,119"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="583,43,735,87,734,92,581,48"/>
+<area shape="rect" id="Node000007" title=" " alt="" coords="907,93,981,119"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="600,37,894,91,893,96,600,43"/>
 </map>

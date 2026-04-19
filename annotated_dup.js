@@ -28,6 +28,8 @@ var annotated_dup =
     [ "IPumpDeviceCallback", "classIPumpDeviceCallback.html", "classIPumpDeviceCallback" ],
     [ "MockHmiDevice", "classMockHmiDevice.html", "classMockHmiDevice" ],
     [ "Motor", "classMotor.html", "classMotor" ],
+    [ "PosSensor", "classPosSensor.html", "classPosSensor" ],
+    [ "PrimeRequest", "structPrimeRequest.html", null ],
     [ "PumpAnnunciationStatus", "structPumpAnnunciationStatus.html", "structPumpAnnunciationStatus" ],
     [ "PumpService", "classPumpService.html", "classPumpService" ],
     [ "PumpStatus", "structPumpStatus.html", "structPumpStatus" ],

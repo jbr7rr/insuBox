@@ -116,27 +116,28 @@ $(document).ready(function(){initNavTree('VirtualPumpDevice_8h_source.html','');
 <div class="line"><a id="l00017" name="l00017"></a><span class="lineno">   17</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#ab79b3dfb27a0a800ee6113c9c12887fc">onBolusRequest</a>(<span class="keywordtype">float</span> amount, time_t timestamp) <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00018" name="l00018"></a><span class="lineno">   18</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#a515355ac9fb35c96fe77f6ee959de82d">onStopBolusRequest</a>() <span class="keyword">override</span>;</div>
 <div class="line"><a id="l00019" name="l00019"></a><span class="lineno">   19</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#a096e963de9956c1d1beb1288219cdb02">onRetractRequest</a>() <span class="keyword">override</span>;</div>
-<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span> </div>
-<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span><span class="keyword">private</span>:</div>
-<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span>    <span class="keyword">struct </span>SubContainer</div>
-<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    {</div>
-<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>        VirtualPumpDevice *pumpDevice;</div>
-<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        k_work_delayable statusWork;</div>
-<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        <span class="keywordtype">float</span> requestedBolus;</div>
-<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordtype">float</span> deliveredBolus;</div>
-<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        time_t requestedTimestamp;</div>
-<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>    };</div>
-<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span> </div>
-<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span>    SubContainer mSubContainer;</div>
-<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    <a class="code hl_class" href="classIPumpDeviceCallback.html">IPumpDeviceCallback</a> &amp;mPumpDeviceCallback;</div>
-<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span> </div>
-<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span>    <span class="keywordtype">float</span> mReservoirLevel = 300.0f;</div>
-<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span> </div>
-<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span>    <span class="keywordtype">void</span> _updateStatus();</div>
-<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>};</div>
-<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span> </div>
-<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span><span class="preprocessor">#endif </span><span class="comment">// CONFIG_IB_VIRTUAL_PUMP</span></div>
-<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#endif </span><span class="comment">// VIRTUAL_PUMP_DEVICE_H</span></div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classIPumpDevice.html#ab8242651e58e7c3549d7f5e33b5e774a">onPrimeRequest</a>() <span class="keyword">override</span>;</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00022" name="l00022"></a><span class="lineno">   22</span><span class="keyword">private</span>:</div>
+<div class="line"><a id="l00023" name="l00023"></a><span class="lineno">   23</span>    <span class="keyword">struct </span>SubContainer</div>
+<div class="line"><a id="l00024" name="l00024"></a><span class="lineno">   24</span>    {</div>
+<div class="line"><a id="l00025" name="l00025"></a><span class="lineno">   25</span>        VirtualPumpDevice *pumpDevice;</div>
+<div class="line"><a id="l00026" name="l00026"></a><span class="lineno">   26</span>        k_work_delayable statusWork;</div>
+<div class="line"><a id="l00027" name="l00027"></a><span class="lineno">   27</span>        <span class="keywordtype">float</span> requestedBolus;</div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>        <span class="keywordtype">float</span> deliveredBolus;</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>        time_t requestedTimestamp;</div>
+<div class="line"><a id="l00030" name="l00030"></a><span class="lineno">   30</span>    };</div>
+<div class="line"><a id="l00031" name="l00031"></a><span class="lineno">   31</span> </div>
+<div class="line"><a id="l00032" name="l00032"></a><span class="lineno">   32</span>    SubContainer mSubContainer;</div>
+<div class="line"><a id="l00033" name="l00033"></a><span class="lineno">   33</span>    <a class="code hl_class" href="classIPumpDeviceCallback.html">IPumpDeviceCallback</a> &amp;mPumpDeviceCallback;</div>
+<div class="line"><a id="l00034" name="l00034"></a><span class="lineno">   34</span> </div>
+<div class="line"><a id="l00035" name="l00035"></a><span class="lineno">   35</span>    <span class="keywordtype">float</span> mReservoirLevel = 300.0f;</div>
+<div class="line"><a id="l00036" name="l00036"></a><span class="lineno">   36</span> </div>
+<div class="line"><a id="l00037" name="l00037"></a><span class="lineno">   37</span>    <span class="keywordtype">void</span> _updateStatus();</div>
+<div class="line"><a id="l00038" name="l00038"></a><span class="lineno">   38</span>};</div>
+<div class="line"><a id="l00039" name="l00039"></a><span class="lineno">   39</span> </div>
+<div class="line"><a id="l00040" name="l00040"></a><span class="lineno">   40</span><span class="preprocessor">#endif </span><span class="comment">// CONFIG_IB_VIRTUAL_PUMP</span></div>
+<div class="line"><a id="l00041" name="l00041"></a><span class="lineno">   41</span><span class="preprocessor">#endif </span><span class="comment">// VIRTUAL_PUMP_DEVICE_H</span></div>
 <div class="ttc" id="aIPumpDevice_8h_html"><div class="ttname"><a href="IPumpDevice_8h.html">IPumpDevice.h</a></div></div>
 <div class="ttc" id="aPumpService_8h_html"><div class="ttname"><a href="PumpService_8h.html">PumpService.h</a></div></div>
 <div class="ttc" id="aclassIPumpDeviceCallback_html"><div class="ttname"><a href="classIPumpDeviceCallback.html">IPumpDeviceCallback</a></div><div class="ttdef"><b>Definition</b> IPumpDevice.h:8</div></div>
@@ -145,6 +146,7 @@ $(document).ready(function(){initNavTree('VirtualPumpDevice_8h_source.html','');
 <div class="ttc" id="aclassIPumpDevice_html_a515355ac9fb35c96fe77f6ee959de82d"><div class="ttname"><a href="classIPumpDevice.html#a515355ac9fb35c96fe77f6ee959de82d">IPumpDevice::onStopBolusRequest</a></div><div class="ttdeci">virtual void onStopBolusRequest()=0</div><div class="ttdoc">Handle a request to stop the bolus delivery.</div></div>
 <div class="ttc" id="aclassIPumpDevice_html_aa04d76a0528b91dd4a6ab3a006563010"><div class="ttname"><a href="classIPumpDevice.html#aa04d76a0528b91dd4a6ab3a006563010">IPumpDevice::init</a></div><div class="ttdeci">virtual void init()=0</div></div>
 <div class="ttc" id="aclassIPumpDevice_html_ab79b3dfb27a0a800ee6113c9c12887fc"><div class="ttname"><a href="classIPumpDevice.html#ab79b3dfb27a0a800ee6113c9c12887fc">IPumpDevice::onBolusRequest</a></div><div class="ttdeci">virtual void onBolusRequest(float amount, time_t timestamp)=0</div><div class="ttdoc">Handle a bolus request.</div></div>
+<div class="ttc" id="aclassIPumpDevice_html_ab8242651e58e7c3549d7f5e33b5e774a"><div class="ttname"><a href="classIPumpDevice.html#ab8242651e58e7c3549d7f5e33b5e774a">IPumpDevice::onPrimeRequest</a></div><div class="ttdeci">virtual void onPrimeRequest()=0</div><div class="ttdoc">Handle a request to prime the pump.</div></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

@@ -1,9 +1,9 @@
 var searchData=
 [
-  ['read_5fsensor_0',['read_sensor',['../InsuBoxDevice_8cpp.html#aa23346a171433dd0c627e6a3682b1af1',1,'InsuBoxDevice.cpp']]],
+  ['readsensors_0',['readSensors',['../classPosSensor.html#a797dad1c0be0db180997965fae909423',1,'PosSensor']]],
   ['ready_1',['READY',['../IdsEnums_8h.html#a450fa252027a1c5239a242d66770f581a2baa69eafc7204f3bd8648eba580c489',1,'IdsEnums.h']]],
   ['recommendation_2',['Last Insulin recommendation',['../BleInterfaceSpec.html#idas-last-insulin-recommendation',1,'']]],
-  ['recycled_3',['recycled',['../classBLEComm.html#a3c5bfe218f246ccacbbe5d3fd7e0a5e3',1,'BLEComm::recycled'],['../classBLEComm.html#a7665de773e4a6f1f9e0b20421b44683d',1,'BLEComm::recycled(void)']]],
+  ['recycled_3',['recycled',['../classBLEComm.html#a7665de773e4a6f1f9e0b20421b44683d',1,'BLEComm::recycled(void)'],['../classBLEComm.html#a3c5bfe218f246ccacbbe5d3fd7e0a5e3',1,'BLEComm::recycled']]],
   ['remaining_20time_4',['AID Suspend Remaining Time',['../BleInterfaceSpec.html#idas-aid-suspend-remaining-time',1,'']]],
   ['removeconnectionref_5',['removeConnectionRef',['../classBLEComm.html#a8f87047e95ccdba0c8dc1b2d2af08196',1,'BLEComm']]],
   ['requestedamount_6',['requestedAmount',['../structBolusProgressUpdate.html#a17e5d436c80a822a4854cab3d6fac452',1,'BolusProgressUpdate']]],
@@ -16,7 +16,7 @@ var searchData=
   ['reservoirattached_13',['reservoirAttached',['../structPumpStatus.html#ad4f63bd838cc3b8127b6f7803fc76906',1,'PumpStatus']]],
   ['reservoirlevel_14',['reservoirlevel',['../structPumpStatus.html#a5c4f572e4532425ea09c5e856ddff4c2',1,'PumpStatus::reservoirLevel'],['../structInsulinDeliveryDevice_1_1IddStatusChar.html#a5c4fc4cf8b09b68c4fe0871ba9da290d',1,'InsulinDeliveryDevice::IddStatusChar::reservoirLevel']]],
   ['response_20op_20code_15',['response op code',['../BleInterfaceSpec.html#idas-response-op-code',1,'Response Op Code'],['../BleInterfaceSpec.html#iss-response-op-code',1,'Response Op Code']]],
-  ['retractrequest_16',['retractrequest',['../classIHmiCallback.html#aaccd7b411926d3fa7570baa04d413d54',1,'IHmiCallback::retractRequest()'],['../classHmiService.html#a2808211713b9fef64c20b38cc85a4b15',1,'HmiService::retractRequest()'],['../structRetractRequest.html',1,'RetractRequest']]],
+  ['retractrequest_16',['retractrequest',['../structRetractRequest.html',1,'RetractRequest'],['../classIHmiCallback.html#aaccd7b411926d3fa7570baa04d413d54',1,'IHmiCallback::retractRequest()'],['../classHmiService.html#a2808211713b9fef64c20b38cc85a4b15',1,'HmiService::retractRequest()']]],
   ['run_17',['RUN',['../IdsEnums_8h.html#ad323b6c1ea460eb65119cf369f7fd88ea855520d2a5b0b1a64b939e7e30889e2a',1,'IdsEnums.h']]],
   ['run_20unit_20tests_18',['Run unit tests',['../index.html#autotoc_md6',1,'']]]
 ];

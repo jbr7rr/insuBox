@@ -117,12 +117,12 @@ Public Member Functions</h2></td></tr>
 <tr class="separator:aa14bcab84b65cca87651b0df79711aff"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2e57c7b2681efea1d3b7f253ee88ecd4" id="r_a2e57c7b2681efea1d3b7f253ee88ecd4"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#a2e57c7b2681efea1d3b7f253ee88ecd4">~Motor</a> ()</td></tr>
 <tr class="separator:a2e57c7b2681efea1d3b7f253ee88ecd4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aec92c05dd046392bf5d805edab31243b" id="r_aec92c05dd046392bf5d805edab31243b"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#aec92c05dd046392bf5d805edab31243b">deliver</a> (float units, uint8_t speed=10)</td></tr>
-<tr class="memdesc:aec92c05dd046392bf5d805edab31243b"><td class="mdescLeft">&#160;</td><td class="mdescRight">deliver the specified number of units, from the current position.  <br /></td></tr>
-<tr class="separator:aec92c05dd046392bf5d805edab31243b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a897fec7211c50e1300dc9a93603559c5" id="r_a897fec7211c50e1300dc9a93603559c5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#a897fec7211c50e1300dc9a93603559c5">moveToPosition</a> (float units, uint8_t speed=100)</td></tr>
-<tr class="memdesc:a897fec7211c50e1300dc9a93603559c5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the motor to the specified position.  <br /></td></tr>
-<tr class="separator:a897fec7211c50e1300dc9a93603559c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3a6e4e0e538a86f8adf47d1aaee4e29" id="r_ad3a6e4e0e538a86f8adf47d1aaee4e29"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#ad3a6e4e0e538a86f8adf47d1aaee4e29">deliver</a> (float units, uint8_t speed=10, uint8_t powerPct=100)</td></tr>
+<tr class="memdesc:ad3a6e4e0e538a86f8adf47d1aaee4e29"><td class="mdescLeft">&#160;</td><td class="mdescRight">deliver the specified number of units, from the current position.  <br /></td></tr>
+<tr class="separator:ad3a6e4e0e538a86f8adf47d1aaee4e29"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a64060b2f1aaa23af3bfa01669949bc77" id="r_a64060b2f1aaa23af3bfa01669949bc77"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#a64060b2f1aaa23af3bfa01669949bc77">moveToPosition</a> (float units, uint8_t speed=100, uint8_t powerPct=100)</td></tr>
+<tr class="memdesc:a64060b2f1aaa23af3bfa01669949bc77"><td class="mdescLeft">&#160;</td><td class="mdescRight">Move the motor to the specified position.  <br /></td></tr>
+<tr class="separator:a64060b2f1aaa23af3bfa01669949bc77"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a015fd5308d4d27e5dcf7f9ea3d5c03f6" id="r_a015fd5308d4d27e5dcf7f9ea3d5c03f6"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#a015fd5308d4d27e5dcf7f9ea3d5c03f6">stop</a> ()</td></tr>
 <tr class="memdesc:a015fd5308d4d27e5dcf7f9ea3d5c03f6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Stop the motor.  <br /></td></tr>
 <tr class="separator:a015fd5308d4d27e5dcf7f9ea3d5c03f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -133,8 +133,12 @@ Public Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a40e46bd9d3e3704399e5f7429b718bd8" id="r_a40e46bd9d3e3704399e5f7429b718bd8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#a40e46bd9d3e3704399e5f7429b718bd8">setVref</a> (uint8_t powerPct=80)</td></tr>
-<tr class="separator:a40e46bd9d3e3704399e5f7429b718bd8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7bee1138a90c1b13c279a25513207197" id="r_a7bee1138a90c1b13c279a25513207197"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#a7bee1138a90c1b13c279a25513207197">prepareForMove</a> (uint8_t speed, uint8_t powerPct)</td></tr>
+<tr class="separator:a7bee1138a90c1b13c279a25513207197"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1c5ca23b79658d4ff2c47ea3fe8b5c1c" id="r_a1c5ca23b79658d4ff2c47ea3fe8b5c1c"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#a1c5ca23b79658d4ff2c47ea3fe8b5c1c">setVref</a> (uint8_t powerPct)</td></tr>
+<tr class="separator:a1c5ca23b79658d4ff2c47ea3fe8b5c1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adcc098680691071a2bf81aa6c9d7c83a" id="r_adcc098680691071a2bf81aa6c9d7c83a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMotor.html#adcc098680691071a2bf81aa6c9d7c83a">loadCb</a> (const char *key, size_t len, settings_read_cb read_cb, void *cb_arg, void *param)</td></tr>
+<tr class="separator:adcc098680691071a2bf81aa6c9d7c83a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-methods" name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
@@ -189,8 +193,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="aec92c05dd046392bf5d805edab31243b" name="aec92c05dd046392bf5d805edab31243b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aec92c05dd046392bf5d805edab31243b">&#9670;&#160;</a></span>deliver()</h2>
+<a id="ad3a6e4e0e538a86f8adf47d1aaee4e29" name="ad3a6e4e0e538a86f8adf47d1aaee4e29"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3a6e4e0e538a86f8adf47d1aaee4e29">&#9670;&#160;</a></span>deliver()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -205,7 +209,13 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>speed</em> = <code>10</code>&#160;</td>
+          <td class="paramname"><em>speed</em> = <code>10</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>powerPct</em> = <code>100</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -296,8 +306,72 @@ Here is the caller graph for this function:</div>
 
 </div>
 </div>
-<a id="a897fec7211c50e1300dc9a93603559c5" name="a897fec7211c50e1300dc9a93603559c5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a897fec7211c50e1300dc9a93603559c5">&#9670;&#160;</a></span>moveToPosition()</h2>
+<a id="adcc098680691071a2bf81aa6c9d7c83a" name="adcc098680691071a2bf81aa6c9d7c83a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adcc098680691071a2bf81aa6c9d7c83a">&#9670;&#160;</a></span>loadCb()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Motor::loadCb </td>
+          <td>(</td>
+          <td class="paramtype">const char *&#160;</td>
+          <td class="paramname"><em>key</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">size_t&#160;</td>
+          <td class="paramname"><em>len</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">settings_read_cb&#160;</td>
+          <td class="paramname"><em>read_cb</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>cb_arg</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">void *&#160;</td>
+          <td class="paramname"><em>param</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMotor_adcc098680691071a2bf81aa6c9d7c83a_icgraph.png" border="0" usemap="#aclassMotor_adcc098680691071a2bf81aa6c9d7c83a_icgraph" alt=""/></div>
+<map name="aclassMotor_adcc098680691071a2bf81aa6c9d7c83a_icgraph" id="aclassMotor_adcc098680691071a2bf81aa6c9d7c83a_icgraph">
+<area shape="rect" title=" " alt="" coords="160,5,273,31"/>
+<area shape="rect" href="classMotor.html#aa14bcab84b65cca87651b0df79711aff" title=" " alt="" coords="5,5,112,31"/>
+<area shape="poly" title=" " alt="" coords="146,21,112,21,112,15,146,15"/>
+</map>
+</div>
+
+</div>
+</div>
+<a id="a64060b2f1aaa23af3bfa01669949bc77" name="a64060b2f1aaa23af3bfa01669949bc77"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a64060b2f1aaa23af3bfa01669949bc77">&#9670;&#160;</a></span>moveToPosition()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -312,7 +386,13 @@ Here is the caller graph for this function:</div>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>speed</em> = <code>100</code>&#160;</td>
+          <td class="paramname"><em>speed</em> = <code>100</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>powerPct</em> = <code>100</code>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -327,11 +407,60 @@ Here is the caller graph for this function:</div>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">units</td><td>The position to move to, in units. Can be negative in order to correct the position if it is incorrect. </td></tr>
-    <tr><td class="paramname">speed</td><td>The speed of the motor. 0 - 100. (0 is slowest possible, 100 is fastest)</td></tr>
+    <tr><td class="paramname">speed</td><td>The speed of the motor. 0 - 100. (0 is slowest possible, 100 is fastest) </td></tr>
+    <tr><td class="paramname">powerPct</td><td>The power percentage to use for the motor. 0 - 150. (0 is off, 100 is nominal, 150 is overdrive)</td></tr>
   </table>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>int 0 on success, negative error code on failure. </dd></dl>
+
+</div>
+</div>
+<a id="a7bee1138a90c1b13c279a25513207197" name="a7bee1138a90c1b13c279a25513207197"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7bee1138a90c1b13c279a25513207197">&#9670;&#160;</a></span>prepareForMove()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int Motor::prepareForMove </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>speed</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>powerPct</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMotor_a7bee1138a90c1b13c279a25513207197_icgraph.png" border="0" usemap="#aclassMotor_a7bee1138a90c1b13c279a25513207197_icgraph" alt=""/></div>
+<map name="aclassMotor_a7bee1138a90c1b13c279a25513207197_icgraph" id="aclassMotor_a7bee1138a90c1b13c279a25513207197_icgraph">
+<area shape="rect" title=" " alt="" coords="224,31,399,56"/>
+<area shape="rect" href="classMotor.html#ad3a6e4e0e538a86f8adf47d1aaee4e29" title="deliver the specified number of units, from the current position." alt="" coords="34,5,147,31"/>
+<area shape="poly" title=" " alt="" coords="210,34,147,27,148,22,211,29"/>
+<area shape="rect" href="classMotor.html#a64060b2f1aaa23af3bfa01669949bc77" title="Move the motor to the specified position." alt="" coords="5,55,176,80"/>
+<area shape="poly" title=" " alt="" coords="211,57,176,61,176,55,210,52"/>
+</map>
+</div>
 
 </div>
 </div>
@@ -350,11 +479,23 @@ Here is the caller graph for this function:</div>
         </tr>
       </table>
 </div><div class="memdoc">
+<div class="dynheader">
+Here is the caller graph for this function:</div>
+<div class="dyncontent">
+<div class="center"><img src="classMotor_ab3a0404322eb9782466d18fefdba3248_icgraph.png" border="0" usemap="#aclassMotor_ab3a0404322eb9782466d18fefdba3248_icgraph" alt=""/></div>
+<map name="aclassMotor_ab3a0404322eb9782466d18fefdba3248_icgraph" id="aclassMotor_ab3a0404322eb9782466d18fefdba3248_icgraph">
+<area shape="rect" title=" " alt="" coords="321,5,461,31"/>
+<area shape="rect" href="classMotor.html#adcc098680691071a2bf81aa6c9d7c83a" title=" " alt="" coords="160,5,273,31"/>
+<area shape="poly" title=" " alt="" coords="308,21,274,21,274,15,308,15"/>
+<area shape="rect" href="classMotor.html#aa14bcab84b65cca87651b0df79711aff" title=" " alt="" coords="5,5,112,31"/>
+<area shape="poly" title=" " alt="" coords="146,21,112,21,112,15,146,15"/>
+</map>
+</div>
 
 </div>
 </div>
-<a id="a40e46bd9d3e3704399e5f7429b718bd8" name="a40e46bd9d3e3704399e5f7429b718bd8"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a40e46bd9d3e3704399e5f7429b718bd8">&#9670;&#160;</a></span>setVref()</h2>
+<a id="a1c5ca23b79658d4ff2c47ea3fe8b5c1c" name="a1c5ca23b79658d4ff2c47ea3fe8b5c1c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1c5ca23b79658d4ff2c47ea3fe8b5c1c">&#9670;&#160;</a></span>setVref()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -366,7 +507,7 @@ Here is the caller graph for this function:</div>
           <td class="memname">int Motor::setVref </td>
           <td>(</td>
           <td class="paramtype">uint8_t&#160;</td>
-          <td class="paramname"><em>powerPct</em> = <code>80</code></td><td>)</td>
+          <td class="paramname"><em>powerPct</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -382,17 +523,21 @@ Here is the caller graph for this function:</div>
 <div class="dynheader">
 Here is the caller graph for this function:</div>
 <div class="dyncontent">
-<div class="center"><img src="classMotor_a40e46bd9d3e3704399e5f7429b718bd8_icgraph.png" border="0" usemap="#aclassMotor_a40e46bd9d3e3704399e5f7429b718bd8_icgraph" alt=""/></div>
-<map name="aclassMotor_a40e46bd9d3e3704399e5f7429b718bd8_icgraph" id="aclassMotor_a40e46bd9d3e3704399e5f7429b718bd8_icgraph">
-<area shape="rect" title=" " alt="" coords="379,55,493,80"/>
-<area shape="rect" href="classMotor.html#aec92c05dd046392bf5d805edab31243b" title="deliver the specified number of units, from the current position." alt="" coords="189,5,302,31"/>
-<area shape="poly" title=" " alt="" coords="372,54,295,33,296,28,374,49"/>
-<area shape="rect" href="classMotor.html#a1498acfa0c1d788f3d2a3ca45f5e4257" title=" " alt="" coords="173,55,318,80"/>
-<area shape="poly" title=" " alt="" coords="365,70,318,70,318,65,365,65"/>
-<area shape="rect" href="classMotor.html#a897fec7211c50e1300dc9a93603559c5" title="Move the motor to the specified position." alt="" coords="160,104,331,129"/>
-<area shape="poly" title=" " alt="" coords="374,86,296,106,295,101,372,81"/>
-<area shape="rect" href="classMotor.html#aa14bcab84b65cca87651b0df79711aff" title=" " alt="" coords="5,55,112,80"/>
-<area shape="poly" title=" " alt="" coords="159,70,112,70,112,65,159,65"/>
+<div class="center"><img src="classMotor_a1c5ca23b79658d4ff2c47ea3fe8b5c1c_icgraph.png" border="0" usemap="#aclassMotor_a1c5ca23b79658d4ff2c47ea3fe8b5c1c_icgraph" alt=""/></div>
+<map name="aclassMotor_a1c5ca23b79658d4ff2c47ea3fe8b5c1c_icgraph" id="aclassMotor_a1c5ca23b79658d4ff2c47ea3fe8b5c1c_icgraph">
+<area shape="rect" title=" " alt="" coords="447,81,561,107"/>
+<area shape="rect" href="classMotor.html#ad3a6e4e0e538a86f8adf47d1aaee4e29" title="deliver the specified number of units, from the current position." alt="" coords="34,83,147,108"/>
+<area shape="poly" title=" " alt="" coords="433,96,224,97,148,97,148,92,224,91,433,91"/>
+<area shape="rect" href="classMotor.html#a1498acfa0c1d788f3d2a3ca45f5e4257" title=" " alt="" coords="239,5,384,31"/>
+<area shape="poly" title=" " alt="" coords="460,78,398,52,347,33,349,28,400,48,462,74"/>
+<area shape="rect" href="classMotor.html#a64060b2f1aaa23af3bfa01669949bc77" title="Move the motor to the specified position." alt="" coords="5,132,176,157"/>
+<area shape="poly" title=" " alt="" coords="473,116,439,134,399,147,342,157,283,161,176,157,177,152,283,155,341,151,398,142,437,129,471,111"/>
+<area shape="rect" href="classMotor.html#a7bee1138a90c1b13c279a25513207197" title=" " alt="" coords="224,107,399,132"/>
+<area shape="poly" title=" " alt="" coords="433,106,399,110,398,105,433,101"/>
+<area shape="rect" href="classMotor.html#aa14bcab84b65cca87651b0df79711aff" title=" " alt="" coords="37,5,144,31"/>
+<area shape="poly" title=" " alt="" coords="225,21,144,21,144,15,225,15"/>
+<area shape="poly" title=" " alt="" coords="210,111,147,104,148,99,211,106"/>
+<area shape="poly" title=" " alt="" coords="211,134,176,138,176,132,210,128"/>
 </map>
 </div>
 

@@ -1,19 +1,21 @@
 <map id="EventDispatcher::dispatch" name="EventDispatcher::dispatch">
-<area shape="rect" id="Node000001" title="Dispatch an event to all registered listeners of its type." alt="" coords="293,194,485,219"/>
+<area shape="rect" id="Node000001" title="Dispatch an event to all registered listeners of its type." alt="" coords="293,218,485,243"/>
 <area shape="rect" id="Node000002" href="$classPumpService.html#ae60c45bb994538cb9757d74079554f39" title="Callback for bolus progress updates." alt="" coords="22,5,229,45"/>
-<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="370,184,318,122,283,88,244,60,219,48,222,43,247,55,287,84,322,118,374,181"/>
+<area shape="poly" id="edge1_Node000001_Node000002" title=" " alt="" coords="372,207,351,174,322,134,286,94,244,60,221,48,223,43,247,55,290,90,326,130,356,171,377,205"/>
 <area shape="rect" id="Node000003" href="$classHmiService.html#a196e227f462d57db883259e9e8de5b41" title="Request a bolus from the pump." alt="" coords="29,70,222,95"/>
-<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="362,187,310,147,278,126,244,109,211,98,212,93,246,104,281,122,313,142,366,183"/>
+<area shape="poly" id="edge2_Node000001_Node000003" title=" " alt="" coords="367,209,315,158,281,131,244,109,215,98,217,93,246,104,284,127,318,154,370,206"/>
 <area shape="rect" id="Node000004" href="$classHmiService.html#a1778b16fa43871cf3cabb0abc79d018d" title=" " alt="" coords="35,119,215,145"/>
-<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="343,192,245,159,197,147,199,142,246,153,344,187"/>
+<area shape="poly" id="edge3_Node000001_Node000004" title=" " alt="" coords="355,213,304,185,244,159,205,147,207,142,246,153,307,180,358,209"/>
 <area shape="rect" id="Node000005" href="$classBLEComm.html#abd6839eb62d6f63cdc9ebe9a6ec17bf6" title=" " alt="" coords="25,169,226,194"/>
-<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="280,199,226,194,227,188,280,194"/>
-<area shape="rect" id="Node000006" href="$classPumpService.html#a1fde612afce6d5b8c7d5293940640876" title="Callback for pump status updates." alt="" coords="5,218,245,243"/>
-<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="280,219,246,222,245,217,279,214"/>
-<area shape="rect" id="Node000007" href="$classHmiService.html#a2808211713b9fef64c20b38cc85a4b15" title="Request to retract the last bolus delivery." alt="" coords="25,267,226,293"/>
-<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="342,227,246,257,194,270,192,265,245,252,340,221"/>
-<area shape="rect" id="Node000008" href="$classHmiService.html#a54956d3eabd768c952cbe5e614a391ec" title="Request to stop the current bolus delivery." alt="" coords="14,317,237,342"/>
-<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="364,230,312,270,246,306,208,319,206,314,244,302,309,265,361,226"/>
-<area shape="rect" id="Node000009" href="$classHmiService.html#a1be5bc0c3202dd6be5b0660cce13bc99" title="Send a response to a user Bluetooth pairing request." alt="" coords="30,367,221,407"/>
-<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="373,232,321,294,286,327,247,356,219,369,216,364,244,351,283,323,318,290,369,229"/>
+<area shape="poly" id="edge4_Node000001_Node000005" title=" " alt="" coords="307,218,194,197,195,191,308,213"/>
+<area shape="rect" id="Node000006" href="$classHmiService.html#a9658428996f450bac5a12e640323504e" title="Request to prime the pump." alt="" coords="27,218,223,243"/>
+<area shape="poly" id="edge5_Node000001_Node000006" title=" " alt="" coords="280,233,224,233,224,228,280,228"/>
+<area shape="rect" id="Node000007" href="$classPumpService.html#a1fde612afce6d5b8c7d5293940640876" title="Callback for pump status updates." alt="" coords="5,267,245,293"/>
+<area shape="poly" id="edge6_Node000001_Node000007" title=" " alt="" coords="308,249,195,270,194,265,307,243"/>
+<area shape="rect" id="Node000008" href="$classHmiService.html#a2808211713b9fef64c20b38cc85a4b15" title="Request to retract the last bolus delivery." alt="" coords="25,317,226,342"/>
+<area shape="poly" id="edge7_Node000001_Node000008" title=" " alt="" coords="357,253,306,280,246,307,202,319,200,314,244,301,304,276,355,248"/>
+<area shape="rect" id="Node000009" href="$classHmiService.html#a54956d3eabd768c952cbe5e614a391ec" title="Request to stop the current bolus delivery." alt="" coords="14,366,237,391"/>
+<area shape="poly" id="edge8_Node000001_Node000009" title=" " alt="" coords="370,255,318,307,284,333,246,356,213,368,211,363,244,351,281,329,314,303,366,252"/>
+<area shape="rect" id="Node000010" href="$classHmiService.html#a1be5bc0c3202dd6be5b0660cce13bc99" title="Send a response to a user Bluetooth pairing request." alt="" coords="30,416,221,456"/>
+<area shape="poly" id="edge9_Node000001_Node000010" title=" " alt="" coords="376,257,326,330,289,371,247,405,221,418,219,413,244,400,286,367,322,327,372,254"/>
 </map>
